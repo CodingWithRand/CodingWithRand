@@ -4,7 +4,7 @@ import Neutral from "@/geutral/util"
 import Client from "@/glient/util";
 import { auth } from "@/glient/firebase";
 import "./page.css"
-import { applyActionCode, verifyPasswordResetCode, confirmPasswordReset } from "@firebase/auth";
+import { applyActionCode, verifyPasswordResetCode, confirmPasswordReset } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Cookies from "universal-cookie";

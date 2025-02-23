@@ -1,6 +1,6 @@
 "use client"
 
-import { onAuthStateChanged } from "@firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { useContext, createContext, useState, useEffect } from "react";
 import { auth } from "./firebase";
 import Cookies from "universal-cookie";

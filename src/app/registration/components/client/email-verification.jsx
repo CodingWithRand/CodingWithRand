@@ -1,7 +1,7 @@
 import Client from "@/glient/util";
 import "./client.css"
 import { useEffect, useState } from "react";
-import { reload, sendEmailVerification } from "@firebase/auth";
+import { reload, sendEmailVerification } from "firebase/auth";
 import { auth } from "@/glient/firebase";
 import { useGlobal } from "@/glient/global";
 import Neutral from "@/app/global/neutral/util";

@@ -1,0 +1,217 @@
+@import url("https://fonts.googleapis.com");
+@import url("https://fonts.gstatic.com");
+@import url("https://fonts.googleapis.com/css2?family=Russo+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=League+Spartan:wght@200&display=swap");
+
+@tailwind components;
+@tailwind utilities;
+
+@layer components{
+
+    body{
+        @apply bg-[#F0F0F0] dark:bg-[#0F0F0F] overflow-x-hidden;
+    }
+    .full-page{
+        @apply w-full h-screen;
+    }
+  
+}
+
+@layer utilities{
+    
+}
+
+body{ user-select: none; }
+
+main section{
+    position: relative;
+    z-index: 2;
+}
+
+.setup{
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
+    position: absolute;
+    z-index: 20;
+    top: 0;
+    left: 0;
+    padding: 2vw;
+}
+
+html{
+    scroll-behavior: smooth;
+}
+
+#banner{
+    height: 100vh;
+}
+
+#proceed{
+    pointer-events: none;
+    transition: opacity 3s ease-in-out;
+    animation: updown 1s ease-in-out alternate infinite;
+}
+
+#search-bar{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    margin-right: 1em;
+    column-gap: 0.5em
+}
+#search-bar button[type="submit"]{
+    width: 32px;
+    height: 32px;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+}
+#search-bar button[type="submit"] img{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    top: 0; 
+    left: 0;
+}
+
+#dice{
+    display: inline-block;
+}
+
+.shake, .skills #skills-block .skill-icon:hover{
+    animation: shaking 1s ease-in-out alternate infinite
+}
+
+#skills-block .reveal-skills{
+    cursor: pointer;
+    transition: rotate 0.5s ease-in-out;
+}
+
+#skills-block .reveal-skills:hover{
+    opacity: 0.8;
+}
+
+.skills #skills-block ol li {
+    transition: opacity 0.5s ease-in-out;
+}
+
+#about-me .content article,
+#about-me .skills #skills-block,
+#about-me .skills #skills-block ul > li,
+#about-me .skills #skills-block ul > li:not(#dev-type) h2,
+#about-me .skills #skills-block ul > li ol > li{
+    transform: translateY(-10%); 
+    opacity: 0; 
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out
+}
+
+.spinning-dice{
+    position: absolute;
+    z-index: 10;
+}
+
+.threeD-screen{
+    perspective: 1000px;
+    perspective-origin: 50% 50%
+}
+
+.spinning-dice:nth-of-type(1){ animation: circulate1 5s linear infinite, spinning 1s linear infinite;}
+.spinning-dice:nth-of-type(2){ animation: circulate1 5s 0.3s linear infinite, spinning 1s linear infinite;}
+.spinning-dice:nth-of-type(3){ animation: circulate1 5s 0.5s linear infinite, spinning 1s linear infinite;}
+.spinning-dice:nth-of-type(4){ animation: circulate1 5s 0.7s linear infinite, spinning 1s linear infinite;}
+.spinning-dice:nth-of-type(5){ animation: circulate1 5s 0.85s linear infinite, spinning 1s linear infinite;}
+
+.spinning-dice:nth-of-type(6){ animation: circulate2 5s linear infinite, spinning 1s linear infinite;}
+.spinning-dice:nth-of-type(7){ animation: circulate2 5s 0.3s linear infinite, spinning 1s linear infinite;}
+.spinning-dice:nth-of-type(8){ animation: circulate2 5s 0.5s linear infinite, spinning 1s linear infinite;}
+.spinning-dice:nth-of-type(9){ animation: circulate2 5s 0.7s linear infinite, spinning 1s linear infinite;}
+.spinning-dice:nth-of-type(10){ animation: circulate2 5s 0.85s linear infinite, spinning 1s linear infinite;}
+
+.effect-box{
+    width: 80%;
+    height: 100%;
+    position: absolute;
+    pointer-events: none;
+}
+
+#skills-block{
+    padding: 1em;
+    border-radius: 1em;
+    width: 80%;
+    overflow-y: auto;
+    box-shadow: 0 0 1em;
+    background-image: linear-gradient(to bottom, black, gray, black);
+}
+
+.skills #skills-block ol li{
+    display: flex;
+    align-items: center;
+    margin: 0.5rem 0;
+}
+
+.skills #skills-block ol li img, .skills #skills-block ol li .skill-icon-name{
+    display: inline-block;
+}
+
+.skills #skills-block .skill-icon-name{
+    width: 0;
+    transition: width 0.2s ease-in-out;
+    overflow: hidden;
+}
+
+.skills #skills-block .progress-bar{
+    position: relative;
+    height: 80%;
+    width: 0;
+    margin: 0.05rem;
+    overflow: hidden;
+    border-radius: 1rem;
+    transition: width 0.2s 0.5s ease-in-out;
+}
+
+.skills #skills-block .progress-bar .progress-bar-sparkle{
+    position: absolute;
+    background-color: white;
+    border-radius: 9999px;
+    animation: randomly-moving-particle 2s ease-in-out infinite alternate;
+}
+
+@keyframes circulate1{
+    0%{ top: -15%; right: -15%; }
+    25%{ top: 100%; right: -15%; }
+    50%{ top: 100%; right: 100%; }
+    75%{ top: -15%; right: 100%; }
+    100%{ top: -15%; right: -15%; }
+}
+
+@keyframes circulate2 {
+    0%{ top: 100%; right: 100%; }
+    25%{ top: -15%; right: 100%; }
+    50%{ top: -15%; right: -15%; }
+    75%{ top: 100%; right: -15%; }
+    100%{ top: 100%; right: 100%; }
+}
+
+@keyframes spinning{
+    from{ rotate: 0deg; }
+    to{ rotate: 360deg; }
+}
+
+@keyframes shaking {
+    from{ rotate: 10deg; }
+    to{ rotate: -10deg; }
+}
+
+@keyframes randomly-moving-particle{
+    0%{ transform: translateX(-23%) translateY(4%); }
+    25%{ transform: translateX(23%) translateY(4%); }
+    50%{ transform: translateX(45%) translateY(-34%); }
+    75%{ transform: translateX(-45%) translateY(34%); }
+    100%{ transform: translateX(-9%) translateY(0); }
+}
+
+@keyframes updown{
+    from{ transform: translateY(-0.5em); }
+    to{ transform: translateY(0.5em); }
+}

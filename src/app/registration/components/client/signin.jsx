@@ -4,7 +4,7 @@ import "./client.css"
 import { useState, useRef } from "react";
 import Client from "@/glient/util";
 import Neutral from "@/geutral/util";
-import { signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from "@firebase/auth"
+import { signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from "firebase/auth"
 import { useGlobal } from "@/glient/global";
 import { auth } from "@/glient/firebase";
 import { useLoadingState } from "@/glient/loading";

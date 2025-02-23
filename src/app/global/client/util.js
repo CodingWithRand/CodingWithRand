@@ -541,7 +541,7 @@ function NavBar(){
                 <ul id="menu">
                     <li><a href="/#about-me">About me</a></li>
                     <li><a href="/my-projects">My Projects</a></li>
-                    <li><a>Lounge</a></li>
+                    <li><a href="/lounge">Lounge</a></li>
                     <li><a>Contact</a></li>
                 </ul>
             </div>

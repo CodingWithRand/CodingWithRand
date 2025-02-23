@@ -9,7 +9,7 @@ import Script from "next/script";
 import Loading from "@/glient/loading";
 import Neutral from "@/geutral/util";
 import { useGlobal } from "@/glient/global";
-import { signOut, signInWithCustomToken } from "@firebase/auth";
+import { signOut, signInWithCustomToken } from "firebase/auth";
 import { auth } from "@/glient/firebase";
 import { getRegistryData, getAllUsernames, updateRegistryData, createNewCustomToken } from "@/gerver/apiCaller";
 import Cookies from "universal-cookie";

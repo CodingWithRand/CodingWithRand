@@ -1,6 +1,6 @@
 import Client from "@/glient/util";
 import { auth } from "@/glient/firebase";
-import { reauthenticateWithCredential, EmailAuthProvider, updatePassword, sendPasswordResetEmail } from "@firebase/auth";
+import { reauthenticateWithCredential, EmailAuthProvider, updatePassword, sendPasswordResetEmail } from "firebase/auth";
 import { useRef, useState } from "react";
 
 const { Dynamic, Switch } = Client.Components;

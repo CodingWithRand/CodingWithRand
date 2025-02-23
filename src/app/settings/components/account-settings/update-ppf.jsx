@@ -2,7 +2,7 @@ import { getDownloadURL, ref, uploadBytes } from "@firebase/storage";
 import { useRef } from "react";
 import { auth, storage } from "@/glient/firebase";
 import Client from "@/app/global/client/util";
-import { updateProfile } from "@firebase/auth";
+import { updateProfile } from "firebase/auth";
 
 const { Section } = Client.Components.Dynamic;
 

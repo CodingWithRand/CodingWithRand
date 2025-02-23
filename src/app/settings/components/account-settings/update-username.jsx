@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Client from "@/glient/util";
-import { updateProfile } from "@firebase/auth";
+import { updateProfile } from "firebase/auth";
 import { auth } from "@/glient/firebase";
 import { updateUsername } from "@/gerver/apiCaller";
 import Cookies from "universal-cookie";
