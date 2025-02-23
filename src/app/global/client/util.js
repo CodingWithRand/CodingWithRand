@@ -630,7 +630,7 @@ function Coroussel({ totalPages, corousselElements, corousselWrappersStyle }) {
 
     return (
         <div className='coroussel'>
-            <div className='_elems'>
+            <div className='elems'>
                 <CorousselElements 
                     total={totalPages}
                     bgImgsSrc='/imgs/backend-images/coroussel'

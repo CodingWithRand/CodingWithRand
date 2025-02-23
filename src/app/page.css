@@ -1,10 +1,236 @@
-@import url("https://fonts.googleapis.com");
-@import url("https://fonts.gstatic.com");
-@import url("https://fonts.googleapis.com/css2?family=Russo+One&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=League+Spartan:wght@200&display=swap");
+@import 'tailwindcss/utilities' layer(utilities);
+@import url('https://fonts.googleapis.com') layer(components);
+@import url('https://fonts.gstatic.com') layer(components);
+@import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap')
+layer(components);
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@200&display=swap')
+layer(components);
+@reference "tailwindcss";
 
-@tailwind components;
-@tailwind utilities;
+@config "../../tailwind.config.js";
+
+@utility subtitle {
+  #logo & {
+    @apply font-spartan text-black dark:text-white;
+    font-weight: 100;
+    transform: scale(0);
+    font-size: 5em;
+    letter-spacing: 0.1em;
+    margin: 0;
+    transition: transform 1s var(--elastic);
+  }
+}
+
+@utility line {
+  #logo & {
+    @apply light-theme-logo-line dark:dark-theme-logo-line;
+    height: 2px;
+    width: 100%;
+    border-radius: 5px;
+    margin: 15px;
+  }
+}
+
+@utility fade {
+  #logo-text & {
+    @apply light-theme-logo-fade dark:dark-theme-logo-fade;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 1em;
+  }
+
+  #logo-text &.modded {
+    @apply light-theme-logo-fade-modded dark:dark-theme-logo-fade-modded;
+  }
+
+  #about-me .content article & {
+    @apply light-theme-content-article-fade dark:dark-theme-content-article-fade;
+    position: sticky;
+    bottom: -1em;
+    left: 0;
+    width: 100%;
+    height: 5em;
+  }
+}
+
+@utility modded {
+  #logo-text &.fade {
+    @apply light-theme-logo-fade-modded dark:dark-theme-logo-fade-modded;
+  }
+}
+
+@utility caption {
+  #banner & {
+    @apply text-[2em] text-black dark:text-white sm:text-[3em] md:text-[4em] lg:text-[5em];
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: transform 2s var(--elastic);
+    transform: scale(0);
+  }
+}
+
+@utility content {
+  #about-me & article {
+    @apply text-black bg-white dark:bg-black max-h-[50vh] dark:text-white sm:max-h-[80vh];
+    padding: 1em;
+    border-radius: 1em;
+    width: 80%;
+    overflow-y: auto;
+    box-shadow: 0 0 1em;
+  }
+
+  #about-me & article .fade {
+    @apply light-theme-content-article-fade dark:dark-theme-content-article-fade;
+    position: sticky;
+    bottom: -1em;
+    left: 0;
+    width: 100%;
+    height: 5em;
+  }
+
+  #about-me & {
+    @apply xs-md:responsive-content-sm md:responsive-content-md;
+    padding: 2em 1em;
+    margin: 1em 0;
+    row-gap: 5em;
+  }
+}
+
+@utility skills {
+  #about-me & {
+    @apply text-black dark:text-white;
+    padding: 2em 1em;
+    margin: 1em 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  #about-me & #skills-block li:not(#dev-type) h2 {
+    @apply my-[0.4em] text-base sm:text-[1.25em];
+  }
+
+  #about-me & #skills-block .skill-icon-name {
+    @apply w-0 h-0 sm:w-[150px] sm:h-auto;
+  }
+
+  & #skills-block .progress-cover-bar {
+    @apply relative light-theme-progress-bg-cover dark:dark-theme-progress-bg-cover;
+    height: 1rem;
+    border: 2px solid transparent;
+    border-radius: 1rem;
+    width: 80%;
+    display: inline-block;
+    font-size: x-small;
+  }
+}
+
+@utility skill-icon-name {
+  #about-me .skills #skills-block & {
+    @apply w-0 h-0 sm:w-[150px] sm:h-auto;
+  }
+}
+
+@utility info-list {
+  @apply flex flex-col space-y-1;
+
+  & dt {
+    @apply font-medium;
+  }
+
+  & dd {
+    @apply text-gray-500;
+  }
+}
+
+@utility monitor-stand {
+  &div {
+    @apply h-4 bg-black dark:bg-neutral-400 rounded-lg opacity-0;
+    transition:
+      transform 0.5s var(--elastic),
+      opacity 0.5s ease-in-out;
+    transform: translateY(-20em);
+  }
+}
+
+@utility learning-style-cartoon-character {
+  &img {
+    @apply absolute bottom-[-10%] md:bottom-0 lg:h-[150px] lg:w-[150px] md:h-[125px] md:w-[125px] sm:h-[150px] sm:w-[150px] nmob:h-[125px] nmob:w-[125px] w-[100px] h-[100px] opacity-0;
+    transition:
+      transform 0.5s 0.8s ease-in-out,
+      opacity 0.5s 0.8s ease-in-out;
+    transform: translateY(-10%);
+  }
+}
+
+@utility progress-cover-bar {
+  .skills #skills-block & {
+    @apply relative light-theme-progress-bg-cover dark:dark-theme-progress-bg-cover;
+    height: 1rem;
+    border: 2px solid transparent;
+    border-radius: 1rem;
+    width: 80%;
+    display: inline-block;
+    font-size: x-small;
+  }
+}
+
+@utility dark-theme-logo-line {
+  background-image: linear-gradient(to right, transparent, white, transparent);
+}
+
+@utility dark-theme-logo-fade {
+  background-image: linear-gradient(to right, transparent, rgb(15, 15, 15));
+}
+
+@utility dark-theme-logo-fade-modded {
+  background-image: linear-gradient(to right, transparent, rgb(5, 5, 5));
+}
+
+@utility dark-theme-content-article-fade {
+  background-image: linear-gradient(to bottom, transparent, black);
+}
+
+@utility dark-theme-progress-bg-cover {
+  --progress-bg-cover: linear-gradient(rgb(25, 25, 25), rgb(25, 25, 25));
+}
+
+@utility light-theme-logo-line {
+  background-image: linear-gradient(to right, transparent, black, transparent);
+}
+
+@utility light-theme-logo-fade {
+  background-image: linear-gradient(to right, transparent, rgb(240, 240, 240));
+}
+
+@utility light-theme-logo-fade-modded {
+  background-image: linear-gradient(to right, transparent, rgb(230, 230, 230));
+}
+
+@utility light-theme-content-article-fade {
+  background-image: linear-gradient(to bottom, transparent, white);
+}
+
+@utility light-theme-progress-bg-cover {
+  --progress-bg-cover: linear-gradient(lightgray, lightgray);
+}
+
+@utility responsive-content-md {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: repeat(3, 50vh);
+  justify-items: center;
+}
+
+@utility responsive-content-sm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
 @layer components{
 
@@ -41,183 +267,24 @@
         transition: width 2s ease-out;
     }
 
-    #logo .subtitle{
-        @apply font-spartan text-black dark:text-white;
-        font-weight: 100; 
-        transform: scale(0); 
-        font-size: 5em; 
-        letter-spacing: 0.1em; 
-        margin: 0; 
-        transition: transform 1s var(--elastic)
-    }
-
     #search-bar input[type="text"]{
         @apply border-solid border-[0.1rem] border-[#CDCDCD] bg-[#EBEBEB] dark:border-[#323232] dark:bg-[#141414] dark:text-white;
         padding: 0.5em;
         border-radius: 2em;
-    }
-
-    #logo .line{
-        @apply light-theme-logo-line dark:dark-theme-logo-line;
-        height: 2px; 
-        width: 100%; 
-        border-radius: 5px; 
-        margin: 15px;
-    }
-
-    #logo-text .fade{
-        @apply light-theme-logo-fade dark:dark-theme-logo-fade;
-        position: absolute; 
-        right: 0;
-        top: 0;
-        height: 100%;
-        width: 1em;
-    }
-
-    #logo-text .fade.modded{
-        @apply light-theme-logo-fade-modded dark:dark-theme-logo-fade-modded;
     }
     
     #menu-btn{
         @apply text-black dark:text-white
     }
 
-    #banner .caption{
-        @apply text-[2em] text-black dark:text-white sm:text-[3em] md:text-[4em] lg:text-[5em];
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        transition: transform 2s var(--elastic);
-        transform: scale(0)
-    }
-
-    #about-me .content article{
-        @apply text-black bg-white dark:bg-black max-h-[50vh] dark:text-white sm:max-h-[80vh];
-        padding: 1em;
-        border-radius: 1em;
-        width: 80%;
-        overflow-y: auto;
-        box-shadow: 0 0 1em;
-    }
-
-    #about-me .skills{
-        @apply text-black dark:text-white;
-        padding: 2em 1em;
-        margin: 1em 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
     #about-me article:not(.skills) h1{ @apply my-[0.5em] text-[1.5em] sm:text-[2em]; }
-    #about-me .skills #skills-block li:not(#dev-type) h2{ @apply my-[0.4em] text-base sm:text-[1.25em]; }
-    #about-me p{ @apply text-sm sm:text-base; }
-
-    #about-me .skills #skills-block .skill-icon-name{
-        @apply w-0 h-0 sm:w-[150px] sm:h-auto
-    }
-
-    #about-me .content article .fade{
-        @apply light-theme-content-article-fade dark:dark-theme-content-article-fade;
-        position: sticky;
-        bottom: -1em;
-        left: 0;
-        width: 100%;
-        height: 5em;
-    }
-
-    #about-me .content{
-        @apply xs-md:responsive-content-sm md:responsive-content-md;
-        padding: 2em 1em;
-        margin: 1em 0;
-        row-gap: 5em;
-    }    
+    #about-me p{ @apply text-sm sm:text-base; }    
 
     #bio-card{
-        @apply rounded-lg shadow-sm max-w-3xl p-0 max-w-[80%] max-h-full overflow-auto bg-white dark:bg-neutral-300;
+        @apply rounded-lg shadow-xs max-w-3xl p-0 max-w-[80%] max-h-full overflow-auto bg-white dark:bg-neutral-300;
         box-shadow: 0.5em 0.5em 2em gray;
     }
 
-    .info-list{
-        @apply flex flex-col space-y-1
-    }
-
-    .info-list dt{
-        @apply font-medium;
-    }
-
-    .info-list dd{
-        @apply text-gray-500
-    }
-
-    div.monitor-stand{
-        @apply h-4 bg-black dark:bg-neutral-400 rounded-lg opacity-0;
-        transition: transform 0.5s var(--elastic), opacity 0.5s ease-in-out;
-        transform: translateY(-20em);
-    }
-
-    img.learning-style-cartoon-character{
-        @apply absolute bottom-[-10%] md:bottom-0 lg:h-[150px] lg:w-[150px] md:h-[125px] md:w-[125px] sm:h-[150px] sm:w-[150px] nmob:h-[125px] nmob:w-[125px] w-[100px] h-[100px] opacity-0;
-        transition: transform 0.5s 0.8s ease-in-out, opacity 0.5s 0.8s ease-in-out;
-        transform: translateY(-10%);
-    }
-
-    .skills #skills-block .progress-cover-bar{
-        @apply relative light-theme-progress-bg-cover dark:dark-theme-progress-bg-cover;
-        height: 1rem;
-        border: 2px solid transparent;
-        border-radius: 1rem;
-        width: 80%;
-        display: inline-block;
-        font-size: x-small;
-    }
-
-}
-
-@layer utilities{
-    .dark-theme-logo-line{
-        background-image: linear-gradient(to right, transparent, white, transparent);
-    }
-    .dark-theme-logo-fade{
-        background-image: linear-gradient(to right, transparent, rgb(15, 15, 15))
-    }
-    .dark-theme-logo-fade-modded{
-        background-image: linear-gradient(to right, transparent, rgb(5, 5, 5))
-    }
-    .dark-theme-content-article-fade{
-        background-image: linear-gradient(to bottom, transparent, black);
-    }
-    .dark-theme-progress-bg-cover{
-        --progress-bg-cover: linear-gradient(rgb(25, 25, 25), rgb(25, 25, 25));
-    }
-    .light-theme-logo-line{
-        background-image: linear-gradient(to right, transparent, black, transparent)
-    }
-    .light-theme-logo-fade{
-        background-image: linear-gradient(to right, transparent, rgb(240, 240, 240))
-    }
-    .light-theme-logo-fade-modded{
-        background-image: linear-gradient(to right, transparent, rgb(230, 230, 230))
-    }
-    .light-theme-content-article-fade{
-        background-image: linear-gradient(to bottom, transparent, white);
-    }
-    .light-theme-progress-bg-cover{
-        --progress-bg-cover: linear-gradient(lightgray, lightgray);
-    }
-    .responsive-content-md{
-        display: grid;
-        grid-template-columns: 50% 50%;
-        grid-template-rows: repeat(3, 50vh);
-        justify-items: center;
-    }
-    .responsive-content-sm{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
 }
 
 .outside-link{ color: red }

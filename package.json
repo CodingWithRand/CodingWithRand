@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tailwindcss/postcss": "^4.0.8",
     "axios": "^1.6.7",
     "firebase": "^10.7.1",
     "next": "^15.1.7",
@@ -18,10 +19,10 @@
     "vercel": "^41.2.0"
   },
   "devDependencies": {
-    "autoprefixer": "^10.0.1",
+    "autoprefixer": "^10.4.20",
     "eslint": "^9.21.0",
     "eslint-config-next": "^15.1.7",
-    "postcss": "^8",
+    "postcss": "^8.5.3",
     "tailwindcss": "^4.0.8"
   }
 }

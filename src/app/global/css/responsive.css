@@ -1,57 +1,134 @@
-@tailwind utilities;
+@import 'tailwindcss/utilities' layer(utilities);
+@reference "tailwindcss";
 
-@layer utilities {
+@config "../../../../tailwind.config.js";
 
-    /* util.jsx - AlertBox Component*/
+@utility alert-box {
+  /* util.jsx - AlertBox Component*/
+  @apply w-[80vw] nmob:w-[60vw];
+  @apply lg:w-[40vw]!;
+}
 
-    .alert-box {
-        @apply w-[80vw] nmob:w-[60vw];
-        @apply lg:w-[40vw] !important;
-    }
+@utility dialog-nester {
+  &.responsive {
+    @apply p-[3vh] amd:p-[5vh];
+  }
+}
 
-    .dialog-nester.responsive {
-        @apply p-[3vh] amd:p-[5vh];
-    }
+@utility responsive {
+  &.dialog-nester {
+    @apply p-[3vh] amd:p-[5vh];
+  }
 
-    .dialog-title.responsive {
-        @apply text-xl sm:text-[2em];
-    }
+  &.dialog-title {
+    @apply text-xl sm:text-[2em];
+  }
 
-    .dialog-subtitle.responsive,
-    .dialog-btn.responsive {
-        @apply text-sm sm:text-base;
-    }
+  &.dialog-subtitle {
+    @apply text-sm sm:text-base;
+  }
 
-    .dialog-description.responsive {
-        @apply text-xs sm:text-sm;
-    }
+  & .dialog-btn {
+    @apply text-sm sm:text-base;
+  }
 
-    /* util.jsx - Switch Component */
+  &.dialog-description {
+    @apply text-xs sm:text-sm;
+  }
 
-    .switch-area.responsive {
-        @apply w-[30px] h-[20px] sm:w-[40px] sm:h-[25px];
-    }
+  /* util.jsx - Switch Component */
 
-    .button.responsive {
-        @apply w-[50%];
-    }
+  &.switch-area {
+    @apply w-[30px] h-[20px] sm:w-[40px] sm:h-[25px];
+  }
 
-    .button.is-on.responsive {
-        @apply left-[50%];
-    }
+  &.button {
+    @apply w-[50%];
+  }
 
-    .option-field.responsive{
-        @apply flex-col gap-y-[10px] nmob:gap-y-0 nmob:flex-row
-    }
+  &.button.is-on {
+    @apply left-[50%];
+  }
 
-    /* util.jsx - Section Component */
+  &.option-field {
+    @apply flex-col gap-y-[10px] nmob:gap-y-0 nmob:flex-row;
+  }
 
-    .setting-section-title.responsive {
-        @apply text-[30px] sm:text-[40px]
-    }
+  /* util.jsx - Section Component */
 
-    .setting-section-description.responsive {
-        @apply text-sm sm:text-base
-    }
-    
+  &.setting-section-title {
+    @apply text-[30px] sm:text-[40px];
+  }
+
+  &.setting-section-description {
+    @apply text-sm sm:text-base;
+  }
+}
+
+@utility dialog-title {
+  &.responsive {
+    @apply text-xl sm:text-[2em];
+  }
+}
+
+@utility dialog-subtitle {
+  &.responsive {
+    @apply text-sm sm:text-base;
+  }
+}
+
+@utility dialog-btn {
+  &.responsive {
+    @apply text-sm sm:text-base;
+  }
+}
+
+@utility dialog-description {
+  &.responsive {
+    @apply text-xs sm:text-sm;
+  }
+}
+
+@utility switch-area {
+  /* util.jsx - Switch Component */
+
+  &.responsive {
+    @apply w-[30px] h-[20px] sm:w-[40px] sm:h-[25px];
+  }
+}
+
+@utility button {
+  &.responsive {
+    @apply w-[50%];
+  }
+
+  &.is-on.responsive {
+    @apply left-[50%];
+  }
+}
+
+@utility is-on {
+  &.button.responsive {
+    @apply left-[50%];
+  }
+}
+
+@utility option-field {
+  &.responsive {
+    @apply flex-col gap-y-[10px] nmob:gap-y-0 nmob:flex-row;
+  }
+}
+
+@utility setting-section-title {
+  /* util.jsx - Section Component */
+
+  &.responsive {
+    @apply text-[30px] sm:text-[40px];
+  }
+}
+
+@utility setting-section-description {
+  &.responsive {
+    @apply text-sm sm:text-base;
+  }
 }

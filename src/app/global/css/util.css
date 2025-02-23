@@ -1,27 +1,121 @@
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/utilities' layer(utilities);
+@reference "tailwindcss";
+
+@config "../../../../tailwind.config.js";
+
+@utility footer {
+  /* Footer Component */
+  @apply flex flex-col gap-y-4 md:grid relative w-full p-4 sm:p-8 bg-[#DEDEDE] dark:bg-black dark:text-white;
+  grid-template-columns: repeat(3, 1fr);
+
+  & .credit-card {
+    position: relative;
+    z-index: 5;
+  }
+}
+
+@utility credit-card {
+  & h1 {
+    @apply text-[1.7em];
+  }
+
+  & ul li {
+    @apply flex items-center mb-1 leading-none text-base;
+  }
+
+  .footer & {
+    position: relative;
+    z-index: 5;
+  }
+}
+
+@utility coroussel {
+  /* Coroussel Component*/
+  @apply flex items-center;
+  overflow-x: hidden;
+
+  & .elems .c-elem {
+    min-height: 50vh;
+    aspect-ratio: 2.25 / 1;
+    @apply transition-transform duration-500;
+  }
+
+  & .elems {
+    @apply flex flex-row;
+  }
+}
+
+@utility elems {
+  .coroussel & .c-elem {
+    min-height: 50vh;
+    aspect-ratio: 2.25 / 1;
+    @apply transition-transform duration-500;
+  }
+
+  .coroussel & {
+    @apply flex flex-row;
+  }
+}
+
+@utility c-elem {
+  .coroussel .elems & {
+    min-height: 50vh;
+    aspect-ratio: 2.25 / 1;
+    @apply transition-transform duration-500;
+  }
+}
+
+@utility ctrl-btn {
+  aspect-ratio: 2.25 / 1;
+  @apply absolute flex items-center flex-col-reverse h-screen w-full pointer-events-none;
+}
+
+@utility arrows {
+  @apply flex items-center flex-row justify-between absolute w-full h-[100%];
+
+  & #lft {
+    @apply h-full! pl-[3vw]! pointer-events-auto!;
+  }
+
+  & #rght {
+    @apply h-full! pr-[3vw]! pointer-events-auto!;
+  }
+
+  & #rght:not(:disabled):hover {
+    background-image: linear-gradient(
+      to right,
+      transparent,
+      rgba(0, 0, 0, 0.5)
+    );
+  }
+
+  & #lft:not(:disabled):hover {
+    background-image: linear-gradient(to left, transparent, rgba(0, 0, 0, 0.5));
+  }
+}
+
+@utility page-selector {
+  @apply absolute flex items-center flex-row justify-evenly w-[50%] mb-4 gap-x-2 cursor-pointer;
+}
+
+@utility tab {
+  @apply grow h-2 rounded-md bg-neutral-200 opacity-50 pointer-events-auto;
+}
+
+@utility dark-theme-footer-gradient {
+  /* Footer Component */
+  background-image: linear-gradient(
+    to bottom,
+    transparent,
+    rgb(250, 250, 250, 0.25)
+  );
+}
+
+@utility light-theme-content-article-fade {
+  background-image: linear-gradient(to bottom, transparent, white);
+}
 
 @layer components {
-
-    /* Footer Component */
-
-    .footer {
-        @apply flex flex-col gap-y-4 md:grid relative w-full p-4 sm:p-8 bg-[#DEDEDE] dark:bg-black dark:text-white;
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .credit-card h1 {
-        @apply text-[1.7em]
-    }
-
-    .credit-card ul li {
-        @apply flex items-center mb-1 leading-none text-base
-    }
-
-    .footer .credit-card {
-        position: relative;
-        z-index: 5;
-    }
 
     /* NavBar Component */
 
@@ -82,70 +176,6 @@
         margin-left: 1em;
         align-items: center;
         flex-direction: row;
-    }
-
-    /* Coroussel Component*/
-
-    .coroussel {
-        @apply flex items-center;
-        overflow-x: hidden;
-    }
-
-    .coroussel ._elems .c-elem {
-        min-height: 50vh;
-        aspect-ratio: 2.25 / 1;
-        @apply transition-transform duration-500;
-    }
-
-    .coroussel ._elems {
-        @apply flex flex-row;
-    }
-
-    .ctrl-btn {
-        aspect-ratio: 2.25 / 1;
-        @apply absolute flex items-center flex-col-reverse h-screen w-full pointer-events-none;
-    }
-
-    .arrows {
-        @apply flex items-center flex-row justify-between absolute w-full h-[100%];
-    }
-
-    .arrows #lft {
-        @apply h-full pl-[3vw] pointer-events-auto !important;
-        
-    }
-
-    .arrows #rght {
-        @apply h-full pr-[3vw] pointer-events-auto !important;
-        
-    }
-
-    .arrows #rght:not(:disabled):hover{
-        background-image: linear-gradient(to right, transparent, rgba(0,0,0,0.5));
-    }
-
-    .arrows #lft:not(:disabled):hover{
-        background-image: linear-gradient(to left, transparent, rgba(0,0,0,0.5));
-    }
-
-    .page-selector {
-        @apply absolute flex items-center flex-row justify-evenly w-[50%] mb-4 gap-x-2 cursor-pointer;
-    }
-
-    .tab {
-        @apply grow h-2 rounded-md bg-neutral-200 opacity-50 pointer-events-auto;
-    }
-}
-
-@layer utilities {
-
-    /* Footer Component */
-    .dark-theme-footer-gradient {
-        background-image: linear-gradient(to bottom, transparent, rgb(250, 250, 250, 0.25));
-    }
-
-    .light-theme-content-article-fade {
-        background-image: linear-gradient(to bottom, transparent, white);
     }
 }
 

@@ -1,27 +1,68 @@
-@import url('https://fonts.googleapis.com/css2?family=Carter+One&family=Truculenta:opsz,wght@12..72,100..900&display=swap');
-@tailwind components;
+@import url('https://fonts.googleapis.com/css2?family=Carter+One&family=Truculenta:opsz,wght@12..72,100..900&display=swap')
+layer(components);
 
-@layer components{
-    h1.title{
-        @apply sm:text-4xl md:text-6xl lg:text-8xl;
-    }
-    h2.subtitle, p.development-status, a.learn-more{
-        @apply sm:text-lg md:text-xl lg:text-2xl;
-    }
-    p.description{
-        @apply lg:text-lg;
-        max-height: 50vh;
-    }
-    .title.thringo{
-        @apply text-blue-400;
-        -webkit-text-stroke-width: 2px;
-        -webkit-text-stroke-color: rgb(59 130 246);
-        text-shadow: 0 0 2rem rgb(188, 214, 255)
-    }
-    .subtitle.thringo, .learn-more.thringo{
-        @apply text-blue-400;
-        text-shadow: 0 0 2rem rgb(59 130 246)
-    }
+@config "../../../tailwind.config.js";
+
+@utility title {
+  &h1 {
+    @apply sm:text-4xl md:text-6xl lg:text-8xl;
+  }
+  &.thringo {
+    @apply text-blue-400;
+    -webkit-text-stroke-width: 2px;
+    -webkit-text-stroke-color: rgb(59 130 246);
+    text-shadow: 0 0 2rem rgb(188, 214, 255);
+  }
+}
+
+@utility subtitle {
+  &h2 {
+    @apply sm:text-lg md:text-xl lg:text-2xl;
+  }
+  &.thringo {
+    @apply text-blue-400;
+    text-shadow: 0 0 2rem rgb(59 130 246);
+  }
+}
+
+@utility development-status {
+  & p {
+    @apply sm:text-lg md:text-xl lg:text-2xl;
+  }
+}
+
+@utility learn-more {
+  & a {
+    @apply sm:text-lg md:text-xl lg:text-2xl;
+  }
+  &.thringo {
+    @apply text-blue-400;
+    text-shadow: 0 0 2rem rgb(59 130 246);
+  }
+}
+
+@utility description {
+  &p {
+    @apply lg:text-lg;
+    max-height: 50vh;
+  }
+}
+
+@utility thringo {
+  &.title {
+    @apply text-blue-400;
+    -webkit-text-stroke-width: 2px;
+    -webkit-text-stroke-color: rgb(59 130 246);
+    text-shadow: 0 0 2rem rgb(188, 214, 255);
+  }
+  &.subtitle {
+    @apply text-blue-400;
+    text-shadow: 0 0 2rem rgb(59 130 246);
+  }
+  & .learn-more {
+    @apply text-blue-400;
+    text-shadow: 0 0 2rem rgb(59 130 246);
+  }
 }
 
 html{ overflow-x: hidden; width: auto; height: auto; }

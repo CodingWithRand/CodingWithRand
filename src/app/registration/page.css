@@ -1,7 +1,60 @@
-@import url("https://fonts.googleapis.com/css2?family=League+Spartan:wght@300&family=Montserrat:wght@300&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@300&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@300&family=Montserrat:wght@300&display=swap')
+layer(components);
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@300&display=swap')
+layer(components);
 
-@tailwind components;
+@config "../../../tailwind.config.js";
+
+@utility h-reg {
+  @apply text-2xl mt-[2em] sm:text-[2em] sm:mt-[1em] lg:text-[3em];
+}
+
+@utility reg-t {
+  @apply sm:text-xl lg:text-[1.5em];
+}
+
+@utility reg-f {
+  @apply py-[1em] sm:py-[2em];
+}
+
+@utility input-field {
+  & > input {
+    @apply text-xs sm:text-base;
+  }
+}
+
+@utility field-label {
+  @apply text-xs sm:text-base;
+}
+
+@utility submit-btn {
+  @apply text-xs sm:text-base;
+}
+
+@utility forget-password {
+  @apply text-[0.55em] sm:text-base;
+  color: darkgray;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+@utility email-icon {
+  @apply w-[150px] h-[150px] sm:w-[200px] sm:h-[200px];
+}
+
+@utility notf-box {
+  @apply p-[3vh] text-sm sm:p-[5vh] sm:text-base;
+}
+
+@utility login-pallete {
+  @apply relative z-2 p-8 rounded-[2em] bg-white w-[70vw] h-auto sm:w-[65vw] md:w-[60vw] lg:w-[50vw] xl:w-[40vw];
+  overflow-x: hidden;
+  box-shadow: 0 0 5px gray;
+  transition:
+    transform 2s ease-out,
+    opacity 2s ease-out;
+  min-width: 245px;
+}
 
 @layer components{
     #registration-mode {
@@ -11,78 +64,46 @@
         cursor: pointer;
         position: relative;
     }
-
-    .h-reg {
-        @apply text-2xl mt-[2em] sm:text-[2em] sm:mt-[1em] lg:text-[3em];
-    }
-
-    .reg-t {
-        @apply sm:text-xl lg:text-[1.5em];
-    }
-
-    .reg-f {
-        @apply py-[1em] sm:py-[2em];
-    }
-
-    .input-field>input,
-    .field-label,
-    .submit-btn {
-        @apply text-xs sm:text-base;
-    }
-
-    .forget-password {
-        @apply text-[0.55em] sm:text-base;
-        color: darkgray;
-        text-decoration: underline;
-        cursor: pointer;
-    }
-
-    .email-icon {
-        @apply w-[150px] h-[150px] sm:w-[200px] sm:h-[200px];
-    }
-
-    .notf-box {
-        @apply p-[3vh] text-sm sm:p-[5vh] sm:text-base;
-    }
 }
 
-:root {
-    --trail-width: 5em
-}
+@layer components {
+  :root {
+    --trail-width: 5em;
+  }
 
-body {
+  body {
     margin: 0;
     overflow: hidden;
-}
+  }
 
-main {
+  main {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100vw;
     height: 100vh;
-}
+  }
 
-.bg-wrapper {
+  .bg-wrapper {
     position: absolute;
     top: 0;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-}
+  }
 
-.minimal-bg {
+  .minimal-bg {
     position: absolute;
     top: 0;
     width: 100%;
     height: 100%;
-}
+  }
 
-.minimal-bg polygon {
+  .minimal-bg polygon {
     transition: opacity 1s ease-in;
-}
+  }
 
-.dice-logo {
+  .dice-logo {
     position: absolute;
     bottom: 50px;
     left: 50px;
@@ -90,17 +111,17 @@ main {
     animation-duration: 1s;
     animation-timing-function: ease-in-out;
     animation-fill-mode: forwards;
-}
+  }
 
-.reg-wrapper {
+  .reg-wrapper {
     display: flex;
     flex-direction: row;
     width: 212%;
     transition: transform 0.3s ease-in-out;
     column-gap: 2rem;
-}
+  }
 
-.reg-box {
+  .reg-box {
     position: relative;
     display: flex;
     justify-content: center;
@@ -108,9 +129,9 @@ main {
     flex-direction: column;
     width: 50%;
     transition: opacity 0.1s ease-in-out;
-}
+  }
 
-.init-dot {
+  .init-dot {
     position: absolute;
     border-radius: 9999px;
     width: 1.25em;
@@ -119,12 +140,17 @@ main {
     animation: diagnog-swoop 1s ease-in-out forwards;
     bottom: 0;
     right: 0;
-}
+  }
 
-.init-dot>.trail {
+  .init-dot > .trail {
     width: 0;
     height: 30%;
-    background-image: linear-gradient(to right, rgb(25, 25, 25), rgb(200, 200, 200), transparent);
+    background-image: linear-gradient(
+      to right,
+      rgb(25, 25, 25),
+      rgb(200, 200, 200),
+      transparent
+    );
     position: relative;
     right: 10%;
     top: 45%;
@@ -133,96 +159,87 @@ main {
     border-radius: 5px;
     transform-origin: center left;
     transform: rotate(180deg);
-}
+  }
 
-@keyframes diagnog-swoop {
+  @keyframes diagnog-swoop {
     0% {
-        top: -20%;
-        left: -20%;
+      top: -20%;
+      left: -20%;
     }
 
     100% {
-        top: 120%;
-        left: 120%;
+      top: 120%;
+      left: 120%;
     }
-}
+  }
 
-@keyframes unstable-trail {
+  @keyframes unstable-trail {
     0% {
-        width: calc(var(--trail-width) - 1.5em)
+      width: calc(var(--trail-width) - 1.5em);
     }
 
     10% {
-        width: calc(var(--trail-width) + 0.8em)
+      width: calc(var(--trail-width) + 0.8em);
     }
 
     20% {
-        width: calc(var(--trail-width) - 0.5em)
+      width: calc(var(--trail-width) - 0.5em);
     }
 
     30% {
-        width: calc(var(--trail-width) + 0.3em)
+      width: calc(var(--trail-width) + 0.3em);
     }
 
     40% {
-        width: calc(var(--trail-width) + 1em)
+      width: calc(var(--trail-width) + 1em);
     }
 
     50% {
-        width: calc(var(--trail-width) - 0.8em)
+      width: calc(var(--trail-width) - 0.8em);
     }
 
     60% {
-        width: calc(var(--trail-width) + 0.7em)
+      width: calc(var(--trail-width) + 0.7em);
     }
 
     70% {
-        width: calc(var(--trail-width) - 1.3em)
+      width: calc(var(--trail-width) - 1.3em);
     }
 
     80% {
-        width: calc(var(--trail-width) + 0.5em)
+      width: calc(var(--trail-width) + 0.5em);
     }
 
     90% {
-        width: calc(var(--trail-width) + 0.2em)
+      width: calc(var(--trail-width) + 0.2em);
     }
 
     100% {
-        width: calc(var(--trail-width) - 1em)
+      width: calc(var(--trail-width) - 1em);
     }
-}
+  }
 
-@keyframes pop-up {
+  @keyframes pop-up {
     0% {
-        transform: translateY(150%)
+      transform: translateY(150%);
     }
 
     50% {
-        transform: translateY(-25%)
+      transform: translateY(-25%);
     }
 
     100% {
-        transform: translateY(0%)
+      transform: translateY(0%);
     }
-}
+  }
 
-@keyframes shaking {
+  @keyframes shaking {
     from {
-        transform: rotate(25deg)
+      transform: rotate(25deg);
     }
 
     to {
-        transform: rotate(-25deg)
+      transform: rotate(-25deg);
     }
-}
-
-@layer components{
-    .login-pallete {
-        @apply relative z-[2] p-8 rounded-[2em] bg-white w-[70vw] h-auto sm:w-[65vw] md:w-[60vw] lg:w-[50vw] xl:w-[40vw];
-        overflow-x: hidden;
-        box-shadow: 0 0 5px gray;
-        transition: transform 2s ease-out, opacity 2s ease-out;
-        min-width: 245px
-    }
+  }
 }

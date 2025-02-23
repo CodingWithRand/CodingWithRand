@@ -1,24 +1,23 @@
-@import url("https://fonts.googleapis.com");
-@import url("https://fonts.gstatic.com");
-@import url("https://fonts.googleapis.com/css2?family=Russo+One&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=League+Spartan:wght@200&display=swap");
+@import 'tailwindcss/utilities' layer(utilities);
+@import url('https://fonts.googleapis.com') layer(components);
+@import url('https://fonts.gstatic.com') layer(components);
+@import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap')
+layer(components);
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@200&display=swap')
+layer(components);
 
-@tailwind components;
-@tailwind utilities;
+@config "../../../tailwind.config.js";
+
+@utility full-page {
+  @apply w-full h-screen;
+}
 
 @layer components{
 
     body{
         @apply bg-[#F0F0F0] dark:bg-[#0F0F0F] overflow-x-hidden;
     }
-    .full-page{
-        @apply w-full h-screen;
-    }
   
-}
-
-@layer utilities{
-    
 }
 
 body{ user-select: none; }

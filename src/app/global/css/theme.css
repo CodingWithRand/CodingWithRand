@@ -1,146 +1,1256 @@
-@tailwind utilities;
+@import 'tailwindcss/utilities' layer(utilities);
+@reference "tailwindcss";
 
-@layer utilities{
+@config "../../../../tailwind.config.js";
 
-    .light-mode-icon{--icon-shadow: radial-gradient(gray 0%, transparent 60%);}
-    .dark-mode-icon{--icon-shadow: radial-gradient(rgb(50, 50, 50) 0%, transparent 75%);}
+@utility light-mode-icon {
+  --icon-shadow: radial-gradient(gray 0%, transparent 60%);
+}
 
-    label.theme.text-color,
-    h1.theme.text-color,
-    h2.theme.text-color,
-    h3.theme.text-color,
-    h4.theme.text-color,
-    h5.theme.text-color,
-    h6.theme.text-color,
-    div.theme.text-color,
-    button.theme.text-color,
-    code.theme.text-color,
-    pre.theme.text-color,
-    a.theme.text-color,
-    option.theme.text-color,
-    li.theme.text-color,
-    ul.theme.text-color,
-    ol.theme.text-color,
-    textarea.theme.text-color,
-    input.theme.text-color,
-    p.theme.text-color
-    {
-        @apply text-black dark:text-white;
-    }
+@utility dark-mode-icon {
+  --icon-shadow: radial-gradient(rgb(50, 50, 50) 0%, transparent 75%);
+}
 
-    label.theme.component.bg-color.inverse,
-    h1.theme.component.bg-color.inverse,
-    h2.theme.component.bg-color.inverse,
-    h3.theme.component.bg-color.inverse,
-    h4.theme.component.bg-color.inverse,
-    h5.theme.component.bg-color.inverse,
-    h6.theme.component.bg-color.inverse,
-    div.theme.component.bg-color.inverse,
-    button.theme.component.bg-color.inverse,
-    code.theme.component.bg-color.inverse,
-    pre.theme.component.bg-color.inverse,
-    a.theme.component.bg-color.inverse,
-    option.theme.component.bg-color.inverse,
-    li.theme.component.bg-color.inverse,
-    ul.theme.component.bg-color.inverse,
-    ol.theme.component.bg-color.inverse,
-    textarea.theme.component.bg-color.inverse,
-    input.theme.component.bg-color.inverse,
-    dialog.theme.component.bg-color.inverse,
-    p.theme.component.bg-color.inverse
-    {
-        @apply bg-white dark:bg-[#0f0f0f];
-    }
+@utility theme {
+  &label.text-color {
+    @apply text-black dark:text-white;
+  }
 
-    label.theme.component.bg-color,
-    h1.theme.component.bg-color,
-    h2.theme.component.bg-color,
-    h3.theme.component.bg-color,
-    h4.theme.component.bg-color,
-    h5.theme.component.bg-color,
-    h6.theme.component.bg-color,
-    div.theme.component.bg-color,
-    button.theme.component.bg-color,
-    code.theme.component.bg-color,
-    pre.theme.component.bg-color,
-    a.theme.component.bg-color,
-    option.theme.component.bg-color,
-    li.theme.component.bg-color,
-    ul.theme.component.bg-color,
-    ol.theme.component.bg-color,
-    textarea.theme.component.bg-color,
-    input.theme.component.bg-color,
-    dialog.theme.component.bg-color,
-    p.theme.component.bg-color
-    {
-        @apply bg-black dark:bg-white;
-    }
+  & h1.text-color {
+    @apply text-black dark:text-white;
+  }
 
-    div.theme.ctn.bg-color,
-    ul.theme.ctn.bg-color,
-    ol.theme.ctn.bg-color,
-    dialog.theme.ctn.bg-color
-    {
-        @apply bg-white dark:bg-neutral-900;
-    }
+  & h2.text-color {
+    @apply text-black dark:text-white;
+  }
 
-    div.theme.ctn.bg-color.intense,
-    ul.theme.ctn.bg-color.intense,
-    ol.theme.ctn.bg-color.intense,
-    dialog.theme.ctn.bg-color.intense
-    {
-        @apply bg-neutral-200 dark:bg-neutral-950;
-    }
+  & h3.text-color {
+    @apply text-black dark:text-white;
+  }
 
-    label.theme.border-color,
-    h1.theme.border-color,
-    h2.theme.border-color,
-    h3.theme.border-color,
-    h4.theme.border-color,
-    h5.theme.border-color,
-    h6.theme.border-color,
-    div.theme.border-color,
-    button.theme.border-color,
-    code.theme.border-color,
-    pre.theme.border-color,
-    a.theme.border-color,
-    option.theme.border-color,
-    li.theme.border-color,
-    ul.theme.border-color,
-    ol.theme.border-color,
-    textarea.theme.border-color,
-    input.theme.border-color,
-    dialog.theme.border-color,
-    p.theme.border-color
-    {
-        @apply border-gray-300 dark:border-[#282828];
-    }
+  & h4.text-color {
+    @apply text-black dark:text-white;
+  }
 
-    label.theme.border-color.intense,
-    h1.theme.border-color.intense,
-    h2.theme.border-color.intense,
-    h3.theme.border-color.intense,
-    h4.theme.border-color.intense,
-    h5.theme.border-color.intense,
-    h6.theme.border-color.intense,
-    div.theme.border-color.intense,
-    button.theme.border-color.intense,
-    code.theme.border-color.intense,
-    pre.theme.border-color.intense,
-    a.theme.border-color.intense,
-    option.theme.border-color.intense,
-    li.theme.border-color.intense,
-    ul.theme.border-color.intense,
-    ol.theme.border-color.intense,
-    textarea.theme.border-color.intense,
-    input.theme.border-color.intense,
-    dialog.theme.border-color.intense
-    p.theme.border-color.intense
-    {
-        @apply border-black dark:border-white;
-    }
+  & h5.text-color {
+    @apply text-black dark:text-white;
+  }
 
-    .setup-btn-icon-shadow.theme.custom{
-        @apply light-mode-icon dark:dark-mode-icon
-    }
+  & h6.text-color {
+    @apply text-black dark:text-white;
+  }
+
+  & div.text-color {
+    @apply text-black dark:text-white;
+  }
+
+  & button.text-color {
+    @apply text-black dark:text-white;
+  }
+
+  & code.text-color {
+    @apply text-black dark:text-white;
+  }
+
+  & pre.text-color {
+    @apply text-black dark:text-white;
+  }
+
+  & a.text-color {
+    @apply text-black dark:text-white;
+  }
+
+  & option.text-color {
+    @apply text-black dark:text-white;
+  }
+
+  & li.text-color {
+    @apply text-black dark:text-white;
+  }
+
+  & ul.text-color {
+    @apply text-black dark:text-white;
+  }
+
+  & ol.text-color {
+    @apply text-black dark:text-white;
+  }
+
+  & textarea.text-color {
+    @apply text-black dark:text-white;
+  }
+
+  & input.text-color {
+    @apply text-black dark:text-white;
+  }
+
+  & p.text-color {
+    @apply text-black dark:text-white;
+  }
+
+  &label.component.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & h1.component.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & h2.component.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & h3.component.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & h4.component.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & h5.component.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & h6.component.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & div.component.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & button.component.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & code.component.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & pre.component.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & a.component.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & option.component.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & li.component.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & ul.component.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & ol.component.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & textarea.component.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & input.component.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & dialog.component.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & p.component.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  &label.component.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & h1.component.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & h2.component.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & h3.component.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & h4.component.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & h5.component.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & h6.component.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & div.component.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & button.component.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & code.component.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & pre.component.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & a.component.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & option.component.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & li.component.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & ul.component.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & ol.component.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & textarea.component.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & input.component.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & dialog.component.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & p.component.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  &div.ctn.bg-color {
+    @apply bg-white dark:bg-neutral-900;
+  }
+
+  & ul.ctn.bg-color {
+    @apply bg-white dark:bg-neutral-900;
+  }
+
+  & ol.ctn.bg-color {
+    @apply bg-white dark:bg-neutral-900;
+  }
+
+  & dialog.ctn.bg-color {
+    @apply bg-white dark:bg-neutral-900;
+  }
+
+  &div.ctn.bg-color.intense {
+    @apply bg-neutral-200 dark:bg-neutral-950;
+  }
+
+  & ul.ctn.bg-color.intense {
+    @apply bg-neutral-200 dark:bg-neutral-950;
+  }
+
+  & ol.ctn.bg-color.intense {
+    @apply bg-neutral-200 dark:bg-neutral-950;
+  }
+
+  & dialog.ctn.bg-color.intense {
+    @apply bg-neutral-200 dark:bg-neutral-950;
+  }
+
+  &label.border-color {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & h1.border-color {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & h2.border-color {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & h3.border-color {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & h4.border-color {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & h5.border-color {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & h6.border-color {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & div.border-color {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & button.border-color {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & code.border-color {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & pre.border-color {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & a.border-color {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & option.border-color {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & li.border-color {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & ul.border-color {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & ol.border-color {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & textarea.border-color {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & input.border-color {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & dialog.border-color {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & p.border-color {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  &label.border-color.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & h1.border-color.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & h2.border-color.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & h3.border-color.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & h4.border-color.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & h5.border-color.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & h6.border-color.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & div.border-color.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & button.border-color.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & code.border-color.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & pre.border-color.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & a.border-color.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & option.border-color.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & li.border-color.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & ul.border-color.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & ol.border-color.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & textarea.border-color.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & input.border-color.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & dialog.border-color.intense &p.border-color.intense {
+    @apply border-black dark:border-white;
+  }
+
+  &.setup-btn-icon-shadow.custom {
+    @apply light-mode-icon dark:dark-mode-icon;
+  }
+}
+
+@utility text-color {
+  &label.theme {
+    @apply text-black dark:text-white;
+  }
+
+  & h1.theme {
+    @apply text-black dark:text-white;
+  }
+
+  & h2.theme {
+    @apply text-black dark:text-white;
+  }
+
+  & h3.theme {
+    @apply text-black dark:text-white;
+  }
+
+  & h4.theme {
+    @apply text-black dark:text-white;
+  }
+
+  & h5.theme {
+    @apply text-black dark:text-white;
+  }
+
+  & h6.theme {
+    @apply text-black dark:text-white;
+  }
+
+  & div.theme {
+    @apply text-black dark:text-white;
+  }
+
+  & button.theme {
+    @apply text-black dark:text-white;
+  }
+
+  & code.theme {
+    @apply text-black dark:text-white;
+  }
+
+  & pre.theme {
+    @apply text-black dark:text-white;
+  }
+
+  & a.theme {
+    @apply text-black dark:text-white;
+  }
+
+  & option.theme {
+    @apply text-black dark:text-white;
+  }
+
+  & li.theme {
+    @apply text-black dark:text-white;
+  }
+
+  & ul.theme {
+    @apply text-black dark:text-white;
+  }
+
+  & ol.theme {
+    @apply text-black dark:text-white;
+  }
+
+  & textarea.theme {
+    @apply text-black dark:text-white;
+  }
+
+  & input.theme {
+    @apply text-black dark:text-white;
+  }
+
+  & p.theme {
+    @apply text-black dark:text-white;
+  }
+}
+
+@utility component {
+  &label.theme.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & h1.theme.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & h2.theme.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & h3.theme.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & h4.theme.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & h5.theme.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & h6.theme.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & div.theme.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & button.theme.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & code.theme.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & pre.theme.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & a.theme.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & option.theme.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & li.theme.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & ul.theme.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & ol.theme.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & textarea.theme.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & input.theme.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & dialog.theme.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & p.theme.bg-color.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  &label.theme.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & h1.theme.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & h2.theme.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & h3.theme.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & h4.theme.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & h5.theme.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & h6.theme.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & div.theme.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & button.theme.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & code.theme.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & pre.theme.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & a.theme.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & option.theme.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & li.theme.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & ul.theme.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & ol.theme.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & textarea.theme.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & input.theme.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & dialog.theme.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+
+  & p.theme.bg-color {
+    @apply bg-black dark:bg-white;
+  }
+}
+
+@utility bg-color {
+  &label.theme.component.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & h1.theme.component.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & h2.theme.component.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & h3.theme.component.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & h4.theme.component.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & h5.theme.component.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & h6.theme.component.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & div.theme.component.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & button.theme.component.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & code.theme.component.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & pre.theme.component.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & a.theme.component.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & option.theme.component.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & li.theme.component.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & ul.theme.component.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & ol.theme.component.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & textarea.theme.component.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & input.theme.component.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & dialog.theme.component.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & p.theme.component.inverse {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  &label.theme.component {
+    @apply bg-black dark:bg-white;
+  }
+
+  & h1.theme.component {
+    @apply bg-black dark:bg-white;
+  }
+
+  & h2.theme.component {
+    @apply bg-black dark:bg-white;
+  }
+
+  & h3.theme.component {
+    @apply bg-black dark:bg-white;
+  }
+
+  & h4.theme.component {
+    @apply bg-black dark:bg-white;
+  }
+
+  & h5.theme.component {
+    @apply bg-black dark:bg-white;
+  }
+
+  & h6.theme.component {
+    @apply bg-black dark:bg-white;
+  }
+
+  & div.theme.component {
+    @apply bg-black dark:bg-white;
+  }
+
+  & button.theme.component {
+    @apply bg-black dark:bg-white;
+  }
+
+  & code.theme.component {
+    @apply bg-black dark:bg-white;
+  }
+
+  & pre.theme.component {
+    @apply bg-black dark:bg-white;
+  }
+
+  & a.theme.component {
+    @apply bg-black dark:bg-white;
+  }
+
+  & option.theme.component {
+    @apply bg-black dark:bg-white;
+  }
+
+  & li.theme.component {
+    @apply bg-black dark:bg-white;
+  }
+
+  & ul.theme.component {
+    @apply bg-black dark:bg-white;
+  }
+
+  & ol.theme.component {
+    @apply bg-black dark:bg-white;
+  }
+
+  & textarea.theme.component {
+    @apply bg-black dark:bg-white;
+  }
+
+  & input.theme.component {
+    @apply bg-black dark:bg-white;
+  }
+
+  & dialog.theme.component {
+    @apply bg-black dark:bg-white;
+  }
+
+  & p.theme.component {
+    @apply bg-black dark:bg-white;
+  }
+
+  &div.theme.ctn {
+    @apply bg-white dark:bg-neutral-900;
+  }
+
+  & ul.theme.ctn {
+    @apply bg-white dark:bg-neutral-900;
+  }
+
+  & ol.theme.ctn {
+    @apply bg-white dark:bg-neutral-900;
+  }
+
+  & dialog.theme.ctn {
+    @apply bg-white dark:bg-neutral-900;
+  }
+
+  &div.theme.ctn.intense {
+    @apply bg-neutral-200 dark:bg-neutral-950;
+  }
+
+  & ul.theme.ctn.intense {
+    @apply bg-neutral-200 dark:bg-neutral-950;
+  }
+
+  & ol.theme.ctn.intense {
+    @apply bg-neutral-200 dark:bg-neutral-950;
+  }
+
+  & dialog.theme.ctn.intense {
+    @apply bg-neutral-200 dark:bg-neutral-950;
+  }
+}
+
+@utility inverse {
+  &label.theme.component.bg-color {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & h1.theme.component.bg-color {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & h2.theme.component.bg-color {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & h3.theme.component.bg-color {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & h4.theme.component.bg-color {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & h5.theme.component.bg-color {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & h6.theme.component.bg-color {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & div.theme.component.bg-color {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & button.theme.component.bg-color {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & code.theme.component.bg-color {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & pre.theme.component.bg-color {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & a.theme.component.bg-color {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & option.theme.component.bg-color {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & li.theme.component.bg-color {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & ul.theme.component.bg-color {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & ol.theme.component.bg-color {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & textarea.theme.component.bg-color {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & input.theme.component.bg-color {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & dialog.theme.component.bg-color {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+
+  & p.theme.component.bg-color {
+    @apply bg-white dark:bg-[#0f0f0f];
+  }
+}
+
+@utility ctn {
+  &div.theme.bg-color {
+    @apply bg-white dark:bg-neutral-900;
+  }
+
+  & ul.theme.bg-color {
+    @apply bg-white dark:bg-neutral-900;
+  }
+
+  & ol.theme.bg-color {
+    @apply bg-white dark:bg-neutral-900;
+  }
+
+  & dialog.theme.bg-color {
+    @apply bg-white dark:bg-neutral-900;
+  }
+
+  &div.theme.bg-color.intense {
+    @apply bg-neutral-200 dark:bg-neutral-950;
+  }
+
+  & ul.theme.bg-color.intense {
+    @apply bg-neutral-200 dark:bg-neutral-950;
+  }
+
+  & ol.theme.bg-color.intense {
+    @apply bg-neutral-200 dark:bg-neutral-950;
+  }
+
+  & dialog.theme.bg-color.intense {
+    @apply bg-neutral-200 dark:bg-neutral-950;
+  }
+}
+
+@utility intense {
+  &div.theme.ctn.bg-color {
+    @apply bg-neutral-200 dark:bg-neutral-950;
+  }
+
+  & ul.theme.ctn.bg-color {
+    @apply bg-neutral-200 dark:bg-neutral-950;
+  }
+
+  & ol.theme.ctn.bg-color {
+    @apply bg-neutral-200 dark:bg-neutral-950;
+  }
+
+  & dialog.theme.ctn.bg-color {
+    @apply bg-neutral-200 dark:bg-neutral-950;
+  }
+
+  &label.theme.border-color {
+    @apply border-black dark:border-white;
+  }
+
+  & h1.theme.border-color {
+    @apply border-black dark:border-white;
+  }
+
+  & h2.theme.border-color {
+    @apply border-black dark:border-white;
+  }
+
+  & h3.theme.border-color {
+    @apply border-black dark:border-white;
+  }
+
+  & h4.theme.border-color {
+    @apply border-black dark:border-white;
+  }
+
+  & h5.theme.border-color {
+    @apply border-black dark:border-white;
+  }
+
+  & h6.theme.border-color {
+    @apply border-black dark:border-white;
+  }
+
+  & div.theme.border-color {
+    @apply border-black dark:border-white;
+  }
+
+  & button.theme.border-color {
+    @apply border-black dark:border-white;
+  }
+
+  & code.theme.border-color {
+    @apply border-black dark:border-white;
+  }
+
+  & pre.theme.border-color {
+    @apply border-black dark:border-white;
+  }
+
+  & a.theme.border-color {
+    @apply border-black dark:border-white;
+  }
+
+  & option.theme.border-color {
+    @apply border-black dark:border-white;
+  }
+
+  & li.theme.border-color {
+    @apply border-black dark:border-white;
+  }
+
+  & ul.theme.border-color {
+    @apply border-black dark:border-white;
+  }
+
+  & ol.theme.border-color {
+    @apply border-black dark:border-white;
+  }
+
+  & textarea.theme.border-color {
+    @apply border-black dark:border-white;
+  }
+
+  & input.theme.border-color {
+    @apply border-black dark:border-white;
+  }
+
+  & dialog.theme.border-color &p.theme.border-color {
+    @apply border-black dark:border-white;
+  }
+}
+
+@utility border-color {
+  &label.theme {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & h1.theme {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & h2.theme {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & h3.theme {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & h4.theme {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & h5.theme {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & h6.theme {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & div.theme {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & button.theme {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & code.theme {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & pre.theme {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & a.theme {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & option.theme {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & li.theme {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & ul.theme {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & ol.theme {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & textarea.theme {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & input.theme {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & dialog.theme {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  & p.theme {
+    @apply border-gray-300 dark:border-[#282828];
+  }
+
+  &label.theme.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & h1.theme.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & h2.theme.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & h3.theme.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & h4.theme.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & h5.theme.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & h6.theme.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & div.theme.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & button.theme.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & code.theme.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & pre.theme.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & a.theme.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & option.theme.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & li.theme.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & ul.theme.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & ol.theme.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & textarea.theme.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & input.theme.intense {
+    @apply border-black dark:border-white;
+  }
+
+  & dialog.theme.intense &p.theme.intense {
+    @apply border-black dark:border-white;
+  }
+}
+
+@utility setup-btn-icon-shadow {
+  &.theme.custom {
+    @apply light-mode-icon dark:dark-mode-icon;
+  }
+}
+
+@utility custom {
+  &.setup-btn-icon-shadow.theme {
+    @apply light-mode-icon dark:dark-mode-icon;
+  }
 }
