@@ -1,7 +1,7 @@
-const { filteredSend } = require("../../util");
+const { filteredSend } = require("../../../util");
 const { firestore } = require("./initialize");
 const firebaseTools = require("firebase-tools");
-const providerResponse = require("./response");
+const providerResponse = require("../response");
 
 const { init, def } = firestore
 

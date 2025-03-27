@@ -10,12 +10,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@supabase/supabase-js": "^2.49.3",
     "axios": "^1.6.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.1",
     "express": "^4.18.2",
     "firebase-admin": "^12.0.0",
     "firebase-tools": "^13.7.4",
+    "googleapis": "^140.0.0",
+    "nodemailer": "^6.9.14",
     "open": "^10.0.3"
   }
 }

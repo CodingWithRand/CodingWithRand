@@ -6,9 +6,21 @@ const server = express();
 
 const response = require("./responseStatus");
 const { userExist, getUserInfo } = require("./api/roblox/main");
-const { crud, sqlQuery, verifyToken, createCustomToken, setCustomUserClaims, getCustomUserClaims, getUserProviderData } = require("./api/provider/main");
+const { 
+    /* Firebase */
+    crud, 
+    sqlQuery, 
+    verifyToken, 
+    createCustomToken, 
+    setCustomUserClaims, 
+    getCustomUserClaims, 
+    getUserProviderData, 
+    sendEmail,
+    /* Supabase */
+    adminQueries
+} = require("./api/provider/main");
 
-server.use("/post/provider/cwr/*", cors({
+server.use("/post/provider/*", cors({
     origin: [
         "https://codingwithrand.vercel.app", 
         "https://cwr-education.vercel.app"
@@ -46,13 +58,20 @@ server.use((req, res, next) => {
 server.get("/get/roblox/users/exist/:userKey", userExist)
 server.get("/get/roblox/users/info/:category/:userId", getUserInfo)
 
-server.post("/post/provider/cwr/firestore/query", sqlQuery)
-server.post("/post/provider/cwr/firestore/:mode", crud)
-server.post("/post/provider/cwr/auth/verifyToken", verifyToken)
-server.post("/post/provider/cwr/auth/createCustomToken", createCustomToken)
-server.post("/post/provider/cwr/auth/setCustomUserClaims", setCustomUserClaims)
-server.post("/post/provider/cwr/auth/getCustomUserClaims", getCustomUserClaims)
-server.post("/post/provider/cwr/auth/getUserProviderData", getUserProviderData)
+// These are for codingwithrand (cwr) project -> codingwithrand.vercel.app
+
+/*Firebase*/
+server.post("/post/provider/firebase/firestore/query", sqlQuery)
+server.post("/post/provider/firebase/firestore/:mode", crud)
+server.post("/post/provider/firebase/auth/verifyToken", verifyToken)
+server.post("/post/provider/firebase/auth/createCustomToken", createCustomToken)
+server.post("/post/provider/firebase/auth/setCustomUserClaims", setCustomUserClaims)
+server.post("/post/provider/firebase/auth/getCustomUserClaims", getCustomUserClaims)
+server.post("/post/provider/firebase/auth/getUserProviderData", getUserProviderData)
+server.post("/post/provider/firebase/auth/sendEmail/:subject", sendEmail)
+
+/*Supabase*/
+server.post("/post/provider/supabase/:mode", adminQueries)
 
 server.post("*", (req, res) => response.notFound(res))
 server.get("*", (req, res) => response.notFound(res))
