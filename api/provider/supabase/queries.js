@@ -21,7 +21,7 @@ async function adminFetch(req, res) {
     try{
         let response
         if(eq){
-            response = await supabase.schema("private").from(tableName).select(rows).eq(eq.columName, eq.value)
+            response = await supabase.schema("private").from(tableName).select(rows).eq(eq.columnName, eq.value)
         }else{
             response = await supabase.schema("private").from(tableName).select(rows)
         }
@@ -29,6 +29,7 @@ async function adminFetch(req, res) {
             throw new Error(response.status)
         }
         if(response.error){
+            console.error(response.error)
             responseStatus.badRequest(res, response.error.message)
             return
         }
