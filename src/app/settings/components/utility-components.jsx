@@ -1,11 +1,9 @@
-import { signOut } from "firebase/auth";
-import { auth } from "@/glient/firebase";
 import { useState, useEffect } from "react";
 import { useGlobal } from "@/glient/global";
 import { useLoadingState } from "@/glient/loading";
 import Client from "@/glient/util";
-import { updateRegistryData } from "@/gerver/apiCaller";
 import Cookies from "universal-cookie";
+import { serverFetch, auth } from "@/glient/supabase";
 
 const { Dynamic } = Client.Components;
 const { Image } = Dynamic;
@@ -15,9 +13,15 @@ export function Username(){
     const [ showingUsername, setShowingUsername ] = useState();
 
     useEffect(() => {
-    if(authUser.isAuthUser) {
-        setShowingUsername(authUser.isAuthUser.displayName)
-    }
+        (async () => {
+            if(authUser.isAuthUser) {
+                try{
+                    const { data, error } = await serverFetch("users-details", "display_name", { columnName: "uid", value: authUser.isAuthUser.id });
+                    if(error) throw error;
+                    setShowingUsername(data[0].display_name);
+                }catch(err){ console.error(err) }
+            }
+        })()
     }, [authUser.isAuthUser])
 
     return <li className="text-sm sm:text-base">{showingUsername}</li>
@@ -29,12 +33,7 @@ export function SignOutBTN() {
 
     return <button onClick={async () => {
         setLoadingState(true);
-        try {
-            await updateRegistryData(auth.currentUser.uid, { origin: window.location.origin, authenticated: false, ip: null, date: null });
-            await signOut(auth);
-            cookies.set("emailVerified", false, { path: "/" });
-            cookies.set("username", null, { path: "/" });
-        } catch (e) { console.error(e); }
+        await auth.signOut();
         setLoadingState(false);
         window.location.replace("/registration");
     }}><Image name="exit.png" dir="icon/" width={35} height={35} /></button>

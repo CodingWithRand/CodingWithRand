@@ -1,10 +1,5 @@
 @import 'tailwindcss/utilities' layer(utilities);
-@import url('https://fonts.googleapis.com') layer(components);
-@import url('https://fonts.gstatic.com') layer(components);
-@import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap')
-layer(components);
-@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@200&display=swap')
-layer(components);
+
 @reference "tailwindcss";
 
 @config "../../tailwind.config.js";
@@ -115,7 +110,7 @@ layer(components);
   }
 
   #about-me & #skills-block .skill-icon-name {
-    @apply w-0 h-0 sm:w-[150px] sm:h-auto;
+    @apply sm:w-[150px] sm:h-auto;
   }
 
   & #skills-block .progress-cover-bar {
@@ -131,7 +126,7 @@ layer(components);
 
 @utility skill-icon-name {
   #about-me .skills #skills-block & {
-    @apply w-0 h-0 sm:w-[150px] sm:h-auto;
+    @apply sm:w-[150px] sm:h-auto;
   }
 }
 
@@ -148,23 +143,19 @@ layer(components);
 }
 
 @utility monitor-stand {
-  &div {
-    @apply h-4 bg-black dark:bg-neutral-400 rounded-lg opacity-0;
-    transition:
-      transform 0.5s var(--elastic),
-      opacity 0.5s ease-in-out;
-    transform: translateY(-20em);
-  }
+  @apply h-4 bg-black dark:bg-neutral-400 rounded-lg opacity-0;
+  transition:
+    transform 0.5s var(--elastic),
+    opacity 0.5s ease-in-out;
+  transform: translateY(-20em);
 }
 
 @utility learning-style-cartoon-character {
-  &img {
-    @apply absolute bottom-[-10%] md:bottom-0 lg:h-[150px] lg:w-[150px] md:h-[125px] md:w-[125px] sm:h-[150px] sm:w-[150px] nmob:h-[125px] nmob:w-[125px] w-[100px] h-[100px] opacity-0;
+    @apply absolute bottom-[-10%] md:bottom-0 md:h-[125px] md:w-[125px] sm:h-[150px] sm:w-[150px] nmob:h-[125px] nmob:w-[125px] w-[100px] h-[100px] opacity-0;
     transition:
       transform 0.5s 0.8s ease-in-out,
       opacity 0.5s 0.8s ease-in-out;
     transform: translateY(-10%);
-  }
 }
 
 @utility progress-cover-bar {
@@ -493,9 +484,28 @@ html{
 }
 
 .skills #skills-block .skill-icon-name{
-    width: 0;
+    /* width: 0; */
     transition: width 0.2s ease-in-out;
     overflow: hidden;
+}
+
+.skills #skills-block .skill-bars-group{
+  grid-template-columns: repeat(4, 1fr);
+  opacity: 1
+}
+
+@media (max-width: 868px) {
+  .skills #skills-block .skill-bars-group{
+    grid-template-columns: repeat(2, 1fr);
+    opacity: 1
+  }
+}
+
+@media (max-width: 500px) {
+  .skills #skills-block .skill-bars-group{
+    grid-template-columns: 1fr;
+    opacity: 1
+  }
 }
 
 .skills #skills-block .progress-bar{

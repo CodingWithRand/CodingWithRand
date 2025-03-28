@@ -4,47 +4,11 @@ import "./page.css"
 import SignIn from "./components/client/signin";
 import SignUp from "./components/client/signup";
 import SwitchPageBtn from "./components/client/switchpagebtn";
-import Client from "@/glient/util";
 import Script from "next/script";
 import Loading from "@/glient/loading";
-import Neutral from "@/geutral/util";
-import { useGlobal } from "@/glient/global";
-import { signOut, signInWithCustomToken } from "firebase/auth";
-import { auth } from "@/glient/firebase";
-import { getRegistryData, getAllUsernames, updateRegistryData, createNewCustomToken } from "@/gerver/apiCaller";
-import Cookies from "universal-cookie";
 
 export default function RegistrationPage() {
-    const { AuthenticateGate } = Client.Components.Dynamic; 
-    const { authUser } = useGlobal();
-    const cookies = new Cookies();
     return (
-        <AuthenticateGate authenticatedAction={async () => {
-            if(window !== window.parent){
-                const targetWebsite = [
-                    "https://cwr-education.vercel.app",
-                ];
-                window.addEventListener("message", async (event) => {
-                    if(targetWebsite.some(url => url === event.origin) && event.data.action === "resetFirebaseAuth") indexedDB.deleteDatabase("firebaseLocalStorageDb");
-                });
-            }
-        }} isolateAction={async () => {
-            if(!authUser.isAuthUser) return;
-            const userAuthenticatedStates = await getRegistryData(auth.currentUser.uid);
-            const thisSiteStates = userAuthenticatedStates[window.location.origin];
-            if(!thisSiteStates.authenticated) signOut(auth);
-        }} unauthenticatedAction={async () => {
-            const usernames = await getAllUsernames();
-            const userAuthenticatedStates = await getRegistryData(usernames[cookies.get("clientUsername")]);
-            const thisSiteStates = userAuthenticatedStates[window.location.origin];
-            if(thisSiteStates.authenticated){
-                const newToken = await createNewCustomToken(usernames[cookies.get("clientUsername")]);
-                await signInWithCustomToken(auth, newToken);
-                const ip = await Neutral.Functions.getClientIp();
-                await updateRegistryData(auth.currentUser.uid, { origin: window.location.origin, authenticated: true, ip: ip, date: Date() });
-            }
-        }}
-        >
             <Loading cover>
                 <main>
                     <Script src="/vanilla-js/frontend/registration.js"/>
@@ -75,6 +39,5 @@ export default function RegistrationPage() {
                     </div>
                 </main>
             </Loading>
-        </AuthenticateGate>
     )
 };

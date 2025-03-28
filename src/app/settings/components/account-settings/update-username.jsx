@@ -1,28 +1,26 @@
 import { useState } from "react";
+import { useGlobal } from "@/glient/global";
 import Client from "@/glient/util";
-import { updateProfile } from "firebase/auth";
-import { auth } from "@/glient/firebase";
-import { updateUsername } from "@/gerver/apiCaller";
+// import { updateProfile } from "firebase/auth";
+// import { auth } from "../../../../../firebaseStuff (Unused)/firebase";
+// import { updateUsername } from "@/gerver/apiCaller";
 import Cookies from "universal-cookie";
+import { serverUpdate } from "@/glient/supabase";
 
 const { InputField, Section } = Client.Components.Dynamic;
 
 export default function UpdateUsername() {
+    const { authUser } = useGlobal();
     const [userName, setUserName] = useState("");
     const [isValid, validate] = useState()
     const cookies = new Cookies();
     async function changeDisplayName(e){
         e.preventDefault();
         if(isValid){ 
-            await updateUsername(userName, auth.currentUser.uid, auth.currentUser.displayName);
-            await updateProfile(auth.currentUser, { displayName: userName });
-            cookies.set("username", userName, { path: "/" });
-            if(window !== window.parent){
-                const targetWebsite = [
-                    "https://cwr-education.vercel.app",
-                ];
-                targetWebsite.forEach((url) => window.parent.postMessage({ action: "signalUpdateClientUsername", newUsername: userName }, url));
-            }
+            try{
+                const { data, error } = await serverUpdate("users-details", { display_name: userName }, { id: authUser.isAuthUser.id });
+                if(error) throw error;
+            }catch(err){ console.error(err) }
             window.location.reload();
         }
     }

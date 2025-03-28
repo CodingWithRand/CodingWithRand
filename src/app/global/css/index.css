@@ -1,9 +1,5 @@
 @import 'tailwindcss/theme' layer(theme);
 @import 'tailwindcss/preflight' layer(base);
-@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@300&family=Montserrat:wght@300&display=swap')
-layer(base);
-@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@300&display=swap')
-layer(base);
 
 @config "../../../../tailwind.config.js";
 

@@ -2,7 +2,7 @@
 
 import Neutral from "@/geutral/util"
 import Client from "@/glient/util";
-import { auth } from "@/glient/firebase";
+import { auth } from "../../../firebaseStuff (Unused)/firebase";
 import "./page.css"
 import { applyActionCode, verifyPasswordResetCode, confirmPasswordReset } from "firebase/auth";
 import { useEffect, useState } from "react";

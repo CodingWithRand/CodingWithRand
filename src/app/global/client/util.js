@@ -2,8 +2,6 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useGlobal } from "./global";
-import { storage, auth } from "./firebase";
-import { getDownloadURL, ref } from "@firebase/storage";
 import Neutral from "@/geutral/util";
 import "@/gss/util.css";
 import "@/gss/theme.css";
@@ -41,12 +39,12 @@ function useDelayedEffect(callback, dependencies, delay) {
   
 function Image(props){
     const { theme } = useGlobal();
-    const [imgSrc, setImgSrc] = useState("");
+    const [imgSrc, setImgSrc] = useState(null);
     const [isBinding, bind] = useState(false);
     
     useEffect(() => {
         if(isBinding) return;
-        if(!props.constant) setImgSrc(`/imgs/backend-images/theme/${props.dir || ""}${(() => {
+        if(!props.constant) setImgSrc(`/imgs/backend-images/theme/${props.dir || null}${(() => {
                 if(theme.theme === "default-os" && props.name !== "mode.png"){
                     if(window.matchMedia('(prefers-color-scheme: dark)').matches) return "dark";
                     else return "light";
@@ -65,11 +63,11 @@ function Image(props){
               if (mutation.type === 'attributes' && mutation.attributeName === 'binding-status') {
                 if(targetElement.getAttribute('binding-status') === "true"){
                     bind(true);
-                    setImgSrc(`/imgs/backend-images/binded/${props.dir || ""}binded-${props.name}`);
+                    setImgSrc(`/imgs/backend-images/binded/${props.dir || null}binded-${props.name}`);
                 }
                 else if(targetElement.getAttribute('binding-status') === "false"){
                     bind(false);
-                    setImgSrc(`/imgs/backend-images/theme/${props.dir || ""}${(() => {
+                    setImgSrc(`/imgs/backend-images/theme/${props.dir || null}${(() => {
                         if(theme.theme === "default-os" && props.name !== "mode.png"){
                             if(window.matchMedia('(prefers-color-scheme: dark)').matches) return "dark";
                             else return "light";
@@ -461,22 +459,6 @@ function CWRFooter(){
     )
 }
 
-function AuthenticateGate({ children, authenticatedAction, unauthenticatedAction, isolateAction }) {
-    const { LoadingPage } = Neutral.Components;
-    const { login, authUser } = useGlobal();
-    const [ showingComponent, setShowingComponent ] = useState(LoadingPage)
-    useDelayedEffect(() => isolateAction && isolateAction(), [], 500)
-    useDelayedEffect(() => {
-        if(login.isLoggedIn === true && authUser.isAuthUser !== null && authUser.isAuthUser.emailVerified){
-            authenticatedAction && authenticatedAction();
-        }else{
-            unauthenticatedAction && unauthenticatedAction();
-        }
-        setShowingComponent(children);
-    }, [login.isLoggedIn, authUser.isAuthUser], 500)
-    return showingComponent
-}
-
 function PreventCrossSiteComponent({ children }){
     const [ component, setComponent ] = useState();
     useEffect(() => {
@@ -665,7 +647,6 @@ const Components = {
         AlertBox,
         Section,
         Coroussel,
-        AuthenticateGate
     },
     ThemeChanger,
     Switch,

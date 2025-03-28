@@ -204,7 +204,7 @@ export function SkillsBarList({ id }){
                     }
                 />
             </h2>
-            <ol id={id} style={{display: "none", gridTemplateColumns: "repeat(4, 1fr)", opacity: 0}}>
+            <ol id={id} className="skill-bars-group" style={{display: "none"}}>
                 {
                     (() => {
                         switch(id){

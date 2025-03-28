@@ -1,4 +1,5 @@
 @config "../../../tailwind.config.js";
+@reference "tailwindcss";
 
 @utility session-info {
   @apply text-black dark:text-white;

@@ -4,11 +4,9 @@ import "./client.css"
 import { useState, useRef } from "react";
 import Client from "@/glient/util";
 import Neutral from "@/geutral/util";
-import { signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from "firebase/auth"
+import { auth } from "@/glient/supabase";
 import { useGlobal } from "@/glient/global";
-import { auth } from "@/glient/firebase";
 import { useLoadingState } from "@/glient/loading";
-import { updateRegistryData } from "@/gerver/apiCaller";
 import Cookies from "universal-cookie";
 
 export default function SignIn() {
@@ -41,35 +39,24 @@ export default function SignIn() {
         userPass.current = e.target.elements["pass"].value;
         setLoadingState(true);
         try {
-            const userCredential = await signInWithEmailAndPassword(auth, userEmail.current, userPass.current);
-            const user = userCredential.user;
-            const username = user.displayName;
-            if (username === userName.current) {
-                login.logIn(true);
-                cookies.set("emailVerified", user.emailVerified, { path: "/" });
-                cookies.set("username", user.displayName, { path: "/" });
-                if(window !== window.parent){
-                    const targetWebsite = [
-                        "https://cwr-education.vercel.app",
-                    ];
-                    targetWebsite.forEach((url) => window.parent.postMessage({ authenticationProgressFinished: true, clientUsername: userCredential.user.displayName , origin: window.location.origin }, url));
-                }
-                const ip = await Neutral.Functions.getClientIp();
-                await updateRegistryData(user.uid, {origin: window.location.origin, authenticated: true, ip: ip, date: Date()})
+            if (await serverFetch("users-details", "display_name", { columnName: "display_name", value: userName.current }).length !== 0) {
+                const { data, error } = await auth.signInWithPassword({ email: userEmail.current, password: userPass.current });
+                if(error) throw error;
+                
+                await serverInsert("users-details", {
+                    created_at: Date(),
+                    ip: await Neutral.Functions.getClientIp(),
+                })
+
                 await Neutral.Functions.asyncDelay(1000);
-                if(window === window.parent) window.location.replace("/");
+                window.location.replace("/");
             } else {
                 debug(true);
                 setErrMsg("Invalid username");
                 signOut(auth);
             }
         } catch (error) {
-            if (error.code === "auth/invalid-credential") { 
-                debug(true); 
-                setErrMsg("Email or password is incorrect!"); 
-            }
-            else if (error.code === "auth/too-many-requests") { debug(true); setErrMsg("Too many sign in attempts requested, please try again later"); }
-            else { debug(true); setErrMsg("Something went wrong, please try again later"); console.log(error) };
+            debug(true); setErrMsg("Something went wrong, please try again later"); console.error(error);
         }
         setLoadingState(false);
     };

@@ -2,13 +2,11 @@
 
 import "./client.css"
 import { useState, useEffect } from "react";
-import { auth } from "@/glient/firebase";
-import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail, sendEmailVerification, updateProfile } from "firebase/auth"
+import { auth, serverFetch, serverInsert } from "@/glient/supabase";
 import { useLoadingState } from "@/glient/loading";
 import Client from "@/glient/util";
 import Neutral from"@/geutral/util";
 import EmailVerifificationPage from "./email-verification";
-import { getAllUsernames, updateRegistryData, updateUsername } from "@/gerver/apiCaller";
 import Cookies from "universal-cookie";
 
 export default function SignUp() {
@@ -47,27 +45,29 @@ export default function SignUp() {
         setLoadingState(true);
 
         try{
-            const total_username_list = await getAllUsernames();
-            if (total_username_list[userName]) {
-                setSUS(true); setErrMsg("This username has been taken");
+            // make this more secure -> create an encrypted api key for this and decrypt it before sending it to the server with a function.
+            if (await serverFetch("users-details", "email", { columnName: "email", value: userEmail }).length !== 0) {
+                setSUS(true); setErrMsg("This username or email has been taken");
                 setLoadingState(false)
                 return;
             }
-            const userCredential = await createUserWithEmailAndPassword(auth, userEmail, userPass)
-            await sendEmailVerification(userCredential.user).then(() => setEmailSent(true));
-            await updateProfile(userCredential.user, { displayName: userName });
-            await updateUsername(userName, userCredential.user.uid);
-            cookies.set("username", user.displayName, { path: "/" });
-            const ip = await Neutral.Functions.getClientIp();
-            await updateRegistryData(userCredential.user.uid, {origin: window.location.origin, authenticated: true, ip: ip, date: Date()})
+            const { data, error } =  await auth.signUp({ email: userEmail, password: userPass }, { data: { display_name: userName } });
+            if (error) throw error;
+            setEmailSent(true);
+
+            await serverInsert("users-details", {
+                uid: data.user.id,
+                email: userEmail,
+                ip: await Neutral.Functions.getClientIp(),
+                display_name: userName,
+                email_verified: false,
+            })
+
+            
         } catch (error) {
             const errorCode = error.code;
             const errorMessage = error.message;
             switch (errorCode) {
-                case "auth/email-already-in-use":
-                    setSUS(true);
-                    setErrMsg("The email is already in use!");
-                    break;
                 default:
                     setSUS(true);
                     setErrMsg("Something went wrong, please try again later");
@@ -115,12 +115,9 @@ export default function SignUp() {
                             binded: true,
                             expected_condition: [0, 1, 2],
                             run_test: async (e) => {
-                                try {
-                                    await fetchSignInMethodsForEmail(auth, e.target.value)
-                                    return 0
-                                } catch (err) {
-                                    return 1
-                                }
+                                const EmailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/g;
+                                if (EmailPattern.test(e.target.value)) return 0
+                                else return 1
                             },
                             actions: [
                                 (e) => { setUserEmail(e.target.value); },

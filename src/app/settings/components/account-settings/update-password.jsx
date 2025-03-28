@@ -1,12 +1,13 @@
 import Client from "@/glient/util";
-import { auth } from "@/glient/firebase";
-import { reauthenticateWithCredential, EmailAuthProvider, updatePassword, sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "@/glient/supabase";
+import { useGlobal } from "@/glient/global";
 import { useRef, useState } from "react";
 
 const { Dynamic, Switch } = Client.Components;
 const { AlertBox, Section, InputField, InputGroupField } = Dynamic
 
 export default function UpdatePassword() {
+    const { authUser } = useGlobal();
     const [inputType, setInputType] = useState("password");
     const [passConfirmed, checkPass] = useState(true);
     const [result, debug] = useState(false);
@@ -19,16 +20,19 @@ export default function UpdatePassword() {
         description: ""
     })
 
-    function changePassword(e){
+    async function changePassword(e){
         e.preventDefault();
         if(passConfirmed) return;
-        reauthenticateWithCredential(auth.currentUser, EmailAuthProvider.credential(auth.currentUser.email, oldPassword.current))
-        .then(() => updatePassword(auth.currentUser, userPass).then(() => { setDM({title: "Successfully Changing your password", subtitle: "You're good to go now", description: ""}); debug(true); }))
-        .catch((err) => {
-            if(err.code === "auth/invalid-login-credentials") setDM({title: "Changing Password failed", subtitle: "Fail to confirm your identity", description: "You have inputted the wrong old password, please type in the correct password"})
-            else setDM({title: "Changing Password failed", subtitle: "Something went wrong, please try again later", description: ""})
+        try{
+            const { data, error } = await auth.signInWithPassword({ email: authUser.isAuthUser.email, password: oldPassword.current });
+            if(error) throw error;
+            await auth.updateUser({ password: userPass });
+            setDM({title: "Successfully Changing your password", subtitle: "You're good to go now", description: ""}); debug(true);
+        } catch (error) {
+            setDM({title: "Changing Password failed", subtitle: "Something went wrong, please try again later", description: ""})
             debug(true);
-        })
+            console.error(error)
+        }
     }
     
     return(

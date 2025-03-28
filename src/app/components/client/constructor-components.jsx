@@ -43,10 +43,12 @@ function Header(){
 export function Intro(){
     const { authUser } = useGlobal();
     return(
-        <Client.Components.SuspenseComponent condition={authUser.isAuthUser !== undefined} cover loadingComponent={<Neutral.Components.LoadingPage />}>
+        // <Client.Components.SuspenseComponent condition={authUser.isAuthUser !== undefined} cover loadingComponent={<Neutral.Components.LoadingPage />}>
+            <>
             <Client.Components.NavBar />
             <Header />
-        </Client.Components.SuspenseComponent>
+            </>
+        // </Client.Components.SuspenseComponent>
     )
 }
 
