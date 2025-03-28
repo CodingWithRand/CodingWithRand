@@ -11,6 +11,9 @@ async function adminQueries(req, res) {
         case "insert":
             adminInsert(req, res)
             break;
+        case "update":
+            adminUpdate(req, res)
+            break;
         default:
             responseStatus.badRequest(res, "Unknown mode!")
             break;
@@ -56,7 +59,28 @@ async function adminInsert(req, res) {
             responseStatus.badRequest(res, response.error.message)
             return
         }
-        responseStatus.noContent(res, "Successfully insert data to the database")
+        responseStatus.noContent(res, "Successfully inserted data to the database")
+    }catch(error){
+        console.log(error)
+        switch(error.message){
+            default:
+                responseStatus.badGateway(res)
+        }  
+    }
+}
+
+async function adminUpdate(req, res) {
+    const { tableName, data, eq } = req.body
+    try{
+        const response = await supabase.schema("private").from(tableName).update(data).eq(eq.columnName, eq.value)
+        if(!response.status === 200){
+            throw new Error(response.status)
+        }
+        if(response.error){
+            responseStatus.badRequest(res, response.error.message)
+            return
+        }
+        responseStatus.noContent(res, "Successfully updated data in the database")
     }catch(error){
         console.log(error)
         switch(error.message){

@@ -2,7 +2,12 @@ require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser")
 const cors = require("cors")
+// const multer = require("multer");
+
 const server = express();
+
+// const storage = multer.memoryStorage();
+// const upload = multer({ storage });
 
 const response = require("./responseStatus");
 const { userExist, getUserInfo } = require("./api/roblox/main");
@@ -71,7 +76,7 @@ server.post("/post/provider/firebase/auth/getUserProviderData", getUserProviderD
 server.post("/post/provider/firebase/auth/sendEmail/:subject", sendEmail)
 
 /*Supabase*/
-server.post("/post/provider/supabase/:mode", adminQueries)
+server.post("/post/provider/supabase/queries/:mode", adminQueries)
 
 server.post("*", (req, res) => response.notFound(res))
 server.get("*", (req, res) => response.notFound(res))

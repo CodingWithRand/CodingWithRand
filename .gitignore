@@ -3,3 +3,6 @@
 
 # Preserve environment sensitive data
 .env
+
+# Under development file
+api/provider/supabase/storage.js
