@@ -76,6 +76,10 @@
     @apply text-black dark:text-white;
   }
 
+  & span.text-color {
+    @apply text-black dark:text-white;
+  }
+
   & textarea.text-color {
     @apply text-black dark:text-white;
   }
@@ -515,6 +519,10 @@
   }
 
   & p.theme {
+    @apply text-black dark:text-white;
+  }
+
+  & span.theme {
     @apply text-black dark:text-white;
   }
 }

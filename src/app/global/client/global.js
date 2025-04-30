@@ -7,11 +7,14 @@ const GlobalState = createContext(undefined);
 
 export function Global({ children }){
   const [isAuthUser, getCurrentUser] = useState();
+  const [authEvent, setAuthEvent] = useState();
 
   useEffect(() => {
     const { data } = auth.onAuthStateChange((event, session) => {
+      setAuthEvent(event)
       if(session) getCurrentUser(session.user)
       else getCurrentUser(null)
+      console.log(isAuthUser);
     });
     return () => data.subscription.unsubscribe()
   }, [])
@@ -47,6 +50,7 @@ export function Global({ children }){
     <GlobalState.Provider value={{
       theme: {theme, setTheme},
       authUser: {isAuthUser},
+      authEvent: {authEvent},
       exceptionPage: {onExceptionPage, setOnExceptionPage},
       device: {device, detectDevice}
     }}>

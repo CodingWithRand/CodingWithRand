@@ -15,11 +15,8 @@ export function Username(){
     useEffect(() => {
         (async () => {
             if(authUser.isAuthUser) {
-                try{
-                    const { data, error } = await serverFetch("users-details", "display_name", { columnName: "uid", value: authUser.isAuthUser.id });
-                    if(error) throw error;
-                    setShowingUsername(data[0].display_name);
-                }catch(err){ console.error(err) }
+                const name = await serverFetch("users-details", "display_name", { columnName: "uid", value: authUser.isAuthUser.id });
+                setShowingUsername(name[0].display_name);
             }
         })()
     }, [authUser.isAuthUser])

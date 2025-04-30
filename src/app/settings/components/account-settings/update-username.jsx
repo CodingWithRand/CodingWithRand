@@ -1,10 +1,6 @@
 import { useState } from "react";
 import { useGlobal } from "@/glient/global";
 import Client from "@/glient/util";
-// import { updateProfile } from "firebase/auth";
-// import { auth } from "../../../../../firebaseStuff (Unused)/firebase";
-// import { updateUsername } from "@/gerver/apiCaller";
-import Cookies from "universal-cookie";
 import { serverUpdate } from "@/glient/supabase";
 
 const { InputField, Section } = Client.Components.Dynamic;
@@ -13,14 +9,10 @@ export default function UpdateUsername() {
     const { authUser } = useGlobal();
     const [userName, setUserName] = useState("");
     const [isValid, validate] = useState()
-    const cookies = new Cookies();
     async function changeDisplayName(e){
         e.preventDefault();
         if(isValid){ 
-            try{
-                const { data, error } = await serverUpdate("users-details", { display_name: userName }, { id: authUser.isAuthUser.id });
-                if(error) throw error;
-            }catch(err){ console.error(err) }
+            await serverUpdate("users-details", { display_name: userName }, { columnName: "uid", value: authUser.isAuthUser.id });
             window.location.reload();
         }
     }

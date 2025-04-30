@@ -6,6 +6,7 @@ import SignUp from "./components/client/signup";
 import SwitchPageBtn from "./components/client/switchpagebtn";
 import Script from "next/script";
 import Loading from "@/glient/loading";
+import { Suspense } from "react";
 
 export default function RegistrationPage() {
     return (
@@ -35,7 +36,9 @@ export default function RegistrationPage() {
                                 <SignUp />
                             </div>
                         </div>
-                        <SwitchPageBtn/>
+                        <Suspense>
+                            <SwitchPageBtn/>
+                        </Suspense>
                     </div>
                 </main>
             </Loading>

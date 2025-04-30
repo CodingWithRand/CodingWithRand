@@ -4,18 +4,14 @@ import "./client.css"
 import { useState, useRef } from "react";
 import Client from "@/glient/util";
 import Neutral from "@/geutral/util";
-import { auth } from "@/glient/supabase";
-import { useGlobal } from "@/glient/global";
+import { auth, serverFetch, serverUpdate } from "@/glient/supabase";
 import { useLoadingState } from "@/glient/loading";
-import Cookies from "universal-cookie";
 
 export default function SignIn() {
-    const cookies = new Cookies();
 
     const { Switch, Dynamic } = Client.Components;
     const { AlertBox, InputField } = Dynamic;
 
-    const { login } = useGlobal();
     const setLoadingState = useLoadingState();
 
     const userEmail = useRef("");
@@ -39,24 +35,27 @@ export default function SignIn() {
         userPass.current = e.target.elements["pass"].value;
         setLoadingState(true);
         try {
-            if (await serverFetch("users-details", "display_name", { columnName: "display_name", value: userName.current }).length !== 0) {
+            if ((await serverFetch("users-details", "display_name", { columnName: "display_name", value: userName.current })).length !== 0) {
                 const { data, error } = await auth.signInWithPassword({ email: userEmail.current, password: userPass.current });
                 if(error) throw error;
                 
-                await serverInsert("users-details", {
-                    created_at: Date(),
+                await serverUpdate("users-details", {
                     ip: await Neutral.Functions.getClientIp(),
-                })
+                }, { columnName: "email", value: userEmail.current });
 
                 await Neutral.Functions.asyncDelay(1000);
-                window.location.replace("/");
+                // window.location.replace("/");
             } else {
                 debug(true);
                 setErrMsg("Invalid username");
-                signOut(auth);
             }
         } catch (error) {
-            debug(true); setErrMsg("Something went wrong, please try again later"); console.error(error);
+            if(error.message === "Invalid login credentials"){
+                setErrMsg("Password or email is incorrect");
+            }else{
+                setErrMsg("Something went wrong, please try again later");
+            }
+            debug(true); console.error(error);
         }
         setLoadingState(false);
     };

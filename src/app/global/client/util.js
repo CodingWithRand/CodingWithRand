@@ -6,6 +6,8 @@ import Neutral from "@/geutral/util";
 import "@/gss/util.css";
 import "@/gss/theme.css";
 import "@/gss/responsive.css";
+import Link from "next/link";
+import { storage } from "./supabase";
 
 function isElementInViewport(element) {
     const rect = element.getBoundingClientRect();
@@ -375,15 +377,18 @@ function UserPFP(){
     const [ pfpImg, setPfpImg ] = useState();
 
     useEffect(() => {
-        if(authUser.isAuthUser && authUser.isAuthUser.photoURL) (async () => {
-            setPfpImg(<img alt="user-profile-icon" src={authUser.isAuthUser.photoURL} className="rounded-full" width={50} height={50}/>)
+        if(authUser.isAuthUser) (async () => {
             try{
-                const userProfileImageRef = ref(storage, `userProfileImage/${auth.currentUser.uid}/profile.png`);
-                const imgUrl = await getDownloadURL(userProfileImageRef);
-                setPfpImg(<img alt="user-profile-icon" src={imgUrl} className="rounded-full" width={50} height={50}/>)
-            }catch(err){ console.warn(err) }
+                const { data, error } = await storage.from("user-pfp").createSignedUrl(`${authUser.isAuthUser.id}/profile.png`, 3600);
+                if(error) throw error
+                const userProfileImage = data.signedUrl;
+                setPfpImg(<img alt="user-profile-icon" src={userProfileImage} className="rounded-full" width={50} height={50}/>)
+            }catch(err){ 
+                setPfpImg(<Client.Components.Dynamic.Image alt="programmer-profile-icon" dir="icon/" width={50} height={50} name="programmer.png" cls="rounded-full" />)
+                console.error(err)
+                console.log(pfpImg) 
+            }
         })()
-        else setPfpImg(<Client.Components.Dynamic.Image alt="programmer-profile-icon" dir="icon/" width={50} height={50} name="programmer.png" cls="rounded-full" />)
     }, [authUser.isAuthUser])
 
     return pfpImg
@@ -394,14 +399,14 @@ function Media(props){
     const [ mediaSrc, setMediaSrc ] = useState();
     const mediaRef = useRef(null)
     useEffect(() => {
-        if(props.firebase) (async () => {
-            const mediaSrcRef = ref(storage, `public/${props.mediaSrc}`);
-            const mediaSrcUrl = await getDownloadURL(mediaSrcRef);
-            setMediaSrc(mediaSrcUrl);
+        if(props.supabase){
+            const { data, error } = storage.from("public-assets").getPublicUrl(props.mediaSrc);
+            if(error) throw error;
+            setMediaSrc(data.publicUrl);
             switch(props.mediaType){
                 case "video": mediaRef.current.load(); break;
             }
-        })()
+        }
     }, [authUser.isAuthUser])
 
     switch(props.mediaType){
@@ -518,10 +523,10 @@ function NavBar(){
     return(
         <nav id="navbar" className="text-sm nmob:text-base">
             <div className="flex flex-row justify-between items-center">
-                <a className="ml-4 w-[30px] h-[30px]" href="/"><Image constant dir="icon/" name="home.png" alt="home"/></a>
+                <Link href="/"><div className="ml-4 w-[30px] h-[30px]"><Image constant dir="icon/" name="home.png" alt="home"/></div></Link>
                 <MenuBtn />
                 <ul id="menu">
-                    <li><a href="/#about-me">About me</a></li>
+                    <li><Link href="/#about-me"><div>About me</div></Link></li>
                     <li><a href="/my-projects">My Projects</a></li>
                     <li><a href="/lounge">Lounge</a></li>
                     <li><a>Contact</a></li>

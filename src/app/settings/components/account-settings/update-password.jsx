@@ -26,10 +26,15 @@ export default function UpdatePassword() {
         try{
             const { data, error } = await auth.signInWithPassword({ email: authUser.isAuthUser.email, password: oldPassword.current });
             if(error) throw error;
-            await auth.updateUser({ password: userPass });
+            const { data2, error2 } = await auth.updateUser({ password: userPass });
+            if(error2) throw error2;
             setDM({title: "Successfully Changing your password", subtitle: "You're good to go now", description: ""}); debug(true);
         } catch (error) {
-            setDM({title: "Changing Password failed", subtitle: "Something went wrong, please try again later", description: ""})
+            if(error.message === "Invalid login credentials") {
+                setDM({title: "Changing Password failed", subtitle: "Please input the correct previous password", description: ""})
+            } else {
+                setDM({title: "Changing Password failed", subtitle: "Something went wrong, please try again later!", description: ""})
+            }
             debug(true);
             console.error(error)
         }
@@ -85,10 +90,11 @@ export default function UpdatePassword() {
                 <div className="option-field">
                     <Switch id="id1" cls="specific" mode="action-on-off" action={() => setInputType("text")} altAction={() => setInputType("password")}/>
                     <label className="field-label responsive">Show Password</label>
-                    <span className="forget-password responsive" onClick={() => sendPasswordResetEmail(auth, auth.currentUser.email).then(() => {
+                    <span className="forget-password responsive" onClick={async () => {
+                        await auth.resetPasswordForEmail(authUser.isAuthUser.email) 
                         debug(true);
                         setDM((prevDM) => ({...prevDM, title: "Password reset email has been sent!", subtitle: "Please check your email inbox!", description: ""}))
-                    })}>Forgot your password? Reset it here</span>
+                    }}>Forgot your password? Reset it here</span>
                 </div>
                 <button className="submit-btn responsive" type="submit" disabled={passConfirmed}>Submit</button>
             </form>

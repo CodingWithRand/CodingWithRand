@@ -46,7 +46,10 @@ export default function SignUp() {
 
         try{
             // make this more secure -> create an encrypted api key for this and decrypt it before sending it to the server with a function.
-            if (await serverFetch("users-details", "email", { columnName: "email", value: userEmail }).length !== 0) {
+            const isEmailExisted = await serverFetch("users-details", "email", { columnName: "email", value: userEmail });
+            const isUsernameExisted = await serverFetch("users-details", "display_name", { columnName: "display_name", value: userName });
+            console.log(isEmailExisted, isUsernameExisted)
+            if (isEmailExisted.length !== 0 || isUsernameExisted.length !== 0) {
                 setSUS(true); setErrMsg("This username or email has been taken");
                 setLoadingState(false)
                 return;
@@ -178,7 +181,7 @@ export default function SignUp() {
             }}
                 action={() => { setSUS(false); Neutral.Functions.jobDelay(() => setErrMsg(""), 500); }} />
             <AlertBox id="email-verification-intermission" detect={emailSent}>
-                <EmailVerifificationPage />
+                <EmailVerifificationPage email={userEmail}/>
             </AlertBox>
         </>
     )

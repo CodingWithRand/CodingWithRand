@@ -142,3 +142,9 @@
     width: 90%;
     text-align: right;
 }
+
+.profile-picture-upload-section{
+    display: flex;
+    column-gap: 1rem;
+    align-items: center;
+}

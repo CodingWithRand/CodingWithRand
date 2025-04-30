@@ -34,7 +34,7 @@ export default function LearningStyle(){
                 style={{ height: "min-content", maxHeight: "250px", minHeight: "200px", transition: "transform 0.5s 0.4s var(--elastic), opacity 0.5s 0.4s ease-in-out", transform: "translateY(-10%)" }}
                 mediaType="video" 
                 mediaSrc="python.mp4" 
-                firebase
+                supabase
                 muted
                 autoPlay
                 loop

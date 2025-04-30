@@ -21,9 +21,9 @@ function SessionsInfo(){
             const userData = await serverFetch("users-details", "*", { columnName: "uid", value: authUser.isAuthUser.id });
             const locationResponse = await fetch(`https://ipwho.is/${userData[0].ip}`);
             const location = await locationResponse.json();
-            sc = <div className="session-info" id="codingwithrand">
+            sc = <div className="session-info theme text-color" id="codingwithrand">
                     <h3>Main Website</h3>
-                    <a href={window.location.origin}><b>URL: </b>{site}</a>
+                    <a href={window.location.origin}><b>URL: </b>{window.location.origin}</a>
                     <dl>
                         <dt><i><b>Issued at:</b></i></dt>
                         <dd>{userData[0].created_at}</dd>
