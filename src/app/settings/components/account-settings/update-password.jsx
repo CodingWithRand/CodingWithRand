@@ -41,7 +41,7 @@ export default function UpdatePassword() {
     }
     
     return(
-        <Section themed style="pallete" title="Password" description="Change your password here">
+        <Section id="up" themed style="pallete" title="Password" description="Change your password here">
             <form className="password setting-submitting-form" onSubmit={changePassword}>
                 <InputField 
                     name="password" type={inputType} themed required placeholder="Your old password here"

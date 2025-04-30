@@ -58,7 +58,7 @@ function SessionsInfo(){
 
 export default function AuthenticationManagementPanel() {
     return (
-        <Section themed style="pallete" title="Authentication Management Panel" description="You can manage your account's login session here, you can log out any sessions you want.">
+        <Section id="amp" themed style="pallete" title="Authentication Management Panel" description="You can manage your account's login session here, you can log out any sessions you want.">
             <b>Current Sessions</b>
             <SessionsInfo />
         </Section>

@@ -179,7 +179,7 @@ function Section(props){
     switch(props.style){
         case "pallete":
             return( 
-                <div className={`pallete ${props.themed ? "theme" : ""} ctn bg-color intense`}>
+                <div id={props.id} style={props.cssstyle} className={`pallete ${props.themed ? "theme" : ""} ctn bg-color intense`}>
                     <h1 className={`setting-section-title responsive ${props.themed ? "theme" : ""} text-color`}>{props.title}</h1>
                     <p className={`setting-section-description responsive ${props.themed ? "theme" : ""} text-color`}>{props.description || ""}</p>
                     {props.children}
@@ -347,7 +347,7 @@ function ThemeChanger(){
     };
     
     return (
-        <button id='theme' className='setup-btn mx-4' onClick={changeTheme}>
+        <button id='theme' className='setup-btn' onClick={changeTheme}>
             <Client.Components.Dynamic.Image dir="icon/" name="mode.png" alt='theme-changer-btn-icon' cls="setup-btn-icon-shadow theme custom" />
         </button>
     )
@@ -382,11 +382,10 @@ function UserPFP(){
                 const { data, error } = await storage.from("user-pfp").createSignedUrl(`${authUser.isAuthUser.id}/profile.png`, 3600);
                 if(error) throw error
                 const userProfileImage = data.signedUrl;
-                setPfpImg(<img alt="user-profile-icon" src={userProfileImage} className="rounded-full" width={50} height={50}/>)
+                setPfpImg(<img alt="user-profile-icon" src={userProfileImage} className="rounded-full" width={40} height={40}/>)
             }catch(err){ 
-                setPfpImg(<Client.Components.Dynamic.Image alt="programmer-profile-icon" dir="icon/" width={50} height={50} name="programmer.png" cls="rounded-full" />)
+                setPfpImg(<Client.Components.Dynamic.Image alt="programmer-profile-icon" dir="icon/" width={40} height={40} name="programmer.png" cls="rounded-full" />)
                 console.error(err)
-                console.log(pfpImg) 
             }
         })()
     }, [authUser.isAuthUser])
@@ -508,12 +507,14 @@ function NavBar(){
             if(device.device === "xs" || (isMatched640 !== undefined ? isMatched640 : window.matchMedia("(max-width: 640px)").matches)) {
                 menu.style.display = "none"
                 menu.style.opacity = 0
+                menu.style.left = "3.5rem"
                 setAppearance(<div id="menu-btn">Menu <Image width={15} height={15} dir="icon/" name="sort-down.png" alt="triangle-icon" onClick={menuBtn}/></div>)
             }
             else{
                 setAppearance(<></>)
                 menu.style.display = "flex"
                 menu.style.opacity = 1
+                menu.style.left = "3.5rem"
             }
         }, [device.device, isMatched640])
 
@@ -526,7 +527,7 @@ function NavBar(){
                 <Link href="/"><div className="ml-4 w-[30px] h-[30px]"><Image constant dir="icon/" name="home.png" alt="home"/></div></Link>
                 <MenuBtn />
                 <ul id="menu">
-                    <li><Link href="/#about-me"><div>About me</div></Link></li>
+                    <li><Link href="/#about-me">About me</Link></li>
                     <li><a href="/my-projects">My Projects</a></li>
                     <li><a href="/lounge">Lounge</a></li>
                     <li><a>Contact</a></li>

@@ -19,7 +19,7 @@ export default function UpdateProfilePicture(){
     }
 
     return(
-        <Section themed style="pallete" title="Profile Picture" description="Change your profile picture here">
+        <Section id="upfp" themed style="pallete" cssstyle={{ marginTop: "4em" }} title="Profile Picture" description="Change your profile picture here">
             <form className="ppf setting-submitting-form" onSubmit={uploadPPF}>
                 <div className="profile-picture-upload-section">
                     <input className="theme text-color" type="file" id="pfp" name="pfp" style={{ display: "none" }} accept="image/png, image/jpeg" onChange={(e) => {

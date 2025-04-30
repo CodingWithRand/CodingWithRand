@@ -124,7 +124,7 @@
     }
 
     #navbar {
-        @apply text-black bg-[#EAEAEA] dark:text-white dark:bg-[#050505];
+        @apply text-black bg-[#DDDDDD] dark:text-white dark:bg-black;
         position: absolute;
         top: 0;
         margin: 0;
@@ -139,7 +139,7 @@
     }
 
     #navbar ul {
-        @apply bg-[#EAEAEA] dark:bg-[#050505] flex mx-4 p-0 top-0 flex-row h-full items-center;
+        @apply bg-[#DDDDDD] dark:bg-black flex mx-4 p-0 top-0 flex-row h-full items-center;
     }
 
     #navbar #menu li {
@@ -152,7 +152,7 @@
     }
 
     #navbar ul li a:hover {
-        @apply bg-[#050505] text-white dark:bg-[#EAEAEA] dark:text-black
+        @apply bg-black text-white dark:bg-[#DDDDDD] dark:text-black
     }
 
     #navbar #menu {

@@ -17,7 +17,7 @@ export default function UpdateUsername() {
         }
     }
     return(
-        <Section themed style="pallete" title="Display Name" description="Change your display name here">
+        <Section id="uu" themed style="pallete" title="Display Name" description="Change your display name here">
             <form className="display-name setting-submitting-form" onSubmit={changeDisplayName}>
                 <InputField 
                     name="username" required errDetector

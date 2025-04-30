@@ -16,7 +16,7 @@
     }
 
     #navbar{
-        @apply text-black bg-[#EAEAEA] dark:text-white dark:bg-[#050505];
+        @apply text-black bg-[#DDDDDD] dark:text-white dark:bg-black;
         margin: 0;
         height: 3.5em;
         font-family: sans-serif;
@@ -28,9 +28,31 @@
     }
 
     #navbar ul{
-        @apply bg-[#EAEAEA] dark:bg-[#050505] flex mx-2 sm:mx-4 p-0 top-0 flex-row h-full gap-x-2 sm:gap-x-4 items-center;
+        @apply bg-[#DDDDDD] dark:bg-black flex mx-2 sm:mx-4 p-0 top-0 flex-row h-full gap-x-2 sm:gap-x-4 items-center;
     }
 
+    #navbar #menu-dropdown{
+        @apply hidden absolute m-0 top-full flex-col h-max opacity-0 text-center opacity-100;
+        list-style: none;
+        align-items: center;
+    }
+
+    #navbar #menu-dropdown li{
+        @apply w-full;
+    }
+
+    #navbar #menu-dropdown li a {
+        @apply block w-full px-2 py-4;
+        transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+    }
+
+    #navbar #menu-dropdown li a:hover {
+        @apply bg-black text-white dark:bg-[#DDDDDD] dark:text-black
+    }
+
+    #navbar #menu-dropdown {
+        transition: opacity 0.5s ease-in-out;
+    }
 }
 
 :root{
