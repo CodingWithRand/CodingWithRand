@@ -57,8 +57,8 @@ export default function SettingPage() {
             <li><Link href="/settings/#up">Password</Link></li>
             <li><Link href="/settings/#amp">Auth Panel</Link></li>
             <li><Link href="/">
-              Back to Home
-              <Image width="20" height="20" name="exit.png" dir="icon/"/>
+              Back to Home&nbsp;
+              <Image style={{display: "inline"}} width="20" height="20" name="exit.png" dir="icon/"/>
             </Link></li>
           </ul>
         </nav>

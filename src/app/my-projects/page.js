@@ -76,6 +76,8 @@ export default function MyProjects() {
         corousselWrappersStyle={[
 
         ]}
+        backgroundImageDir="projects"
+        autoScroll={true}
       />
       <CWRFooter />
     </>

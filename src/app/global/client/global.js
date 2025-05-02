@@ -14,7 +14,7 @@ export function Global({ children }){
       setAuthEvent(event)
       if(session) getCurrentUser(session.user)
       else getCurrentUser(null)
-      console.log(isAuthUser);
+      // console.log(isAuthUser);
     });
     return () => data.subscription.unsubscribe()
   }, [])

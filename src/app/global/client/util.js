@@ -426,9 +426,10 @@ function Media(props){
     }
 }
 
-function CWRFooter(){
+function CWRFooter({ arbitraryCSSRules }){
     return(
         <footer className="footer">
+            {arbitraryCSSRules}
             <div className="credit-card">
             <h1>Powered by</h1>
             <ul>
@@ -473,7 +474,7 @@ function PreventCrossSiteComponent({ children }){
 }
 
 
-function NavBar(){
+function NavBar({ arbitraryCSSRules }){
 
     const { authUser } = useGlobal();
     function MenuBtn(){
@@ -514,7 +515,7 @@ function NavBar(){
                 setAppearance(<></>)
                 menu.style.display = "flex"
                 menu.style.opacity = 1
-                menu.style.left = "3.5rem"
+                menu.style.left = 0
             }
         }, [device.device, isMatched640])
 
@@ -523,6 +524,7 @@ function NavBar(){
     
     return(
         <nav id="navbar" className="text-sm nmob:text-base">
+            {arbitraryCSSRules}
             <div className="flex flex-row justify-between items-center">
                 <Link href="/"><div className="ml-4 w-[30px] h-[30px]"><Image constant dir="icon/" name="home.png" alt="home"/></div></Link>
                 <MenuBtn />
@@ -537,7 +539,7 @@ function NavBar(){
                 <ThemeChanger />
                 {   authUser.isAuthUser ? 
                     <>
-                        <li style={{ cursor: "pointer" }} onClick={() => window.location.replace('/settings')}><UserPFP /></li>
+                        <li style={{ cursor: "pointer", margin: "0 1rem" }} onClick={() => window.location.replace('/settings')}><UserPFP /></li>
                     </>
                     :
                     <>
@@ -554,7 +556,14 @@ function NavBar(){
 function CorousselElements({ total, bgImgsSrc, autoScroll, elems, wrappersStyle }) {
     let imgs = [];
     for (let i = 0; i < total; i++) imgs.push(
-        <div className="c-elem w-screen h-screen" style={{ ...autoScroll, ...wrappersStyle[i], backgroundImage: `url(${bgImgsSrc + `/wallpaper-${i + 1}.png`})`, backgroundPositionX: "center", backgroundRepeat: "no-repeat", backgroundSize: "cover" }}>
+        <div className="c-elem w-screen h-screen" key={i} style={{ 
+            ...autoScroll, 
+            ...wrappersStyle[i], 
+            backgroundImage: bgImgsSrc ? `url(${bgImgsSrc + `/wallpaper-${i + 1}.png`})` : undefined, 
+            backgroundPositionX: "center", 
+            backgroundRepeat: "no-repeat", 
+            backgroundSize: "cover" 
+        }}>
             {elems[i]}
         </div>
     );
@@ -563,11 +572,11 @@ function CorousselElements({ total, bgImgsSrc, autoScroll, elems, wrappersStyle 
 
 function CorousselPage({ maxPages, btnFunc, tabsOpacity }) {
     let tabs = [];
-    for (let i = 0; i < maxPages; i++) tabs.push(<div className='tab' id={`p-${i + 1}`} onClick={() => btnFunc(i + 1)} style={{ opacity: tabsOpacity[i] }}></div>);
+    for (let i = 0; i < maxPages; i++) tabs.push(<div key={i} className='tab' id={`p-${i + 1}`} onClick={() => btnFunc(i + 1)} style={{ opacity: tabsOpacity[i] }}></div>);
     return tabs;
 };
 
-function Coroussel({ totalPages, corousselElements, corousselWrappersStyle }) {
+function Coroussel({ totalPages, corousselElements, corousselWrappersStyle, backgroundImageDir, autoScroll }) {
 
     const [inUsed, setInUsed] = useState({
         rightArrow: false,
@@ -583,11 +592,12 @@ function Coroussel({ totalPages, corousselElements, corousselWrappersStyle }) {
     const ls = () => setPage((prevState) => prevState - 1);
 
     useEffect(() => {
-        const autoScroll = setInterval(() => {
+        if (!autoScroll) return;
+        const as = setInterval(() => {
             if (!(page === totalPages)) rs();
             else for (let currentPage = page; currentPage > 1; currentPage--) ls();
         }, 5000);
-        return () => clearInterval(autoScroll);
+        return () => clearInterval(as);
     }, [page])
 
     useEffect(() => {
@@ -621,7 +631,7 @@ function Coroussel({ totalPages, corousselElements, corousselWrappersStyle }) {
             <div className='elems'>
                 <CorousselElements 
                     total={totalPages}
-                    bgImgsSrc='/imgs/backend-images/coroussel'
+                    bgImgsSrc={backgroundImageDir ? `/imgs/backend-images/coroussel/${backgroundImageDir}` : false}
                     autoScroll={{ transform: `translateX(${(page - 1) * -100}%)` }} 
                     elems={corousselElements}
                     wrappersStyle={corousselWrappersStyle}

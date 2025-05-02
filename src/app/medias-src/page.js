@@ -30,6 +30,8 @@ export default function MediaSrc() {
         <dd><a href="https://www.flaticon.com/free-icons/ux" title="ux icons">Ux icons created by Freepik - Flaticon</a></dd>
         <dd><a href="https://www.flaticon.com/free-icons/cross-platform" title="cross platform icons">Cross platform icons created by Freepik - Flaticon</a></dd>
         <dd><a href="https://www.flaticon.com/free-icons/interactive" title="interactive icons">Interactive icons created by Freepik - Flaticon</a></dd>
+        <dd><a href="https://www.flaticon.com/free-icons/play-button" title="play button icons">Play button icons created by NajmunNahar - Flaticon</a></dd>
+        <dd><a href="https://www.flaticon.com/free-icons/pause" title="pause icons">Pause icons created by Debi Alpa Nugraha - Flaticon</a></dd>
         <dt>Freepik</dt>
         <dd><a href="https://www.freepik.com/free-vector/desktop-smartphone-app-development_10276838.htm#fromView=search&page=1&position=1&uuid=eb176483-e73f-4186-bc4f-bb7d160993fc">Desktop and smartphone app development - Image by freepik</a></dd>
         <dt>Iconduck</dt>
