@@ -48,6 +48,16 @@ layer(components);
         aspect-ratio: 16/9;
         pointer-events: none;
     }  
+
+    #playlists{
+        @apply w-[60%] sm:w-[80%];
+        display: grid;
+        justify-items: center;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        height: 60%;
+    }
+
 }
 
 h2.h-concerned{
@@ -65,7 +75,7 @@ h2.h-concerned{
     transition: transform 0.25s ease-in-out;
 }
 
-.item *.selected{
+.item *.selected, .round-btn:hover{
     box-shadow: 0 0 10px 0.5rem #1DB954;   
 }
 
@@ -74,7 +84,7 @@ h2.h-concerned{
     box-shadow: none;
 }
 
-.control-btn{
+.round-btn{
     border-radius: 9999px;
     background-color: #1DB954;
     padding: 1rem;
@@ -159,7 +169,10 @@ img[alt="smile listen to music"]{
 }
 
 
-body{ user-select: none; }
+body{
+    user-select: none;
+    position: relative;
+}
 
 main section{
     position: relative;
@@ -207,4 +220,45 @@ html{
 
 #music{
     background-color: black;
+}
+
+.playlist-item{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.playlist-item .playlist-cover{
+    width: 200px;
+    height: 200px;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.playlist-cover img{
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+}
+
+.toast-container {
+    position: fixed;
+    z-index: 9999;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    bottom: 1rem;
+    right: 1rem;
+    column-gap: 0.5rem;
+    padding: 1rem;
+    height: 50px;
+    width: 50%;
+    border: 2px solid white;
+    border-radius: 9999px;
+    background-image: linear-gradient(45deg, rgb(80,80,80), rgb(0,0,0) 50%, rgb(80,80,80));
 }
