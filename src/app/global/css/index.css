@@ -73,5 +73,8 @@
     ::-webkit-scrollbar-thumb:hover{
         background-color: rgba(200, 200, 200, 0.5);
     }
-  
+    
+    dialog:focus-visible{
+      outline: none;
+  }
 }

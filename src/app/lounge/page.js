@@ -4,7 +4,7 @@ import "./page.css";
 import Client from "@/glient/util";
 import { useEffect } from "react";
 import Neutral from "@/geutral/util";
-import { BGMMusic, LofiRadio, MusicStateProvider, RadioToast } from "./components/client/constructor-components";
+import { BGMMusic, LofiRadio, MusicStateProvider, RadioToast, MusicLibrary } from "./components/client/constructor-components";
 import Script from "next/script";
 
 export default function Lounge() {
@@ -88,6 +88,7 @@ export default function Lounge() {
 
         `}</style>
       } />
+      <MusicLibrary />
       <RadioToast />
       <Script src="https://www.youtube.com/iframe_api" />
     </MusicStateProvider>

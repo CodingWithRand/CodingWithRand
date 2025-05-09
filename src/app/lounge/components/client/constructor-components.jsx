@@ -1,6 +1,7 @@
 import Client from "@/glient/util"
 import { useRef, useState, useEffect, createContext, useContext } from "react";
 import { flushSync } from "react-dom";
+import musicId from "../musicId";
 
 const MusicState = createContext(undefined);
 
@@ -8,14 +9,20 @@ export function MusicStateProvider({ children }){
     const [ isPlaying, setIsPlaying ] = useState({ 
         playlist: undefined,
         music: undefined,
+        category: undefined,
+        subcategory: undefined,
         state: false,
     });
+    const [ speakerUniqueId, setSpeakerUniqueId ] = useState("speaker");
+    const [ currentSearchingLib, setCSL ] = useState("");
     const toasterPlayer = useRef(null);
 
     return (
         <MusicState.Provider value={{ 
             isPlayingState: {isPlaying, setIsPlaying },
             player: toasterPlayer,
+            speakerUID: {speakerUniqueId, setSpeakerUniqueId },
+            csl: {currentSearchingLib, setCSL},
          }}>
             {children}
         </MusicState.Provider>
@@ -66,6 +73,21 @@ export function LofiRadio(){
         setIsIframePlaying((prev) => ({ ...prev, [iframeId]: isPlaying.state }));
     }, [isPlaying]);
 
+    useEffect(() => {
+        if (!isPlaying.state){
+            document.querySelector(".belt").style.animationPlayState = "running";
+            document.querySelectorAll(".control-btn-icon").forEach((cbi) => {
+                cbi.src = "/imgs/backend-images/icon/play-button.png"
+            });
+            document.querySelectorAll(".control-btn").forEach((cb) => {
+                cb.src = "/imgs/backend-images/icon/play-button.png"
+            });
+            document.querySelectorAll(".lofi-radio").forEach((lr) => {
+                lr.classList.remove("selected")
+            });
+        }
+    }, [isPlaying])
+
     Client.Hooks.useDelayedEffect(() => {
         if (Object.values(isIframePlaying).every((value) => value === false)){
           document.querySelectorAll(`.control-btn`).forEach((e) => e.style.pointerEvents = "initial");
@@ -93,19 +115,19 @@ export function LofiRadio(){
       function setToasterIsPlayingState(iframeId, state){
         switch (iframeId) {
             case "hh-rs":
-                setIsPlaying({ playlist: "Hip Hop", music: "Relax/Study", state });
+                setIsPlaying((prev) => ({...prev, playlist: "Hip Hop", music: "Relax/Study", state, category: "Lofi Radio", subcategory: undefined }));
                 break;
             case "hh-sc":
-                setIsPlaying({ playlist: "Hip Hop", music: "Sleep/Chill", state});
+                setIsPlaying((prev) => ({...prev, playlist: "Hip Hop", music: "Sleep/Chill", state, category: "Lofi Radio", subcategory: undefined }));
                 break;
             case "medieval":
-                setIsPlaying({ playlist: "Medieval", music: "Medieval", state });
+                setIsPlaying((prev) => ({...prev, playlist: "Medieval", music: "Medieval", state, category: "Lofi Radio", subcategory: undefined }));
                 break;
             case "s-cg":
-                setIsPlaying({ playlist: "Synthwave", music: "Chill/Gaming", state });
+                setIsPlaying((prev) => ({...prev, playlist: "Synthwave", music: "Chill/Gaming", state, category: "Lofi Radio", subcategory: undefined }));
                 break;
             case "j-cs":
-                setIsPlaying({ playlist: "Jazz", music: "Chill/Study", state });
+                setIsPlaying((prev) => ({...prev, playlist: "Jazz", music: "Chill/Study", state, category: "Lofi Radio", subcategory: undefined }));
                 break;
         }
       }
@@ -143,8 +165,6 @@ export function LofiRadio(){
         } else {
           lofiRadioPlayers.current[cpi].pauseVideo();
           setToasterIsPlayingState(cpi, false);
-          document.querySelector(`#${cpi}.control-btn-icon`).src = "/imgs/backend-images/icon/play-button.png";
-          document.querySelector(".belt").style.animationPlayState = "running";
           setIsIframePlaying((prev) => ({ ...prev, [cpi]: false }));
         }
       }
@@ -155,7 +175,7 @@ export function LofiRadio(){
                 <Image alt="lofi-girl" name="lofi-girl.png" dir="icon/" constant />
                 Lofi Radio
             </h2>
-            <div className="conveyor">
+            <div className="conveyor h-[60%] w-full">
                 <div className="belt">
                 <div className="item gap-y-2">
                     <iframe id="hh-rs" className="relative z-[2] lofi-radio" src="https://www.youtube.com/embed/jfKfPfyJRdk?si=mHRrVpcsmqu6LX6g&amp;controls=0&amp;enablejsapi=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
@@ -208,63 +228,93 @@ export function LofiRadio(){
     )
 }
 
+function getRandomMusic(playlist=undefined, music=undefined){
+    const playlists = Object.keys(musicId);
+    const randomPlaylist = playlist || playlists[Math.floor(Math.random() * playlists.length)];
+    const musics = Object.keys(musicId[randomPlaylist]);
+    const randomMusic = music || musics[Math.floor(Math.random() * musics.length)];
+    return { playlist: randomPlaylist, music: randomMusic, id: musicId[randomPlaylist][randomMusic] };
+}
+
+function DiceSVG({ width, height, number }) {
+    return <svg width={width} height={height} id="dice">                              
+        <mask id={`dice-reverse-mask-${number}`}>                                
+            <rect width={width} height={height} fill="white" />
+            <circle cx={width * 1/4} cy={width * 3/4} r={Math.round(width / 10)} fill="black" className="d two three four five six"></circle>
+            <circle cx={width * 3/4} cy={width * 1/4} r={Math.round(width / 10)} fill="black" className="d two three four five six"></circle>
+        </mask>          
+        <rect width={width} height={height} rx={Math.round(width / 10)} ry={Math.round(width / 10)} fill="white" mask={`url(#dice-reverse-mask-${number})`} />
+    </svg>
+}
+
+function playMusic({ c, playlist, music, id, recursiveFunction, rfParams=undefined, subcategory=undefined }, constant){
+    if(playlist !== constant.isPlaying.playlist || music !== constant.isPlaying.music){
+        const uId = `speaker-${Date.now()}`;
+        flushSync(() => constant.setSpeakerUniqueId(uId))
+        if (window.currentPlayer) {
+            window.currentPlayer.destroy();
+            window.currentPlayer = null;
+        }
+        
+        // if (window.currentPlayer) window.currentPlayer.loadVideoById(id);
+        window.currentPlayer = new YT.Player(uId, {
+            videoId: id,
+            events: {    
+                onReady: (event) => {
+                    console.log("play")
+                    event.target.playVideo();
+                },
+                onStateChange: (event) => {
+                    if (event.data === YT.PlayerState.PAUSED) {
+                        constant.setIsPlaying((prev) => ({ ...prev, state: false })); 
+                    }
+                    else if (event.data === YT.PlayerState.ENDED) {
+                        if(!recursiveFunction) constant.setIsPlaying((prev) => ({ ...prev, state: false })); 
+                        if(rfParams) recursiveFunction(constant.e, ...rfParams);
+                        else recursiveFunction(constant.e);
+                    }
+                }
+            }
+        })
+        constant.setIsPlaying((prev) => ({...prev, playlist, music, state: true, category: c, subcategory }));
+        constant.player.current = window.currentPlayer;
+    }
+}
+
+function nextMusicInLib(playlist, currentIndex, ids, names, constant){
+    if(currentIndex === ids.length - 1) currentIndex = -1;
+    playMusic({
+        c: "Normal",
+        playlist,
+        music: names[currentIndex + 1],
+        id: ids[currentIndex + 1],
+        recursiveFunction: nextMusicInLib,
+        rfParams: [ playlist, currentIndex + 1, ids, names ],
+        subcategory: playlist
+    }, constant)
+}
+
 export function BGMMusic(){
     const { Image } = Client.Components.Dynamic
-    const [ uniqueId, setUniqueId ] = useState("speaker");
-    const { isPlayingState, player } = useMusic();
+    const { isPlayingState, speakerUID, player } = useMusic();
     const { isPlaying, setIsPlaying } = isPlayingState;
-    const music_id = {
-        "Vindsvept": {
-            "Sleeper": "VMUzqKy3Xec",
-            "Sleeper Pt.2": "LcGSBAYlINI",
-            "Reverie Pt.2": "L_z7TBLzfEM",
-            "Distant": "toYkSo3-McY",
-            "The Fae": "8JFG_bKg5lE",
-            "Through the Woods we Ran": "yKizp0pDFtA",
-        },
-    }
+    const { speakerUniqueId, setSpeakerUniqueId } = speakerUID;
+
+    let constant = { isPlaying, setIsPlaying, player, setSpeakerUniqueId };
     
     function explain(e){ e.target.querySelectorAll("span").forEach((span) => span.style.display = "inline") }
     function abbreviate(e){ e.target.querySelectorAll("span").forEach((span) => span.style.display = "none") }
 
-    function getRandomMusic(){
-        const playlists = Object.keys(music_id);
-        const randomPlaylist = playlists[Math.floor(Math.random() * playlists.length)];
-        const musics = Object.keys(music_id[randomPlaylist]);
-        const randomMusic = musics[Math.floor(Math.random() * musics.length)];
-        return { playlist: randomPlaylist, music: randomMusic, id: music_id[randomPlaylist][randomMusic] };
-    }
-
     function playRandomly(e){ 
-        console.log(uniqueId, isPlaying)
+        setIsPlaying((prev) => ({...prev, state: false}));
+        if(player.current) player.current.pauseVideo();
+        constant["e"] = e;
         const { playlist, music, id } = getRandomMusic();
-        const speakerDiv = document.getElementById("speaker-hidden-container").children[0];
-        if(playlist !== isPlaying.playlist || music !== isPlaying.music){
-            const uId = `speaker-${Date.now()}`;
-            speakerDiv.id = uId;
-            flushSync(() => {
-                setUniqueId(uId);
-            });
-            if (window.currentPlayer) window.currentPlayer.loadVideoById(id);
-            else window.currentPlayer = new YT.Player(uId, {
-                videoId: id,
-                events: {    
-                    onReady: (event) => {
-                        console.log("play")
-                        event.target.playVideo();
-                    },
-                    onStateChange: (event) => {
-                        if (event.data === YT.PlayerState.ENDED) {
-                            playRandomly(e);
-                        }
-                    }
-                }
-            })
-            flushSync(() => {
-                setIsPlaying({ playlist, music, state: true });
-            });
-            player.current = window.currentPlayer;
-        }
+        playMusic({ 
+            c: "Random",
+            playlist, music, id, 
+            recursiveFunction: playRandomly, 
+        }, constant);
     }
 
     return(
@@ -277,45 +327,63 @@ export function BGMMusic(){
                 M
                 <span style={{ fontSize: "1rem", display: "none" }}>usic</span>
             </h2>
-            <div id="playlists">
+            <div className="conveyor overflow-auto" id="playlists">
+                <div></div>
+                <div className="playlist-item">
+                    <div className="playlist-cover" style={{ boxShadow: "20px 20px 0 #A038C8" }}>
+                        <Image name="dm dokuro calamity.jpg" alt="DM DOKURO: Calamity Mod" dir="playlist-covers/" constant />
+                    </div>
+                    <h3 className="text-center text-white font-comic-relief text-xl sm:text-2xl mt-8">DM DOKURO Calamity Mod</h3>
+                </div>
                 <div className="playlist-item">
                     <div className="playlist-cover" style={{ boxShadow: "20px 20px 0 #402726" }}>
                         <Image name="vindsvept.jpg" alt="Vindsvept" dir="playlist-covers/" constant />
                     </div>
-                    <h3 className="text-white font-comic-relief text-xl sm:text-2xl mt-8">Vindsvept</h3>
-                    <div className="flex flex-row gap-x-4">
-                        <div className="flex flex-col items-center gap-y-2">
-                            <button className="round-btn mt-4">
-                                <Image name="search-interface-symbol.png" alt="search" dir="icon/" width={28} height={28} constant />
-                            </button>
-                            <span className="text-white font-comic-relief">Search</span>
-                        </div>
-                        <div className="flex flex-col items-center gap-y-2">
-                            <button className="round-btn mt-4" onClick={playRandomly}>
-                                <svg width="28" height="28" id="dice">                              
-                                    <mask id="dice-reverse-mask">                                
-                                        <rect width="28" height="28" fill="white" />
-                                        <circle cx="7" cy="21" r="3" fill="black" className="d two three four five six"></circle>
-                                        <circle cx="21" cy="7" r="3" fill="black" className="d two three four five six"></circle>
-                                    </mask>          
-                                    <rect width="28" height="28" rx="3" ry="3" fill="white" mask="url(#dice-reverse-mask)" />
-                                </svg>
-                            </button>
-                            <span className="text-white font-comic-relief">Random</span>
-                        </div>
+                    <h3 className="text-center text-white font-comic-relief text-xl sm:text-2xl mt-8">Vindsvept</h3>
+                </div>
+                <div className="playlist-item">
+                    <div className="playlist-cover" style={{ boxShadow: "20px 20px 0 #6070A0" }}>
+                        <Image name="a hat in time (original).jpg" alt="A Hat in Time (Original)" dir="playlist-covers/" constant />
                     </div>
+                    <h3 className="text-center text-white font-comic-relief text-xl sm:text-2xl mt-8">A Hat in Time (Original)</h3>
+                </div>
+                <div className="playlist-item">
+                    <div className="playlist-cover" style={{ boxShadow: "20px 20px 0 #803800" }}>
+                        <Image name="a hat in time (seal the deal).jpg" alt="A Hat in Time (Seal the Deal)" dir="playlist-covers/" constant />
+                    </div>
+                    <h3 className="text-center text-white font-comic-relief text-xl sm:text-2xl mt-8">A Hat in Time (Seal the Deal)</h3>
+                </div>
+                <div></div>
+            </div>
+            <div className="flex flex-row gap-x-4">
+                <div className="flex flex-col items-center gap-y-2">
+                    <button className="round-btn mt-4" onClick={() => document.getElementById("music-library").showModal()}>
+                        <Image name="search-interface-symbol.png" alt="search" dir="icon/" width={28} height={28} constant />
+                    </button>
+                    <span className="text-white font-comic-relief">Search</span>
+                </div>
+                <div className="flex flex-col items-center gap-y-2">
+                    <button className="random-play round-btn mt-4" onClick={playRandomly}>
+                        <DiceSVG width={28} height={28} number={1} />
+                    </button>
+                    <span className="text-white font-comic-relief">Random</span>
                 </div>
             </div>
-            <div id="speaker-hidden-container" className="hidden">
-                <div id={uniqueId}></div>
+            <div id="speaker-hidden-container">
+                <div id={speakerUniqueId}></div>
             </div>
         </div>
     )
 }
 
 export function RadioToast(){
-    const { isPlayingState, player } = useMusic();
+    const { isPlayingState, player, speakerUID } = useMusic();
     const { isPlaying, setIsPlaying } = isPlayingState;
+    const { setSpeakerUniqueId } = speakerUID;
+    const { Image } = Client.Components.Dynamic
+    
+
+    let constant = { isPlaying, setIsPlaying, player, setSpeakerUniqueId };
 
     Client.Hooks.useDelayedEffect(() => {
         if(!player.current) return;
@@ -326,7 +394,11 @@ export function RadioToast(){
         }
     }, [isPlaying.state], 100)
 
-    function playOnToast(e){
+    useEffect(() => {
+
+    }, [isPlaying.playlist, isPlaying.music]);
+
+    function isLofiRadio(){
         let iframeId;
         switch (`${isPlaying.playlist} - ${isPlaying.music}`) {
             case "Hip Hop - Relax/Study":
@@ -347,8 +419,13 @@ export function RadioToast(){
             default:
                 iframeId = "speaker";
         }
+        return [iframeId, iframeId !== "speaker"];
+    }
+
+    function playOnToast(e){
+        let iframeId = isLofiRadio()[0];
         setIsPlaying((prevState) => ({ ...prevState, state: !prevState.state }))
-        if(iframeId !== "speaker"){
+        if(isLofiRadio()[1]){
             if(isPlaying.state){
                 document.querySelector(`#${iframeId}.control-btn-icon`).src = "/imgs/backend-images/icon/play-button.png";
                 document.querySelector(".belt").style.animationPlayState = "running";
@@ -359,15 +436,166 @@ export function RadioToast(){
         }
     }
 
+    function skipOnToast(e){
+        if(isPlaying.category === "Lofi Radio") return;
+        else if(isPlaying.category === "Random") {
+            if(isPlaying.subcategory) document.getElementById(isPlaying.subcategory).querySelector(".random-play").click();
+            else document.querySelector(".random-play").click();
+        }
+        else if(isPlaying.category === "Normal") {
+            if(isPlaying.subcategory){
+                constant["e"] = e
+                const names = Object.keys(musicId[isPlaying.playlist]);
+                nextMusicInLib(isPlaying.playlist, names.indexOf(isPlaying.music), Object.values(musicId[isPlaying.playlist]), names, constant);
+            }
+        }
+    }
+
     return(
-        (isPlaying.playlist && isPlaying.music && player.current) && 
+        (isPlaying.playlist && isPlaying.music) && 
 
         <div className="toast-container">
             <button onClick={playOnToast} className="toast-btn">
                 <img src={`/imgs/backend-images/icon/${isPlaying.state ? "pause" : "play-button"}.png`} alt="control-btn" width={25} height={25} />
             </button>
-            <div className="font-comic-relief text-white">{`Now playing: ${isPlaying.playlist} - ${isPlaying.music}`}</div>
+            <button id="skip-play-btn" disabled={isPlaying.category === "Lofi Radio" ? true : false} onClick={skipOnToast}>
+                <Image name="next-button.png" alt="next-play-btn" dir="icon/" width={25} height={25} constant />
+            </button>
+            <div id="music-name" className="font-comic-relief text-white">{`Now playing: ${isPlaying.playlist} - ${isPlaying.music}`}</div>
         </div>
 
+    )
+}
+
+export function MusicLibrary(){
+    const { Image } = Client.Components.Dynamic
+    const [ showingList, setShowingList ] = useState(showAllLib());
+    const { isPlayingState, player, speakerUID, csl } = useMusic();
+    const { isPlaying, setIsPlaying } = isPlayingState;
+    const { setSpeakerUniqueId } = speakerUID;
+    const { currentSearchingLib, setCSL } = csl;
+    
+    let constant = { isPlaying, setIsPlaying, player, setSpeakerUniqueId };
+
+    function showAllLib(){
+        let list = [];
+        for(const libName of Object.keys(musicId)) list.push(<MusicLibraryCard key={libName} libName={libName} />)
+        return list
+    }
+
+    function MusicLibraryCard({ libName }){
+        function playRandomlyInLib(e){
+            setIsPlaying((prev) => ({...prev, state: false}));
+            if(player.current) player.current.pauseVideo();
+            constant["e"] = e
+            const { playlist, music, id } = getRandomMusic(libName)
+            playMusic({ 
+                c: "Random",
+                playlist, music, id, 
+                recursiveFunction: playRandomlyInLib,
+                rfParams: [ libName ],
+                subcategory: libName
+            }, constant)
+        }
+
+        function browseLib(){
+            setShowingList((() => {
+                let list = [];
+                for(const musicName of Object.keys(musicId[libName])) list.push(<MusicCard key={musicName} musicName={musicName} />)
+                return list
+            })())
+            setCSL(libName)
+        }
+
+        return <div id={libName} className="music-lib">
+            <span>{libName}</span>
+            <div className="flex flex-row gap-x-2 items-center">
+                <button className="round-btn" style={{ padding: "0.5rem" }} onClick={browseLib}>
+                    <Image name="search-interface-symbol.png" alt="search" dir="icon/" width={20} height={20} constant />
+                </button>
+                <button className="round-btn random-play" style={{ padding: "0.5rem" }} onClick={playRandomlyInLib}>
+                    <DiceSVG width={20} height={20} number={2} />
+                </button>
+            </div>
+        </div>
+    }
+
+    function MusicCard({ musicName }){
+        const { csl } = useMusic();
+        const { currentSearchingLib } = csl;
+
+        function playMusicInLib(e){
+            setIsPlaying((prev) => ({...prev, state: false}));
+            if(player.current) player.current.pauseVideo();
+            constant["e"] = e
+            const ids = Object.values(musicId[currentSearchingLib]);
+            const names = Object.keys(musicId[currentSearchingLib]);
+            let currentIndex = names.indexOf(musicName);
+
+            playMusic({ 
+                c: "Normal",
+                playlist: currentSearchingLib,
+                music: musicName,
+                id: musicId[currentSearchingLib][musicName],
+                recursiveFunction: nextMusicInLib,
+                rfParams: [ currentSearchingLib, currentIndex, ids, names, constant ],
+                subcategory: currentSearchingLib
+            }, constant)
+        }
+
+        return <div id={musicName} className="music-card">
+            <span>{musicName}</span>
+            <div className="flex flex-row gap-x-2 items-center">
+                <button className="round-btn" style={{ padding: "0.5rem" }} onClick={playMusicInLib}>
+                    <img src="/imgs/backend-images/icon/play-button.png" alt="control-btn" width={20} height={20} />
+                </button>
+            </div>
+        </div>
+    }
+
+    function searchCheck(e){
+        setShowingList((() => {
+            let list = [];
+            if (currentSearchingLib === ""){ 
+                for(const libName of Object.keys(musicId)){
+                    const searchPattern = new RegExp(`^${e.target.value.toLowerCase()}`)
+                    if(searchPattern.test(libName.toLowerCase())) list.push(<MusicLibraryCard key={libName} libName={libName} />)
+                }
+            } else {
+                for(const musicName of Object.keys(musicId[currentSearchingLib])){
+                    const searchPattern = new RegExp(`^${e.target.value.toLowerCase()}`)
+                    if(searchPattern.test(musicName.toLowerCase())) list.push(<MusicCard key={musicName} musicName={musicName} />)
+                }
+            }
+            
+            return list
+        })())
+    }
+
+    return(
+        <dialog id="music-library">
+            <div className="music-library-container">
+                <div className="flex flex-col w-full items-center">
+                    <div id="lib-search-bar">
+                        <input placeholder="Search for music here" onChange={searchCheck} type="text"/>
+                        <Image name="search-interface-symbol.png" alt="search" dir="icon/" width={28} height={28} constant />
+                    </div>
+                    <div className="lib-list">
+                        {showingList}
+                    </div>
+                </div>
+                
+                <div className="flex flex-row justify-center gap-x-4">
+                    { currentSearchingLib !== "" &&
+                        <button onClick={() => { setCSL(""); setShowingList(showAllLib()) }}>
+                            <Image name="left-arrow.png" alt="left-arrow" dir="icon/" width={28} height={28} constant />
+                        </button>
+                    }
+                    <button onClick={() => document.getElementById("music-library").close()}>
+                        <Image name="close.png" alt="close" dir="icon/" width={28} height={28} constant />
+                    </button>
+                </div>
+            </div>
+        </dialog>
     )
 }
