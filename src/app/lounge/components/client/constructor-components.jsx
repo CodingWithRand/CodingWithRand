@@ -2,6 +2,8 @@ import Client from "@/glient/util"
 import { useRef, useState, useEffect, createContext, useContext } from "react";
 import { flushSync } from "react-dom";
 import musicId from "../musicId";
+import { Direction, Range } from "react-range";
+import { useGlobal } from "@/glient/global";
 
 const MusicState = createContext(undefined);
 
@@ -71,7 +73,7 @@ export function LofiRadio(){
                 break;
         }
         setIsIframePlaying((prev) => ({ ...prev, [iframeId]: isPlaying.state }));
-    }, [isPlaying]);
+    }, [isPlaying.playlist, isPlaying.music]);
 
     useEffect(() => {
         if (!isPlaying.state){
@@ -86,7 +88,7 @@ export function LofiRadio(){
                 lr.classList.remove("selected")
             });
         }
-    }, [isPlaying])
+    }, [isPlaying.state])
 
     Client.Hooks.useDelayedEffect(() => {
         if (Object.values(isIframePlaying).every((value) => value === false)){
@@ -317,6 +319,15 @@ export function BGMMusic(){
         }, constant);
     }
 
+    function PlaylistLibCard({ name, backdropColor }){
+        return <div className="playlist-item">
+            <div className="playlist-cover" style={{ boxShadow: `20px 20px 0 ${backdropColor}` }}>
+                <Image name={`${name}.jpg`} alt={name} dir="playlist-covers/" constant />
+            </div>
+            <h3 className="text-center text-white font-comic-relief text-xl sm:text-2xl mt-8">{name}</h3>
+        </div>
+    }
+
     return(
         <div className="flex flex-col items-center h-full relative">
             <h2 className="text-[#9b3331] font-comic-relief py-16 text-center text-5xl nmob:text-6xl sm:text-7xl md:text-8xl lg:text-9xl" onMouseEnter={explain} onMouseLeave={abbreviate} onClick={explain}>
@@ -329,30 +340,10 @@ export function BGMMusic(){
             </h2>
             <div className="conveyor overflow-auto" id="playlists">
                 <div></div>
-                <div className="playlist-item">
-                    <div className="playlist-cover" style={{ boxShadow: "20px 20px 0 #A038C8" }}>
-                        <Image name="dm dokuro calamity.jpg" alt="DM DOKURO: Calamity Mod" dir="playlist-covers/" constant />
-                    </div>
-                    <h3 className="text-center text-white font-comic-relief text-xl sm:text-2xl mt-8">DM DOKURO Calamity Mod</h3>
-                </div>
-                <div className="playlist-item">
-                    <div className="playlist-cover" style={{ boxShadow: "20px 20px 0 #402726" }}>
-                        <Image name="vindsvept.jpg" alt="Vindsvept" dir="playlist-covers/" constant />
-                    </div>
-                    <h3 className="text-center text-white font-comic-relief text-xl sm:text-2xl mt-8">Vindsvept</h3>
-                </div>
-                <div className="playlist-item">
-                    <div className="playlist-cover" style={{ boxShadow: "20px 20px 0 #6070A0" }}>
-                        <Image name="a hat in time (original).jpg" alt="A Hat in Time (Original)" dir="playlist-covers/" constant />
-                    </div>
-                    <h3 className="text-center text-white font-comic-relief text-xl sm:text-2xl mt-8">A Hat in Time (Original)</h3>
-                </div>
-                <div className="playlist-item">
-                    <div className="playlist-cover" style={{ boxShadow: "20px 20px 0 #803800" }}>
-                        <Image name="a hat in time (seal the deal).jpg" alt="A Hat in Time (Seal the Deal)" dir="playlist-covers/" constant />
-                    </div>
-                    <h3 className="text-center text-white font-comic-relief text-xl sm:text-2xl mt-8">A Hat in Time (Seal the Deal)</h3>
-                </div>
+                <PlaylistLibCard name="DM DOKURO Calamity Mod" backdropColor="#A038C8" />
+                <PlaylistLibCard name="Vindsvept" backdropColor="#402726" />
+                <PlaylistLibCard name="A Hat in Time" backdropColor="#6070A0" />
+                <PlaylistLibCard name="A Hat in Time (Seal the Deal)" backdropColor="#803800" />
                 <div></div>
             </div>
             <div className="flex flex-row gap-x-4">
@@ -377,11 +368,12 @@ export function BGMMusic(){
 }
 
 export function RadioToast(){
+    const [ volume, setVolume ] = useState([100]);
     const { isPlayingState, player, speakerUID } = useMusic();
+    const { device } = useGlobal();
     const { isPlaying, setIsPlaying } = isPlayingState;
     const { setSpeakerUniqueId } = speakerUID;
     const { Image } = Client.Components.Dynamic
-    
 
     let constant = { isPlaying, setIsPlaying, player, setSpeakerUniqueId };
 
@@ -395,8 +387,24 @@ export function RadioToast(){
     }, [isPlaying.state], 100)
 
     useEffect(() => {
+        let showNameTimeout;
+        let hideNameTimeout;
+        if(device.device !== "lg" && device.device !== "xl" && device.device !== "2xl"){
+            showNameTimeout = setTimeout(() => document.getElementById("mn-dialog").show(), 100);
+            hideNameTimeout = setTimeout(() => document.getElementById("mn-dialog").close(), 3100);
+        } else {
+            showNameTimeout = setTimeout(() => document.getElementById("music-name").style.width = `${160 + ((isPlaying.playlist.length + isPlaying.music.length) * 10)}px`, 100);
+            hideNameTimeout = setTimeout(() => document.getElementById("music-name").style.width = 0, 3100);
+        }
+        return () => {
+            clearTimeout(showNameTimeout);
+            clearTimeout(hideNameTimeout);
+        }
+    }, [isPlaying.playlist, isPlaying.music, device.device]);
 
-    }, [isPlaying.playlist, isPlaying.music]);
+    useEffect(() => {
+        if(player.current) player.current.setVolume(volume[0]);
+    }, [volume])
 
     function isLofiRadio(){
         let iframeId;
@@ -461,7 +469,59 @@ export function RadioToast(){
             <button id="skip-play-btn" disabled={isPlaying.category === "Lofi Radio" ? true : false} onClick={skipOnToast}>
                 <Image name="next-button.png" alt="next-play-btn" dir="icon/" width={25} height={25} constant />
             </button>
-            <div id="music-name" className="font-comic-relief text-white">{`Now playing: ${isPlaying.playlist} - ${isPlaying.music}`}</div>
+            <button id="show-mn-btn" onClick={() => {
+                if(document.getElementById("mn-dialog").open) document.getElementById("mn-dialog").close();
+                else document.getElementById("mn-dialog").show()
+            }}>
+                <Image name="name-tag.png" alt="name-tag" dir="icon/" width={25} height={25} constant />
+            </button>
+            <button onClick={() => {
+                if(document.getElementById("volume-slider").style.display === "block") document.getElementById("volume-slider").style.display = "none";
+                else document.getElementById("volume-slider").style.display = "block"
+            }}>
+                <img src={`/imgs/backend-images/icon/${volume[0] === 0 ? "muted" : "audio"}.png`} alt="volume-btn" width={25} height={25} />
+                <div id="volume-slider" style={{ display: "none" }}>
+                <Range
+                    direction={Direction.Up}
+                    min={0}
+                    max={100}
+                    step={1}
+                    values={volume}
+                    onChange={(values) => setVolume(values)}
+                    renderTrack={({ props, children }) => (
+                        <div
+                        {...props}
+                        style={{
+                            ...props.style,
+                            height: "50px",
+                            width: "6px",
+                            borderRadius: "9999px",
+                            backgroundColor: "#fff",
+                        }}
+                        >
+                        {children}
+                        </div>
+                    )}
+                    renderThumb={({ props }) => (
+                        <div
+                        {...props}
+                        key={props.key}
+                        style={{
+                            ...props.style,
+                            height: "15px",
+                            width: "15px",
+                            borderRadius: "9999px",
+                            backgroundColor: "#999",
+                        }}
+                        />
+                    )}
+                />
+            </div>
+            </button>
+            <div id="music-name" style={{ width: 0 }} className="font-comic-relief text-white">{`Now playing: ${isPlaying.playlist} - ${isPlaying.music}`}</div>
+            <dialog id="mn-dialog">
+                <div>{`Now playing: ${isPlaying.playlist} - ${isPlaying.music}`}</div>
+            </dialog>
         </div>
 
     )

@@ -529,7 +529,7 @@ function NavBar({ arbitraryCSSRules }){
                 <Link href="/"><div className="ml-4 w-[30px] h-[30px]"><Image constant dir="icon/" name="home.png" alt="home"/></div></Link>
                 <MenuBtn />
                 <ul id="menu">
-                    <li><Link href="/#about-me">About me</Link></li>
+                    <li><Link href="/">About me</Link></li>
                     <li><a href="/my-projects">My Projects</a></li>
                     <li><a href="/lounge">Lounge</a></li>
                     <li><a>Contact</a></li>
