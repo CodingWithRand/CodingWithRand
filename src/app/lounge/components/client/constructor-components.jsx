@@ -1,43 +1,10 @@
 import Client from "@/glient/util"
-import { useRef, useState, useEffect, createContext, useContext } from "react";
-import { flushSync } from "react-dom";
+import { useRef, useState, useEffect } from "react";
 import musicId from "../musicId";
 import { Direction, Range } from "react-range";
 import { useGlobal } from "@/glient/global";
+import { useMusic, DiceSVG, playMusic, getRandomMusic, nextMusicInLib, PlaylistLibCard, MusicLibraryCard, MusicCard } from "./utility-components";
 
-const MusicState = createContext(undefined);
-
-export function MusicStateProvider({ children }){
-    const [ isPlaying, setIsPlaying ] = useState({ 
-        playlist: undefined,
-        music: undefined,
-        category: undefined,
-        subcategory: undefined,
-        state: false,
-    });
-    const [ speakerUniqueId, setSpeakerUniqueId ] = useState("speaker");
-    const [ currentSearchingLib, setCSL ] = useState("");
-    const toasterPlayer = useRef(null);
-
-    return (
-        <MusicState.Provider value={{ 
-            isPlayingState: {isPlaying, setIsPlaying },
-            player: toasterPlayer,
-            speakerUID: {speakerUniqueId, setSpeakerUniqueId },
-            csl: {currentSearchingLib, setCSL},
-         }}>
-            {children}
-        </MusicState.Provider>
-    )
-}
-
-export function useMusic(){
-  const context = useContext(MusicState);
-  if(!context){
-    throw new Error("useMusic must be used within a MusicStateProvider component!");
-  };
-  return context;
-};
 
 export function LofiRadio(){
     const { Image } = Client.Components.Dynamic
@@ -53,6 +20,7 @@ export function LofiRadio(){
     }, []);
 
     useEffect(() => {
+        if (isPlaying.category !== "Lofi Radio") return;
         if (!isPlaying.playlist || !isPlaying.music) return;
         let iframeId;
         switch (`${isPlaying.playlist} - ${isPlaying.music}`) {
@@ -75,22 +43,8 @@ export function LofiRadio(){
         setIsIframePlaying((prev) => ({ ...prev, [iframeId]: isPlaying.state }));
     }, [isPlaying.playlist, isPlaying.music]);
 
-    useEffect(() => {
-        if (!isPlaying.state){
-            document.querySelector(".belt").style.animationPlayState = "running";
-            document.querySelectorAll(".control-btn-icon").forEach((cbi) => {
-                cbi.src = "/imgs/backend-images/icon/play-button.png"
-            });
-            document.querySelectorAll(".control-btn").forEach((cb) => {
-                cb.src = "/imgs/backend-images/icon/play-button.png"
-            });
-            document.querySelectorAll(".lofi-radio").forEach((lr) => {
-                lr.classList.remove("selected")
-            });
-        }
-    }, [isPlaying.state])
-
     Client.Hooks.useDelayedEffect(() => {
+        if (isPlaying.category !== "Lofi Radio") return;
         if (Object.values(isIframePlaying).every((value) => value === false)){
           document.querySelectorAll(`.control-btn`).forEach((e) => e.style.pointerEvents = "initial");
           return;
@@ -99,7 +53,7 @@ export function LofiRadio(){
           if (isIframePlaying[id]) continue;
           document.querySelector(`#${id}.control-btn`).style.pointerEvents = "none";
         }
-      }, [isIframePlaying], 100);
+      }, [isIframePlaying, isPlaying.category], 100);
     
       function selection(e){
         e.target.classList.add("selected");
@@ -150,8 +104,14 @@ export function LofiRadio(){
               events: {
                 onReady: (event) => {
                   event.target.playVideo();
+                  event.target.setVolume(isPlaying.volume[0]);
                 },
-              },
+                onStateChange: (event) => {
+                  if (event.data === window.YT.PlayerState.PAUSED) {
+                    setIsIframePlaying((prev) => ({ ...prev, [cpi]: false }));
+                  }
+                },
+              }
             });
           } else {
             lofiRadioPlayers.current[cpi].playVideo();
@@ -230,72 +190,6 @@ export function LofiRadio(){
     )
 }
 
-function getRandomMusic(playlist=undefined, music=undefined){
-    const playlists = Object.keys(musicId);
-    const randomPlaylist = playlist || playlists[Math.floor(Math.random() * playlists.length)];
-    const musics = Object.keys(musicId[randomPlaylist]);
-    const randomMusic = music || musics[Math.floor(Math.random() * musics.length)];
-    return { playlist: randomPlaylist, music: randomMusic, id: musicId[randomPlaylist][randomMusic] };
-}
-
-function DiceSVG({ width, height, number }) {
-    return <svg width={width} height={height} id="dice">                              
-        <mask id={`dice-reverse-mask-${number}`}>                                
-            <rect width={width} height={height} fill="white" />
-            <circle cx={width * 1/4} cy={width * 3/4} r={Math.round(width / 10)} fill="black" className="d two three four five six"></circle>
-            <circle cx={width * 3/4} cy={width * 1/4} r={Math.round(width / 10)} fill="black" className="d two three four five six"></circle>
-        </mask>          
-        <rect width={width} height={height} rx={Math.round(width / 10)} ry={Math.round(width / 10)} fill="white" mask={`url(#dice-reverse-mask-${number})`} />
-    </svg>
-}
-
-function playMusic({ c, playlist, music, id, recursiveFunction, rfParams=undefined, subcategory=undefined }, constant){
-    if(playlist !== constant.isPlaying.playlist || music !== constant.isPlaying.music){
-        const uId = `speaker-${Date.now()}`;
-        flushSync(() => constant.setSpeakerUniqueId(uId))
-        if (window.currentPlayer) {
-            window.currentPlayer.destroy();
-            window.currentPlayer = null;
-        }
-        
-        // if (window.currentPlayer) window.currentPlayer.loadVideoById(id);
-        window.currentPlayer = new YT.Player(uId, {
-            videoId: id,
-            events: {    
-                onReady: (event) => {
-                    console.log("play")
-                    event.target.playVideo();
-                },
-                onStateChange: (event) => {
-                    if (event.data === YT.PlayerState.PAUSED) {
-                        constant.setIsPlaying((prev) => ({ ...prev, state: false })); 
-                    }
-                    else if (event.data === YT.PlayerState.ENDED) {
-                        if(!recursiveFunction) constant.setIsPlaying((prev) => ({ ...prev, state: false })); 
-                        if(rfParams) recursiveFunction(constant.e, ...rfParams);
-                        else recursiveFunction(constant.e);
-                    }
-                }
-            }
-        })
-        constant.setIsPlaying((prev) => ({...prev, playlist, music, state: true, category: c, subcategory }));
-        constant.player.current = window.currentPlayer;
-    }
-}
-
-function nextMusicInLib(playlist, currentIndex, ids, names, constant){
-    if(currentIndex === ids.length - 1) currentIndex = -1;
-    playMusic({
-        c: "Normal",
-        playlist,
-        music: names[currentIndex + 1],
-        id: ids[currentIndex + 1],
-        recursiveFunction: nextMusicInLib,
-        rfParams: [ playlist, currentIndex + 1, ids, names ],
-        subcategory: playlist
-    }, constant)
-}
-
 export function BGMMusic(){
     const { Image } = Client.Components.Dynamic
     const { isPlayingState, speakerUID, player } = useMusic();
@@ -317,15 +211,6 @@ export function BGMMusic(){
             playlist, music, id, 
             recursiveFunction: playRandomly, 
         }, constant);
-    }
-
-    function PlaylistLibCard({ name, backdropColor }){
-        return <div className="playlist-item">
-            <div className="playlist-cover" style={{ boxShadow: `20px 20px 0 ${backdropColor}` }}>
-                <Image name={`${name}.jpg`} alt={name} dir="playlist-covers/" constant />
-            </div>
-            <h3 className="text-center text-white font-comic-relief text-xl sm:text-2xl mt-8">{name}</h3>
-        </div>
     }
 
     return(
@@ -368,7 +253,6 @@ export function BGMMusic(){
 }
 
 export function RadioToast(){
-    const [ volume, setVolume ] = useState([100]);
     const { isPlayingState, player, speakerUID } = useMusic();
     const { device } = useGlobal();
     const { isPlaying, setIsPlaying } = isPlayingState;
@@ -387,6 +271,31 @@ export function RadioToast(){
     }, [isPlaying.state], 100)
 
     useEffect(() => {
+        if (!isPlaying.state){
+            document.querySelector(".belt").style.animationPlayState = "running";
+            document.querySelectorAll(".control-btn-icon").forEach((cbi) => {
+                cbi.src = "/imgs/backend-images/icon/play-button.png"
+            });
+            document.querySelectorAll(".control-btn").forEach((cb) => {
+                cb.src = "/imgs/backend-images/icon/play-button.png"
+                cb.classList.remove("selected")
+            });
+            document.querySelectorAll(".lofi-radio").forEach((lr) => {
+                lr.classList.remove("selected")
+            });
+            document.querySelectorAll(".radio-name").forEach((rn) => {
+                rn.classList.remove("selected")
+            });
+        }
+
+        if (isPlaying.state && isPlaying.category !== "Lofi Radio"){
+            document.querySelectorAll(".control-btn").forEach((e) => e.style.pointerEvents = "none");
+        } else if (!isPlaying.state && isPlaying.category !== "Lofi Radio") {
+            document.querySelectorAll(".control-btn").forEach((e) => e.style.pointerEvents = "initial");
+        }
+    }, [isPlaying.state, isPlaying.category])
+
+    useEffect(() => {
         let showNameTimeout;
         let hideNameTimeout;
         if(device.device !== "lg" && device.device !== "xl" && device.device !== "2xl"){
@@ -402,9 +311,6 @@ export function RadioToast(){
         }
     }, [isPlaying.playlist, isPlaying.music, device.device]);
 
-    useEffect(() => {
-        if(player.current) player.current.setVolume(volume[0]);
-    }, [volume])
 
     function isLofiRadio(){
         let iframeId;
@@ -479,15 +385,15 @@ export function RadioToast(){
                 if(document.getElementById("volume-slider").style.display === "block") document.getElementById("volume-slider").style.display = "none";
                 else document.getElementById("volume-slider").style.display = "block"
             }}>
-                <img src={`/imgs/backend-images/icon/${volume[0] === 0 ? "muted" : "audio"}.png`} alt="volume-btn" width={25} height={25} />
+                <img src={`/imgs/backend-images/icon/${isPlaying.volume[0] === 0 ? "muted" : "audio"}.png`} alt="volume-btn" width={25} height={25} />
                 <div id="volume-slider" style={{ display: "none" }}>
                 <Range
                     direction={Direction.Up}
                     min={0}
                     max={100}
                     step={1}
-                    values={volume}
-                    onChange={(values) => setVolume(values)}
+                    values={isPlaying.volume}
+                    onChange={(values) => setIsPlaying((prev) => ({...prev, volume: values }))}
                     renderTrack={({ props, children }) => (
                         <div
                         {...props}
@@ -529,88 +435,14 @@ export function RadioToast(){
 
 export function MusicLibrary(){
     const { Image } = Client.Components.Dynamic
-    const [ showingList, setShowingList ] = useState(showAllLib());
-    const { isPlayingState, player, speakerUID, csl } = useMusic();
-    const { isPlaying, setIsPlaying } = isPlayingState;
-    const { setSpeakerUniqueId } = speakerUID;
+    const { csl, mlList } = useMusic();
+    const { showingList, setShowingList } = mlList;
     const { currentSearchingLib, setCSL } = csl;
-    
-    let constant = { isPlaying, setIsPlaying, player, setSpeakerUniqueId };
 
     function showAllLib(){
         let list = [];
         for(const libName of Object.keys(musicId)) list.push(<MusicLibraryCard key={libName} libName={libName} />)
         return list
-    }
-
-    function MusicLibraryCard({ libName }){
-        function playRandomlyInLib(e){
-            setIsPlaying((prev) => ({...prev, state: false}));
-            if(player.current) player.current.pauseVideo();
-            constant["e"] = e
-            const { playlist, music, id } = getRandomMusic(libName)
-            playMusic({ 
-                c: "Random",
-                playlist, music, id, 
-                recursiveFunction: playRandomlyInLib,
-                rfParams: [ libName ],
-                subcategory: libName
-            }, constant)
-        }
-
-        function browseLib(){
-            setShowingList((() => {
-                let list = [];
-                for(const musicName of Object.keys(musicId[libName])) list.push(<MusicCard key={musicName} musicName={musicName} />)
-                return list
-            })())
-            setCSL(libName)
-        }
-
-        return <div id={libName} className="music-lib">
-            <span>{libName}</span>
-            <div className="flex flex-row gap-x-2 items-center">
-                <button className="round-btn" style={{ padding: "0.5rem" }} onClick={browseLib}>
-                    <Image name="search-interface-symbol.png" alt="search" dir="icon/" width={20} height={20} constant />
-                </button>
-                <button className="round-btn random-play" style={{ padding: "0.5rem" }} onClick={playRandomlyInLib}>
-                    <DiceSVG width={20} height={20} number={2} />
-                </button>
-            </div>
-        </div>
-    }
-
-    function MusicCard({ musicName }){
-        const { csl } = useMusic();
-        const { currentSearchingLib } = csl;
-
-        function playMusicInLib(e){
-            setIsPlaying((prev) => ({...prev, state: false}));
-            if(player.current) player.current.pauseVideo();
-            constant["e"] = e
-            const ids = Object.values(musicId[currentSearchingLib]);
-            const names = Object.keys(musicId[currentSearchingLib]);
-            let currentIndex = names.indexOf(musicName);
-
-            playMusic({ 
-                c: "Normal",
-                playlist: currentSearchingLib,
-                music: musicName,
-                id: musicId[currentSearchingLib][musicName],
-                recursiveFunction: nextMusicInLib,
-                rfParams: [ currentSearchingLib, currentIndex, ids, names, constant ],
-                subcategory: currentSearchingLib
-            }, constant)
-        }
-
-        return <div id={musicName} className="music-card">
-            <span>{musicName}</span>
-            <div className="flex flex-row gap-x-2 items-center">
-                <button className="round-btn" style={{ padding: "0.5rem" }} onClick={playMusicInLib}>
-                    <img src="/imgs/backend-images/icon/play-button.png" alt="control-btn" width={20} height={20} />
-                </button>
-            </div>
-        </div>
     }
 
     function searchCheck(e){
@@ -631,6 +463,8 @@ export function MusicLibrary(){
             return list
         })())
     }
+
+    useEffect(() => setShowingList(showAllLib()), [])
 
     return(
         <dialog id="music-library">
