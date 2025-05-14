@@ -26,14 +26,15 @@ export default function OriginBioCard() {
                         <Image name="channel_logo_new.png" constant alt="Avatar" style={{ aspectRatio: 96 / 96, objectFit: "cover" }} />
                     </div>
                     <div className="prose max-w-none w-full text-center text-xs nmob:text-sm sm:text-base">
-                        <p><i>&quot;A young ambitious junior developer&quot;</i></p>
+                        <p><i>&quot;A young ambitious self-taught developer&quot;</i></p>
                     </div>
                 </div>
                 <div className="p-3 sm:p-6">
                     <dl className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs nmob:text-sm sm:text-base">
                         <div className="info-list">
                             <dt>Name</dt>
-                            <dd>Thanwisit Angsachon</dd>
+                            {/* <dd>Thanwisit Angsachon</dd> */}
+                            <dd>(Hidden)</dd>
                         </div>
                         <div className="info-list">
                             <dt>Hobbies</dt>
@@ -41,7 +42,7 @@ export default function OriginBioCard() {
                         </div>
                         <div className="info-list">
                             <dt>Location</dt>
-                            <dd>Chiang Mai, Thailand</dd>
+                            <dd>(Hidden)</dd>
                             </div>
                         <div className="info-list">
                             <dt>Languages</dt>

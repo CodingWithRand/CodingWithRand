@@ -1,9 +1,20 @@
+
+// Due to privacy reason, I have to remove some of the content.
+// export const originContent = <>
+//     <h1>Origin</h1>
+//     <p>&emsp;&emsp;My name is Thanwisit Angsachon, and my nickname is Than. Despite having those name and nickname, I&apos;m insisting on using alias names like <a className="outside-link" target="_blank" href="https://www.youtube.com/@CodingWithRand">CodingWithRand</a> (My YouTube channel), CWR (abbrevation), or Rand0MTutorial (The previous name) on the internet, and I prefer people on the internet to call me <i>&quot;Rand&quot;</i></p>
+//     <p>&emsp;&emsp;I live in Thailand, to be precise, it&apos;s in Chiang Mai which one of a popular northern city, so that means I&apos;m Thai. I&apos;m turning 18 this year.</p>
+//     <p>&emsp;&emsp;I&apos;m currently studying in the Matthayom 6th (Equivalent to Grade 12 or Grade 13) of <a className="outside-link" target="_blank" href="https://eng.chongfah.ac.th">Chongfah Xinsheng Wanishbamrung</a> school. It&apos;s a Thai-Chinese private school. Even though I have been studying in this school since I was 7, I&apos;m still not that good at Chinese. I still know a little bit of Chinese, but I think my fundamental of Chinese is okay I guess.</p>
+//     <br /><br />
+//     <p>&emsp;&emsp;Want to know more about me? Keep scrolling down!</p>
+// </>
+
 export const originContent = <>
-    <h1>Origin</h1>
-    <p>&emsp;&emsp;My name is Thanwisit Angsachon, and my nickname is Than. Despite having those name and nickname, I&apos;m insisting on using alias names like <a className="outside-link" target="_blank" href="https://www.youtube.com/@CodingWithRand">CodingWithRand</a> (My YouTube channel), CWR (abbrevation), or Rand0MTutorial (The previous name) on the internet, and I prefer people on the internet to call me <i>&quot;Rand&quot;</i></p>
-    <p>&emsp;&emsp;I live in Thailand, to be precise, it&apos;s in Chiang Mai which one of a popular northern city, so that means I&apos;m Thai. I&apos;m turning 18 this year.</p>
-    <p>&emsp;&emsp;I&apos;m currently studying in the Matthayom 6th (Equivalent to Grade 12 or Grade 13) of <a className="outside-link" target="_blank" href="https://eng.chongfah.ac.th">Chongfah Xinsheng Wanishbamrung</a> school. It&apos;s a Thai-Chinese private school. Even though I have been studying in this school since I was 7, I&apos;m still not that good at Chinese. I still know a little bit of Chinese, but I think my fundamental of Chinese is okay I guess.</p>
-    <br /><br />
+    <h1>About Me</h1>
+    <p><i>* Due to privacy and security reason, I have to conceal some of my personal information *</i></p>
+    <br/>
+    <p>Hello! I&apos;m a self-taught developer based in Thailand. I&apos;ve been learning and building personal projects for over 3 years, whether it&apos;s full-stack web development (possibly), mobile app development (React-Native), computer program development (Python), or game development (Roblox Studio). Overall that, I have a passion in frontend web development the most. So, I have honed my skill in the frontend world more than any other fields, starting from the basic HTML, CSS, and JavaScript, to using modern tools like React, Next.js, and Tailwind CSS. I enjoy coding, sharing what I learn, and turning ideas into fully responsive web experiences.</p>
+    <br/>
     <p>&emsp;&emsp;Want to know more about me? Keep scrolling down!</p>
 </>
 
