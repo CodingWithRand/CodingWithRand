@@ -74,6 +74,7 @@ export function DiceSVG({ width, height, number }) {
 }
 
 export function playMusic({ c, playlist, music, id, recursiveFunction, rfParams=undefined, subcategory=undefined }, constant){
+    console.log(playlist)
     if(playlist !== constant.isPlaying.playlist || music !== constant.isPlaying.music){
         const uId = `speaker-${Date.now()}`;
         flushSync(() => constant.setSpeakerUniqueId(uId))
@@ -140,7 +141,7 @@ export function MusicLibraryCard({ libName }){
             c: "Random",
             playlist, music, id, 
             recursiveFunction: playRandomlyInLib,
-            rfParams: [ libName ],
+            rfParams: [ "Random", libName ],
             subcategory: libName
         }, constant)
     }
@@ -190,7 +191,7 @@ export function MusicCard({ musicName }){
             music: musicName,
             id: musicId[currentSearchingLib][musicName],
             recursiveFunction: nextMusicInLib,
-            rfParams: [ currentSearchingLib, currentIndex, ids, names, constant ],
+            rfParams: [ "Normal", currentSearchingLib, currentIndex, ids, names, constant ],
             subcategory: currentSearchingLib
         }, constant)
     }

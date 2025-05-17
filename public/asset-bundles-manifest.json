@@ -1,0 +1,13 @@
+{
+    "bundles": [
+        {
+            "name": "library",
+            "assets": [
+                {
+                    "alias": "bookshelf",
+                    "src": "/imgs/backend-images/sprites/bookshelf.png"
+                }
+            ]
+        }
+    ]
+}

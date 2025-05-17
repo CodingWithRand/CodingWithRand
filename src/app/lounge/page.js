@@ -4,7 +4,7 @@ import "./page.css";
 import Client from "@/glient/util";
 import { useEffect } from "react";
 import Neutral from "@/geutral/util";
-import { BGMMusic, LofiRadio, RadioToast, MusicLibrary } from "./components/client/constructor-components";
+import { BGMMusic, LofiRadio, RadioToast, MusicLibrary, BookShelf } from "./components/client/constructor-components";
 import { MusicStateProvider } from "./components/client/utility-components";
 import Script from "next/script";
 
@@ -76,6 +76,12 @@ export default function Lounge() {
             ]}
             backgroundImageDir={false}
           />
+        </section>
+        <section className="break bg-black flex flex-row items-center justify-evenly">
+          <h1 id="im-a-bookworm" className="relative z-10 art-text py-[1em] md:py-[2em] font-bangers text-3xl nmob:text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[#1DB954]">I&apos;m a bookworm!</h1>
+        </section>
+        <section className="bg-black h-screen w-screen flex items-center justify-center">
+          <BookShelf />
         </section>
       </main>
       <CWRFooter arbitraryCSSRules={

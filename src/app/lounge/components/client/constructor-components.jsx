@@ -1,10 +1,18 @@
-import Client from "@/glient/util"
+import { Application, extend } from "@pixi/react";
+import { Container, Graphics, Sprite, Texture, Assets } from "pixi.js";
+
+import Client from "@/glient/util";
 import { useRef, useState, useEffect } from "react";
 import musicId from "../musicId";
 import { Direction, Range } from "react-range";
 import { useGlobal } from "@/glient/global";
 import { useMusic, DiceSVG, playMusic, getRandomMusic, nextMusicInLib, PlaylistLibCard, MusicLibraryCard, MusicCard } from "./utility-components";
 
+extend({
+    Container,
+    Graphics,
+    Sprite,
+})
 
 export function LofiRadio(){
     const { Image } = Client.Components.Dynamic
@@ -491,5 +499,41 @@ export function MusicLibrary(){
                 </div>
             </div>
         </dialog>
+    )
+}
+
+export function BookShelf(){
+    const parent = useRef(null);
+    const [ textures, setTextures ] = useState(Texture.EMPTY);
+    const [ spriteSizes, setSpriteSizes ] = useState({
+        bookshelf: {
+            
+        }
+    });
+
+    useEffect(() => {
+        (async () => {
+            await Assets.init({ manifest: "/asset-bundles-manifest.json" })
+            if (textures === Texture.EMPTY) {
+                Assets
+                    .loadBundle("library")
+                    .then((loaded) => {
+                        setTextures(loaded)
+                    })
+            }
+        })()
+    }, []);
+
+
+    return (
+        // <div className="h-[80%] w-[80%]" ref={parent}>
+        //     <Application resizeTo={parent}>
+        //                 <pixiContainer x={0} y={0}>
+        //                     <pixiSprite texture={textures.bookshelf} x={0} y={0} scale={0.125}/>
+        //                     <pixiSprite texture={textures.bookshelf} x={600} y={0} scale={0.125}/>
+        //                 </pixiContainer>
+        //     </Application>
+        // </div>
+        <></>
     )
 }
