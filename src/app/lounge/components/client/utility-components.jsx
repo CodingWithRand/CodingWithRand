@@ -3,6 +3,11 @@ import { flushSync } from "react-dom";
 import { useContext, useState, useRef, createContext, useEffect } from "react";
 import musicId from "../musicId";
 
+import { extend } from "@pixi/react";
+import { Graphics, Rectangle } from "pixi.js";
+
+extend({ Graphics });
+
 const MusicState = createContext(undefined);
 
 export function MusicStateProvider({ children }){
@@ -11,11 +16,12 @@ export function MusicStateProvider({ children }){
         music: undefined,
         category: undefined,
         subcategory: undefined,
+        globallyRandom: true,
         state: false,
         volume: [100],
     });
     const [ speakerUniqueId, setSpeakerUniqueId ] = useState("speaker");
-    const [ currentSearchingLib, setCSL ] = useState("");
+    const [ currentSearching, setCS ] = useState({ cate: undefined, lib: undefined });
     const [ showingList, setShowingList ] = useState([]);
     const toasterPlayer = useRef(null);
 
@@ -28,7 +34,7 @@ export function MusicStateProvider({ children }){
             isPlayingState: {isPlaying, setIsPlaying },
             player: toasterPlayer,
             speakerUID: {speakerUniqueId, setSpeakerUniqueId },
-            csl: {currentSearchingLib, setCSL},
+            cs: {currentSearching, setCS},
             mlList: {showingList, setShowingList},
          }}>
             {children}
@@ -44,22 +50,37 @@ export function useMusic(){
   return context;
 };
 
+export function CategoryTitle({ text, fontSize }){
+    return(
+        <div className="flex">
+            <div className="ml-4 text-white _90deg-flipped-ccw-text">
+                <div className="body-text" style={{ fontSize: fontSize ? fontSize : "2rem" }}>
+                    {text}
+                </div>
+            </div>
+            <div className="vr"></div>
+        </div>
+    )
+}
+
 export function PlaylistLibCard({ name, backdropColor }){
     const { Image } = Client.Components.Dynamic
     return <div className="playlist-item">
         <div className="playlist-cover" style={{ boxShadow: `20px 20px 0 ${backdropColor}` }}>
             <Image name={`${name}.jpg`} alt={name} dir="playlist-covers/" constant />
         </div>
-        <h3 className="text-center text-white font-comic-relief text-xl sm:text-2xl mt-8">{name}</h3>
+        <h3 className="text-center text-white font-comic-relief text-lg sm:text-xl mt-8">{name}</h3>
     </div>
 }
 
-export function getRandomMusic(playlist=undefined, music=undefined){
-    const playlists = Object.keys(musicId);
+export function getRandomMusic(cate=undefined, playlist=undefined, music=undefined){
+    const categories = Object.keys(musicId);
+    const randomCategory = cate || categories[Math.floor(Math.random() * categories.length)];
+    const playlists = Object.keys(musicId[randomCategory]);
     const randomPlaylist = playlist || playlists[Math.floor(Math.random() * playlists.length)];
-    const musics = Object.keys(musicId[randomPlaylist]);
+    const musics = Object.keys(musicId[randomCategory][randomPlaylist]);
     const randomMusic = music || musics[Math.floor(Math.random() * musics.length)];
-    return { playlist: randomPlaylist, music: randomMusic, id: musicId[randomPlaylist][randomMusic] };
+    return { playlist: randomPlaylist, music: randomMusic, id: musicId[randomCategory][randomPlaylist][randomMusic] };
 }
 
 export function DiceSVG({ width, height, number }) {
@@ -73,7 +94,17 @@ export function DiceSVG({ width, height, number }) {
     </svg>
 }
 
-export function playMusic({ c, playlist, music, id, recursiveFunction, rfParams=undefined, subcategory=undefined }, constant){
+export function playMusic({ 
+    c, 
+    playlist, 
+    music, 
+    id, 
+    recursiveFunction, 
+    isRfDOMEvent=false, 
+    rfParams=undefined,
+    subcategory=undefined, 
+    globallyRandom=false 
+}, constant){
     console.log(playlist)
     if(playlist !== constant.isPlaying.playlist || music !== constant.isPlaying.music){
         const uId = `speaker-${Date.now()}`;
@@ -98,18 +129,22 @@ export function playMusic({ c, playlist, music, id, recursiveFunction, rfParams=
                     }
                     else if (event.data === YT.PlayerState.ENDED) {
                         if(!recursiveFunction) constant.setIsPlaying((prev) => ({ ...prev, state: false })); 
-                        if(rfParams) recursiveFunction(constant.e, ...rfParams);
+                        if(rfParams){
+                            if(isRfDOMEvent) recursiveFunction(constant.e, ...rfParams);
+                            else recursiveFunction(...rfParams);
+                        }
                         else recursiveFunction(constant.e);
                     }
                 }
             }
         })
-        constant.setIsPlaying((prev) => ({...prev, playlist, music, state: true, category: c, subcategory }));
+        constant.setIsPlaying((prev) => ({...prev, playlist, music, state: true, category: c, subcategory, globallyRandom }));
         constant.player.current = window.currentPlayer;
     }
 }
 
-export function nextMusicInLib(playlist, currentIndex, ids, names, constant){
+export function nextMusicInLib(playlist, currentIndex, ids, names, cate, constant){
+    console.log(constant)
     if(currentIndex === ids.length - 1) currentIndex = -1;
     playMusic({
         c: "Normal",
@@ -117,17 +152,17 @@ export function nextMusicInLib(playlist, currentIndex, ids, names, constant){
         music: names[currentIndex + 1],
         id: ids[currentIndex + 1],
         recursiveFunction: nextMusicInLib,
-        rfParams: [ playlist, currentIndex + 1, ids, names ],
-        subcategory: playlist
+        rfParams: [ playlist, currentIndex + 1, ids, names, cate, constant ],
+        subcategory: cate,
     }, constant)
 }
 
-export function MusicLibraryCard({ libName }){
-    const { isPlayingState, player, speakerUID, csl, mlList } = useMusic();
+export function MusicLibraryCard({ cate, libName }){
+    const { isPlayingState, player, speakerUID, cs, mlList } = useMusic();
     const { isPlaying, setIsPlaying } = isPlayingState;
     const { setShowingList } = mlList;
     const { setSpeakerUniqueId } = speakerUID;
-    const { setCSL } = csl;
+    const { setCS } = cs;
     const { Image } = Client.Components.Dynamic
 
     let constant = { isPlaying, setIsPlaying, player, setSpeakerUniqueId };
@@ -136,27 +171,38 @@ export function MusicLibraryCard({ libName }){
         setIsPlaying((prev) => ({...prev, state: false}));
         if(player.current) player.current.pauseVideo();
         constant["e"] = e
-        const { playlist, music, id } = getRandomMusic(libName)
+        let musicMetadata;
+        if(cate && !libName) musicMetadata = getRandomMusic(cate)
+        else if(cate && libName) musicMetadata = getRandomMusic(cate, libName);
+        const { playlist, music, id } = musicMetadata;
         playMusic({ 
             c: "Random",
             playlist, music, id, 
             recursiveFunction: playRandomlyInLib,
-            rfParams: [ "Random", libName ],
-            subcategory: libName
+            subcategory: cate
         }, constant)
     }
 
     function browseLib(){
-        setShowingList((() => {
-            let list = [];
-            for(const musicName of Object.keys(musicId[libName])) list.push(<MusicCard key={musicName} musicName={musicName} />)
-            return list
-        })())
-        setCSL(libName)
+        if(cate && !libName){
+            setShowingList((() => {
+                let list = [];
+                for(const lName of Object.keys(musicId[cate])) list.push(<MusicLibraryCard key={`${cate}-${lName}`} cate={cate} libName={lName} />)
+                return list
+            })())
+            setCS({ cate, lib: undefined })
+        }else if(cate && libName){
+            setShowingList((() => {
+                let list = [];
+                for(const musicName of Object.keys(musicId[cate][libName])) list.push(<MusicCard key={musicName} musicName={musicName} />)
+                return list
+            })())
+            setCS((prev) => ({ ...prev, lib: libName }))
+        }
     }
 
-    return <div id={libName} className="music-lib">
-        <span>{libName}</span>
+    return <div id={cate && libName ? libName : cate} className="music-lib">
+        <span>{cate && libName ? libName : cate}</span>
         <div className="flex flex-row gap-x-2 items-center">
             <button className="round-btn" style={{ padding: "0.5rem" }} onClick={browseLib}>
                 <Image name="search-interface-symbol.png" alt="search" dir="icon/" width={20} height={20} constant />
@@ -170,10 +216,10 @@ export function MusicLibraryCard({ libName }){
 
 export function MusicCard({ musicName }){
 
-    const { isPlayingState, player, speakerUID, csl } = useMusic();
+    const { isPlayingState, player, speakerUID, cs } = useMusic();
     const { isPlaying, setIsPlaying } = isPlayingState;
     const { setSpeakerUniqueId } = speakerUID;
-    const { currentSearchingLib } = csl;
+    const { currentSearching } = cs;
 
     let constant = { isPlaying, setIsPlaying, player, setSpeakerUniqueId };
 
@@ -181,18 +227,18 @@ export function MusicCard({ musicName }){
         setIsPlaying((prev) => ({...prev, state: false}));
         if(player.current) player.current.pauseVideo();
         constant["e"] = e
-        const ids = Object.values(musicId[currentSearchingLib]);
-        const names = Object.keys(musicId[currentSearchingLib]);
+        const ids = Object.values(musicId[currentSearching.cate][currentSearching.lib]);
+        const names = Object.keys(musicId[currentSearching.cate][currentSearching.lib]);
         let currentIndex = names.indexOf(musicName);
 
         playMusic({ 
             c: "Normal",
-            playlist: currentSearchingLib,
+            playlist: currentSearching.lib,
             music: musicName,
-            id: musicId[currentSearchingLib][musicName],
+            id: musicId[currentSearching.cate][currentSearching.lib][musicName],
             recursiveFunction: nextMusicInLib,
-            rfParams: [ "Normal", currentSearchingLib, currentIndex, ids, names, constant ],
-            subcategory: currentSearchingLib
+            rfParams: [ currentSearching.lib, currentIndex, ids, names, currentSearching.cate, constant ],
+            subcategory: currentSearching.cate
         }, constant)
     }
 
@@ -204,4 +250,73 @@ export function MusicCard({ musicName }){
             </button>
         </div>
     </div>
+}
+
+export function Book({
+    side,
+    position,
+    thickness,
+    height,
+    color,
+    event
+}){
+    return(
+        <pixiGraphics
+            interactive={true}
+            hitArea={new Rectangle(0, 0, thickness, height)}
+            onClick={event.onClick}
+            onTap={event.onTap}
+            cursor="pointer"
+            x={position.x}
+            y={position.y}
+            draw={g => {
+                // Book cover
+                g.setFillStyle({ color: color.cover });
+                g.rect(0, 0, thickness, height);
+                g.fill();
+                // Book spine (darker)
+                g.setFillStyle({ color: color.spine });
+                g.rect(0, 0, 6, height);
+                g.fill();
+
+                if(side === "left"){
+                    // Book top (simulate 3D)
+                    g.setFillStyle({ color: 0xffeedd });
+                    g.moveTo(0, 0);
+                    g.lineTo(thickness, 0);
+                    g.lineTo(thickness + 12, -20);
+                    g.lineTo(12, -20);
+                    g.closePath();
+                    g.fill();
+                    // Book front
+                    g.setFillStyle({ color: color.front });
+                    g.moveTo(thickness, 0);
+                    g.lineTo(thickness, height);
+                    g.lineTo(thickness + 12, height - 20);
+                    g.lineTo(thickness + 12, -20);
+                    g.closePath();
+                    g.fill();
+                }
+                else if(side === "right"){
+                    // Book top (simulate 3D)
+                    g.setFillStyle({ color: 0xffeedd });
+                    g.moveTo(0, 0);
+                    g.lineTo(thickness, 0);
+                    g.lineTo(thickness - 12, -20);
+                    g.lineTo(-12, -20);
+                    g.closePath();
+                    g.fill();
+                    // Book back
+                    g.setFillStyle({ color: color.spine });
+                    g.moveTo(0, 0);
+                    g.lineTo(0, height);
+                    g.lineTo(-12, height - 20);
+                    g.lineTo(-12, -20);
+                    g.closePath();
+                    g.fill();
+                }
+                
+            }}
+        />
+    )
 }

@@ -4,7 +4,7 @@ import "./page.css";
 import Client from "@/glient/util";
 import { useEffect } from "react";
 import Neutral from "@/geutral/util";
-import { BGMMusic, LofiRadio, RadioToast, MusicLibrary, BookShelf } from "./components/client/constructor-components";
+import { LofiRadio, RadioToast, MusicLibrary, BookShelf, MusicLibraryDialog } from "./components/client/constructor-components";
 import { MusicStateProvider } from "./components/client/utility-components";
 import Script from "next/script";
 
@@ -69,7 +69,7 @@ export default function Lounge() {
             totalPages={2}
             corousselElements={[
               <LofiRadio key={1} />,
-              <BGMMusic key={2} />,
+              <MusicLibrary key={2} />,
             ]}
             corousselWrappersStyle={[
               
@@ -77,10 +77,24 @@ export default function Lounge() {
             backgroundImageDir={false}
           />
         </section>
-        <section className="break bg-black flex flex-row items-center justify-evenly">
-          <h1 id="im-a-bookworm" className="relative z-10 art-text py-[1em] md:py-[2em] font-bangers text-3xl nmob:text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[#1DB954]">I&apos;m a bookworm!</h1>
+        <section className="break flex flex-col items-center" style={{ backgroundImage: "linear-gradient(black 50%, rgb(169, 95, 47))" }}>
+          <div className="w-full flex flex-row items-center justify-evenly">
+            <div>
+              <Image alt="falling book" name="falling-book.png" constant  />
+            </div>
+            <h1 id="im-a-bookworm" className="relative z-10 art-text py-[1em] md:py-[2em] font-bangers text-3xl nmob:text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[#1DB954]">I&apos;m a bookworm!</h1>
+          </div>
+          <Image alt="bookpile" name="pile of books.png" style={{ maskImage: "linear-gradient(black 80%, transparent 100%)" }} constant/>
         </section>
-        <section className="bg-black h-screen w-screen flex items-center justify-center">
+        <section className="h-screen w-screen flex items-center justify-center" style={{
+          backgroundColor: "rgb(169, 95, 47)",
+        }}>
+          <Image cls="w-full h-full" alt="old library" name="old-library-bg.jpg" style={{ 
+            position: "absolute",
+            zIndex: 0,
+            maskImage: "linear-gradient(transparent, black 20%)",
+            objectFit: "cover",
+          }} constant />
           <BookShelf />
         </section>
       </main>
@@ -92,10 +106,9 @@ export default function Lounge() {
           footer > :last-child {
             background-image: linear-gradient(to bottom, transparent, #ffa0cf)
           }
-
         `}</style>
       } />
-      <MusicLibrary />
+      <MusicLibraryDialog />
       <RadioToast />
       <Script src="https://www.youtube.com/iframe_api" />
     </MusicStateProvider>

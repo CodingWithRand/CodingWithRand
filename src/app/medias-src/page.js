@@ -52,6 +52,9 @@ export default function MediaSrc() {
         <dd><a href="https://www.bing.com/images/create/a-sticker-of-a-cartoon-character-of-a-little-girl-/1-65f5c0d0f15442f18284dfc40d05a14e?FORM=GUH2CR">mentor-chatgpt</a></dd>
         <dt>Other</dt>
         <dd><a href="https://en.wikipedia.org/wiki/Caesar_cipher#/media/File:Caesar_cipher_left_shift_of_3.svg">Caesar cipher</a></dd>
+        <dd><a href="https://www.kindpng.com/imgv/ToTiRoi_book-bookcover-floating-floatingbook-pages-png-transparent-background/" target="_blank">Falling Book</a></dd>
+        <dd><a href="https://www.pngitem.com/middle/Jhohim_books-png-file-download-free-book-pile-transparent/">Bookpile</a></dd>
+        <dd><a href="https://pngtree.com/freebackground/3d-illustration-of-old-library-or-bookshop-with-many-books-on-shelves_15710808.html">Old library background</a></dd>
       </dl>
       
     </main>

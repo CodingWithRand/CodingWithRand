@@ -1,12 +1,23 @@
 import { Application, extend } from "@pixi/react";
-import { Container, Graphics, Sprite, Texture, Assets } from "pixi.js";
+import { Container, Graphics, Sprite, Texture, Assets, Rectangle } from "pixi.js";
 
 import Client from "@/glient/util";
 import { useRef, useState, useEffect } from "react";
 import musicId from "../musicId";
 import { Direction, Range } from "react-range";
 import { useGlobal } from "@/glient/global";
-import { useMusic, DiceSVG, playMusic, getRandomMusic, nextMusicInLib, PlaylistLibCard, MusicLibraryCard, MusicCard } from "./utility-components";
+import { 
+    useMusic,
+    DiceSVG,
+    playMusic,
+    getRandomMusic,
+    nextMusicInLib,
+    PlaylistLibCard,
+    MusicLibraryCard,
+    MusicCard,
+    Book,
+    CategoryTitle
+} from "./utility-components";
 
 extend({
     Container,
@@ -198,16 +209,13 @@ export function LofiRadio(){
     )
 }
 
-export function BGMMusic(){
+export function MusicLibrary(){
     const { Image } = Client.Components.Dynamic
     const { isPlayingState, speakerUID, player } = useMusic();
     const { isPlaying, setIsPlaying } = isPlayingState;
     const { speakerUniqueId, setSpeakerUniqueId } = speakerUID;
 
     let constant = { isPlaying, setIsPlaying, player, setSpeakerUniqueId };
-    
-    function explain(e){ e.target.querySelectorAll("span").forEach((span) => span.style.display = "inline") }
-    function abbreviate(e){ e.target.querySelectorAll("span").forEach((span) => span.style.display = "none") }
 
     function playRandomly(e){ 
         setIsPlaying((prev) => ({...prev, state: false}));
@@ -217,31 +225,36 @@ export function BGMMusic(){
         playMusic({ 
             c: "Random",
             playlist, music, id, 
-            recursiveFunction: playRandomly, 
+            recursiveFunction: playRandomly,
+            isRfDOMEvent: true,
+            globallyRandom: true
         }, constant);
     }
 
     return(
         <div className="flex flex-col items-center h-full relative">
-            <h2 className="text-[#9b3331] font-comic-relief py-16 text-center text-5xl nmob:text-6xl sm:text-7xl md:text-8xl lg:text-9xl" onMouseEnter={explain} onMouseLeave={abbreviate} onClick={explain}>
-                B
-                <span style={{ fontSize: "1rem", display: "none" }}>ack</span>
-                G
-                <span style={{ fontSize: "1rem", display: "none" }}>round </span>
-                M
-                <span style={{ fontSize: "1rem", display: "none" }}>usic</span>
+            <h2 className="text-[#9b3331] font-comic-relief py-16 text-center text-5xl nmob:text-6xl sm:text-7xl md:text-8xl lg:text-9xl">
+                Music Library
             </h2>
             <div className="conveyor overflow-auto" id="playlists">
-                <div></div>
-                <PlaylistLibCard name="DM DOKURO Calamity Mod" backdropColor="#A038C8" />
+                <CategoryTitle text="Background Music" />
                 <PlaylistLibCard name="Vindsvept" backdropColor="#402726" />
+                <CategoryTitle text="Game OST" />
+                <PlaylistLibCard name="DM DOKURO Calamity Mod" backdropColor="#A038C8" />
                 <PlaylistLibCard name="A Hat in Time" backdropColor="#6070A0" />
                 <PlaylistLibCard name="A Hat in Time (Seal the Deal)" backdropColor="#803800" />
-                <div></div>
+                <PlaylistLibCard name="The Binding of Isaac" backdropColor="#382030" />
+                <PlaylistLibCard name="The Binding of Isaac (Rebirth)" backdropColor="#650005" />
+                <PlaylistLibCard name="The Binding of Isaac (Afterbirth)" backdropColor="#ef8778" />
+                <PlaylistLibCard name="The Binding of Isaac (Repentance)" backdropColor="#b50017" />
+                <PlaylistLibCard name="The Binding of Isaac (Antibirth)" backdropColor="#383030" />
+                <PlaylistLibCard name="The Legend of Bum-bo" backdropColor="#42330A" />
+                <PlaylistLibCard name="The Binding of Isaac (Lullabies)" backdropColor="#31372A" />
+                <PlaylistLibCard name="The Binding of Isaac (Mutations)" backdropColor="#00355D" />
             </div>
             <div className="flex flex-row gap-x-4">
                 <div className="flex flex-col items-center gap-y-2">
-                    <button className="round-btn mt-4" onClick={() => document.getElementById("music-library").showModal()}>
+                    <button className="round-btn mt-4" onClick={() => document.getElementById("music-library").style.display = "block"}>
                         <Image name="search-interface-symbol.png" alt="search" dir="icon/" width={28} height={28} constant />
                     </button>
                     <span className="text-white font-comic-relief">Search</span>
@@ -261,10 +274,11 @@ export function BGMMusic(){
 }
 
 export function RadioToast(){
-    const { isPlayingState, player, speakerUID } = useMusic();
+    const { isPlayingState, player, speakerUID, cs } = useMusic();
     const { device } = useGlobal();
     const { isPlaying, setIsPlaying } = isPlayingState;
     const { setSpeakerUniqueId } = speakerUID;
+    const { currentSearching } = cs;
     const { Image } = Client.Components.Dynamic
 
     let constant = { isPlaying, setIsPlaying, player, setSpeakerUniqueId };
@@ -361,14 +375,17 @@ export function RadioToast(){
     function skipOnToast(e){
         if(isPlaying.category === "Lofi Radio") return;
         else if(isPlaying.category === "Random") {
-            if(isPlaying.subcategory) document.getElementById(isPlaying.subcategory).querySelector(".random-play").click();
+            if(!isPlaying.globallyRandom){
+                if(currentSearching.cate) document.getElementById(isPlaying.playlist).querySelector(".random-play").click();
+                else document.getElementById(isPlaying.subcategory).querySelector(".random-play").click();
+            }
             else document.querySelector(".random-play").click();
         }
         else if(isPlaying.category === "Normal") {
             if(isPlaying.subcategory){
                 constant["e"] = e
-                const names = Object.keys(musicId[isPlaying.playlist]);
-                nextMusicInLib(isPlaying.playlist, names.indexOf(isPlaying.music), Object.values(musicId[isPlaying.playlist]), names, constant);
+                const names = Object.keys(musicId[isPlaying.subcategory][isPlaying.playlist]);
+                nextMusicInLib(isPlaying.playlist, names.indexOf(isPlaying.music), Object.values(musicId[isPlaying.subcategory][isPlaying.playlist]), names, isPlaying.subcategory, constant);
             }
         }
     }
@@ -441,28 +458,33 @@ export function RadioToast(){
     )
 }
 
-export function MusicLibrary(){
+export function MusicLibraryDialog(){
     const { Image } = Client.Components.Dynamic
-    const { csl, mlList } = useMusic();
+    const { cs, mlList } = useMusic();
     const { showingList, setShowingList } = mlList;
-    const { currentSearchingLib, setCSL } = csl;
+    const { currentSearching, setCS } = cs;
 
-    function showAllLib(){
+    function showAllCate(){
         let list = [];
-        for(const libName of Object.keys(musicId)) list.push(<MusicLibraryCard key={libName} libName={libName} />)
+        for(const cate of Object.keys(musicId)) list.push(<MusicLibraryCard key={cate} cate={cate} />)
         return list
     }
 
     function searchCheck(e){
         setShowingList((() => {
             let list = [];
-            if (currentSearchingLib === ""){ 
-                for(const libName of Object.keys(musicId)){
+            if (Object.values(currentSearching).every((v) => v === undefined)) {
+                for(const cate of Object.keys(musicId)){
                     const searchPattern = new RegExp(`^${e.target.value.toLowerCase()}`)
-                    if(searchPattern.test(libName.toLowerCase())) list.push(<MusicLibraryCard key={libName} libName={libName} />)
+                    if(searchPattern.test(cate.toLowerCase())) list.push(<MusicLibraryCard key={cate} cate={cate} />)
                 }
-            } else {
-                for(const musicName of Object.keys(musicId[currentSearchingLib])){
+            } else if (currentSearching.cate && !currentSearching.lib) {
+                for(const libName of Object.keys(musicId[currentSearching.cate])){
+                    const searchPattern = new RegExp(`^${e.target.value.toLowerCase()}`)
+                    if(searchPattern.test(libName.toLowerCase())) list.push(<MusicLibraryCard key={libName} cate={currentSearching.cate} libName={libName} />)
+                }
+            } else if (currentSearching.cate && currentSearching.lib) {
+                for(const musicName of Object.keys(musicId[currentSearching.cate][currentSearching.lib])){
                     const searchPattern = new RegExp(`^${e.target.value.toLowerCase()}`)
                     if(searchPattern.test(musicName.toLowerCase())) list.push(<MusicCard key={musicName} musicName={musicName} />)
                 }
@@ -472,10 +494,10 @@ export function MusicLibrary(){
         })())
     }
 
-    useEffect(() => setShowingList(showAllLib()), [])
+    useEffect(() => setShowingList(showAllCate()), [])
 
     return(
-        <dialog id="music-library">
+        <div id="music-library" className="pseudo-modal" style={{ display: "none" }}>
             <div className="music-library-container">
                 <div className="flex flex-col w-full items-center">
                     <div id="lib-search-bar">
@@ -488,28 +510,63 @@ export function MusicLibrary(){
                 </div>
                 
                 <div className="flex flex-row justify-center gap-x-4">
-                    { currentSearchingLib !== "" &&
-                        <button onClick={() => { setCSL(""); setShowingList(showAllLib()) }}>
+                    { Object.values(currentSearching).some((v) => v !== undefined) &&
+                        <button onClick={() => {
+                            if(currentSearching.cate && !currentSearching.lib){
+                                setCS({ cate: undefined, lib: undefined });
+                                setShowingList(showAllCate())
+                            } else if (currentSearching.cate && currentSearching.lib){
+                                setCS((prev) => ({...prev, lib: undefined}));
+                                setShowingList((() => {
+                                    let list = [];
+                                    for(const libName of Object.keys(musicId[currentSearching.cate])) list.push(<MusicLibraryCard key={libName} cate={currentSearching.cate} libName={libName} />)
+                                    return list
+                                })())
+                            }
+                        }}>
                             <Image name="left-arrow.png" alt="left-arrow" dir="icon/" width={28} height={28} constant />
                         </button>
                     }
-                    <button onClick={() => document.getElementById("music-library").close()}>
+                    <button onClick={() => document.getElementById("music-library").style.display = "none"}>
                         <Image name="close.png" alt="close" dir="icon/" width={28} height={28} constant />
                     </button>
                 </div>
             </div>
-        </dialog>
+        </div>
     )
 }
 
 export function BookShelf(){
+    const defaultSpriteSizes = {
+        container: {
+            width: 550,
+            height: 560
+        },
+        shelf: {
+            s1: {
+                width: 530,
+                height: 120
+            }
+        },
+        bookshelf: 0.125
+    }
     const parent = useRef(null);
+    const { device } = useGlobal();
     const [ textures, setTextures ] = useState(Texture.EMPTY);
-    const [ spriteSizes, setSpriteSizes ] = useState({
-        bookshelf: {
-            
-        }
+    const [ spriteSizes, setSpriteSizes ] = useState(defaultSpriteSizes);
+    const [ dialogPos, setDialogPos ] = useState({ x: 0, y: 0 });
+    const [ bookMetadata, setBookMetadata ] = useState({
+        title: "",
+        link: ""
     });
+
+    function showBookCover(e, title, link){
+        e.stopPropagation();
+        const { x, y } = e.data.global;
+        setDialogPos({ x: x, y: y - 50 });
+        setBookMetadata({ title, link });
+        document.getElementById("link-dialog").show();
+    }
 
     useEffect(() => {
         (async () => {
@@ -524,16 +581,113 @@ export function BookShelf(){
         })()
     }, []);
 
+    useEffect(() => {
+        if (device.device === "sm"){
+            setSpriteSizes((prev) => ({
+                ...prev, 
+                container: {
+                    width: 438,
+                    height: 535
+                },
+                bookshelf: 0.1
+            }))
+        } else if (device.device === "xs"){
+            setSpriteSizes((prev) => ({
+                ...prev, 
+                container: {
+                    width: 329,
+                    height: 400
+                },
+                bookshelf: 0.075
+            }))
+        } else {
+            setSpriteSizes(defaultSpriteSizes)
+        }
+    }, [device.device])
+
 
     return (
-        // <div className="h-[80%] w-[80%]" ref={parent}>
-        //     <Application resizeTo={parent}>
-        //                 <pixiContainer x={0} y={0}>
-        //                     <pixiSprite texture={textures.bookshelf} x={0} y={0} scale={0.125}/>
-        //                     <pixiSprite texture={textures.bookshelf} x={600} y={0} scale={0.125}/>
-        //                 </pixiContainer>
-        //     </Application>
-        // </div>
-        <></>
+        <>
+            <div className="relative" ref={parent} style={{ width: `${spriteSizes.container.width}px`, height: `${spriteSizes.container.height}px`, boxShadow: "0 1rem 4rem black" }}>
+                <Application resizeTo={parent}>
+                    { textures.bookshelf && 
+                        <pixiContainer x={0} y={0}
+                            interactive={true}
+                            hitArea={new Rectangle(0, 0, spriteSizes.container.width, spriteSizes.container.height)}
+                            onClick={() => document.getElementById("link-dialog").close()}
+                            onTap={() => document.getElementById("link-dialog").close()}
+                        >
+                            <pixiSprite
+                                texture={textures.bookshelf}
+                                x={0} y={0}
+                                scale={spriteSizes.bookshelf}
+                            />
+                            <pixiContainer 
+                                x={10} y={10} 
+                                width={spriteSizes.shelf.s1.width} 
+                                height={spriteSizes.shelf.s1.height}
+                                cursor="pointer"
+                        
+                            >
+                                <Book
+                                    side="left"
+                                    position={{ x: 50, y: 50 }} 
+                                    thickness={30}
+                                    height={70}
+                                    color={{
+                                        cover: 0x3366cc,
+                                        spine: 0x254080,
+                                        front: 0x99bbff
+                                    }}
+                                    event={{
+                                        onClick: (e) => showBookCover(
+                                            e, 
+                                            "My Gift LVL 9999 Unlimited Gacha Manga", 
+                                            "https://mygiftlvl9999unlimitedgacha.com/"
+                                        ),
+                                        onTap: () => showBookCover(
+                                            e, 
+                                            "My Gift LVL 9999 Unlimited Gacha Manga", 
+                                            "https://mygiftlvl9999unlimitedgacha.com/"
+                                        )
+                                    }}
+                                />
+                                <Book
+                                    side="right"
+                                    position={{ x: 150, y: 40 }}
+                                    thickness={15}
+                                    height={80} 
+                                    color={{
+                                        cover: 0xff0000,
+                                        spine: 0x800000,
+                                        front: 0xff6666
+                                    }}
+                                    event={{
+                                        onClick: (e) => showBookCover(
+                                            e, 
+                                            "Chronicles of an Aristocrat Reborn in Another World", 
+                                            "https://comick.io/comic/tensei-kizoku-no-isekai-boukenroku-jichou-wo-shiranai-kamigami-no-shito"
+                                        ),
+                                        onTap: () => showBookCover(
+                                            e, 
+                                            "Chronicles of an Aristocrat Reborn in Another World", 
+                                            "https://comick.io/comic/tensei-kizoku-no-isekai-boukenroku-jichou-wo-shiranai-kamigami-no-shito"
+                                        )
+                                    }}
+                                />
+                            </pixiContainer>
+                        </pixiContainer>
+                    }
+                </Application>
+                <dialog id="link-dialog" style={{ top: `${dialogPos.y}px`, left: `${dialogPos.x}px` }} >
+                    <div className="w-[10vw]">
+                        <a href={bookMetadata.link} target="_blank">{bookMetadata.title}</a>
+                    </div>
+                </dialog>
+            </div>
+            <div className="text-white" style={{ position: "absolute", bottom: 0, left: 0 }}>
+                Sorry for the inconvenience, but I can&apos;t really embed manga iframe to this site. It&apos;s about copyright infringement stuff.
+            </div>
+        </>
     )
 }
