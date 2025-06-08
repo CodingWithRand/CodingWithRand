@@ -1,5 +1,5 @@
 import { Application, extend } from "@pixi/react";
-import { Container, Graphics, Sprite, Texture, Assets, Rectangle } from "pixi.js";
+import { Container, Graphics, Sprite, Texture, Assets, Rectangle, v8_0_0 } from "pixi.js";
 
 import Client from "@/glient/util";
 import { useRef, useState, useEffect } from "react";
@@ -153,7 +153,7 @@ export function LofiRadio(){
     return(
         <div className="h-full">
             <h2 className="flex items-center justify-center gap-x-4 text-[#dc503b] font-comic-relief h-concerned text-center text-5xl nmob:text-6xl sm:text-7xl md:text-8xl lg:text-9xl">
-                <Image alt="lofi-girl" name="lofi-girl.png" dir="icon/" constant />
+                <Image id="lofi-girl" alt="lofi-girl" name="lofi-girl.png" dir="icon/" constant />
                 Lofi Radio
             </h2>
             <div className="conveyor h-[60%] w-full">
@@ -238,19 +238,19 @@ export function MusicLibrary(){
             </h2>
             <div className="conveyor overflow-auto" id="playlists">
                 <CategoryTitle text="Background Music" />
-                <PlaylistLibCard name="Vindsvept" backdropColor="#402726" />
+                <PlaylistLibCard cate="BGM" name="Vindsvept" backdropColor="#402726" />
                 <CategoryTitle text="Game OST" />
-                <PlaylistLibCard name="DM DOKURO Calamity Mod" backdropColor="#A038C8" />
-                <PlaylistLibCard name="A Hat in Time" backdropColor="#6070A0" />
-                <PlaylistLibCard name="A Hat in Time (Seal the Deal)" backdropColor="#803800" />
-                <PlaylistLibCard name="The Binding of Isaac" backdropColor="#382030" />
-                <PlaylistLibCard name="The Binding of Isaac (Rebirth)" backdropColor="#650005" />
-                <PlaylistLibCard name="The Binding of Isaac (Afterbirth)" backdropColor="#ef8778" />
-                <PlaylistLibCard name="The Binding of Isaac (Repentance)" backdropColor="#b50017" />
-                <PlaylistLibCard name="The Binding of Isaac (Antibirth)" backdropColor="#383030" />
-                <PlaylistLibCard name="The Legend of Bum-bo" backdropColor="#42330A" />
-                <PlaylistLibCard name="The Binding of Isaac (Lullabies)" backdropColor="#31372A" />
-                <PlaylistLibCard name="The Binding of Isaac (Mutations)" backdropColor="#00355D" />
+                <PlaylistLibCard cate="Game OST" name="DM DOKURO Calamity Mod" backdropColor="#A038C8" />
+                <PlaylistLibCard cate="Game OST" name="A Hat in Time" backdropColor="#6070A0" />
+                <PlaylistLibCard cate="Game OST" name="A Hat in Time (Seal the Deal)" backdropColor="#803800" />
+                <PlaylistLibCard cate="Game OST" name="The Binding of Isaac" backdropColor="#382030" />
+                <PlaylistLibCard cate="Game OST" name="The Binding of Isaac (Rebirth)" backdropColor="#650005" />
+                <PlaylistLibCard cate="Game OST" name="The Binding of Isaac (Afterbirth)" backdropColor="#ef8778" />
+                <PlaylistLibCard cate="Game OST" name="The Binding of Isaac (Repentance)" backdropColor="#b50017" />
+                <PlaylistLibCard cate="Game OST" name="The Binding of Isaac (Antibirth)" backdropColor="#383030" />
+                <PlaylistLibCard cate="Game OST" name="The Legend of Bum-bo" backdropColor="#42330A" />
+                <PlaylistLibCard cate="Game OST" name="The Binding of Isaac (Lullabies)" backdropColor="#31372A" />
+                <PlaylistLibCard cate="Game OST" name="The Binding of Isaac (Mutations)" backdropColor="#00355D" />
             </div>
             <div className="flex flex-row gap-x-4">
                 <div className="flex flex-col items-center gap-y-2">
@@ -466,28 +466,38 @@ export function MusicLibraryDialog(){
 
     function showAllCate(){
         let list = [];
-        for(const cate of Object.keys(musicId)) list.push(<MusicLibraryCard key={cate} cate={cate} />)
+        Object.keys(musicId).forEach((cate, i) => list.push(<MusicLibraryCard key={cate} nth={i} cate={cate} />));
         return list
     }
 
     function searchCheck(e){
         setShowingList((() => {
             let list = [];
+            let i = 0;
             if (Object.values(currentSearching).every((v) => v === undefined)) {
-                for(const cate of Object.keys(musicId)){
+                Object.keys(musicId).forEach((cate) => {
                     const searchPattern = new RegExp(`^${e.target.value.toLowerCase()}`)
-                    if(searchPattern.test(cate.toLowerCase())) list.push(<MusicLibraryCard key={cate} cate={cate} />)
-                }
+                    if(searchPattern.test(cate.toLowerCase())){
+                        list.push(<MusicLibraryCard key={cate} nth={i} cate={cate} />)
+                        i++;
+                    }
+                })
             } else if (currentSearching.cate && !currentSearching.lib) {
-                for(const libName of Object.keys(musicId[currentSearching.cate])){
+                Object.keys(musicId[currentSearching.cate]).forEach((libName) => {
                     const searchPattern = new RegExp(`^${e.target.value.toLowerCase()}`)
-                    if(searchPattern.test(libName.toLowerCase())) list.push(<MusicLibraryCard key={libName} cate={currentSearching.cate} libName={libName} />)
-                }
+                    if(searchPattern.test(libName.toLowerCase())){
+                        list.push(<MusicLibraryCard key={libName} nth={i} cate={currentSearching.cate} libName={libName} />)
+                        i++;
+                    }
+                })
             } else if (currentSearching.cate && currentSearching.lib) {
-                for(const musicName of Object.keys(musicId[currentSearching.cate][currentSearching.lib])){
+                Object.keys(musicId[currentSearching.cate][currentSearching.lib]).forEach((musicName) => {
                     const searchPattern = new RegExp(`^${e.target.value.toLowerCase()}`)
-                    if(searchPattern.test(musicName.toLowerCase())) list.push(<MusicCard key={musicName} musicName={musicName} />)
-                }
+                    if(searchPattern.test(musicName.toLowerCase())){
+                        list.push(<MusicCard key={musicName} nth={i} musicName={musicName} />)
+                        i++;
+                    }
+                })
             }
             
             return list
@@ -519,7 +529,7 @@ export function MusicLibraryDialog(){
                                 setCS((prev) => ({...prev, lib: undefined}));
                                 setShowingList((() => {
                                     let list = [];
-                                    for(const libName of Object.keys(musicId[currentSearching.cate])) list.push(<MusicLibraryCard key={libName} cate={currentSearching.cate} libName={libName} />)
+                                    Object.keys(musicId[currentSearching.cate]).forEach((libName, i) => list.push(<MusicLibraryCard key={libName} nth={i} cate={currentSearching.cate} libName={libName} />))
                                     return list
                                 })())
                             }

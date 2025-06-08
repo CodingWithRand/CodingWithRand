@@ -89,6 +89,7 @@ function Image(props){
     
     return(
         <img
+            id={props.id || undefined}
             alt={props.alt}
             src={imgSrc}
             className={props.cls || undefined}

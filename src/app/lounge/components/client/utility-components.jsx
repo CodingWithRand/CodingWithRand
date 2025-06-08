@@ -63,10 +63,22 @@ export function CategoryTitle({ text, fontSize }){
     )
 }
 
-export function PlaylistLibCard({ name, backdropColor }){
+export function PlaylistLibCard({ cate, name, backdropColor }){
     const { Image } = Client.Components.Dynamic
+    const { cs, mlList } = useMusic();
+    const { setCS } = cs;
+    const { setShowingList } = mlList;
+
     return <div className="playlist-item">
-        <div className="playlist-cover" style={{ boxShadow: `20px 20px 0 ${backdropColor}` }}>
+        <div className="playlist-cover" style={{ boxShadow: `20px 20px 0 ${backdropColor}` }} onClick={() => {
+            setShowingList((() => {
+                let list = [];
+                Object.keys(musicId[cate][name]).forEach((musicName, i) => list.push(<MusicCard key={musicName} nth={i} musicName={musicName} />))
+                return list
+            })())
+            setCS({ cate, lib: name });
+            document.getElementById("music-library").style.display = "block"
+        }}>
             <Image name={`${name}.jpg`} alt={name} dir="playlist-covers/" constant />
         </div>
         <h3 className="text-center text-white font-comic-relief text-lg sm:text-xl mt-8">{name}</h3>
@@ -157,7 +169,7 @@ export function nextMusicInLib(playlist, currentIndex, ids, names, cate, constan
     }, constant)
 }
 
-export function MusicLibraryCard({ cate, libName }){
+export function MusicLibraryCard({ nth, cate, libName }){
     const { isPlayingState, player, speakerUID, cs, mlList } = useMusic();
     const { isPlaying, setIsPlaying } = isPlayingState;
     const { setShowingList } = mlList;
@@ -187,14 +199,14 @@ export function MusicLibraryCard({ cate, libName }){
         if(cate && !libName){
             setShowingList((() => {
                 let list = [];
-                for(const lName of Object.keys(musicId[cate])) list.push(<MusicLibraryCard key={`${cate}-${lName}`} cate={cate} libName={lName} />)
+                Object.keys(musicId[cate]).forEach((lName, i) => list.push(<MusicLibraryCard key={`${cate}-${lName}`} nth={i} cate={cate} libName={lName} />))
                 return list
             })())
             setCS({ cate, lib: undefined })
         }else if(cate && libName){
             setShowingList((() => {
                 let list = [];
-                for(const musicName of Object.keys(musicId[cate][libName])) list.push(<MusicCard key={musicName} musicName={musicName} />)
+                Object.keys(musicId[cate][libName]).forEach((musicName, i) => list.push(<MusicCard key={musicName} nth={i} musicName={musicName} />))
                 return list
             })())
             setCS((prev) => ({ ...prev, lib: libName }))
@@ -202,8 +214,11 @@ export function MusicLibraryCard({ cate, libName }){
     }
 
     return <div id={cate && libName ? libName : cate} className="music-lib">
-        <span>{cate && libName ? libName : cate}</span>
-        <div className="flex flex-row gap-x-2 items-center">
+        <span className="text-sm nmob:text-base">
+            <span className="nth">{nth + 1}</span>
+            {cate && libName ? libName : cate}
+        </span>
+        <div className="flex flex-row gap-x-2 items-center" style={{ minWidth: "80px" }}>
             <button className="round-btn" style={{ padding: "0.5rem" }} onClick={browseLib}>
                 <Image name="search-interface-symbol.png" alt="search" dir="icon/" width={20} height={20} constant />
             </button>
@@ -214,7 +229,7 @@ export function MusicLibraryCard({ cate, libName }){
     </div>
 }
 
-export function MusicCard({ musicName }){
+export function MusicCard({ nth, musicName }){
 
     const { isPlayingState, player, speakerUID, cs } = useMusic();
     const { isPlaying, setIsPlaying } = isPlayingState;
@@ -243,8 +258,11 @@ export function MusicCard({ musicName }){
     }
 
     return <div id={musicName} className="music-card">
-        <span>{musicName}</span>
-        <div className="flex flex-row gap-x-2 items-center">
+        <span className="text-sm nmob:text-base">
+            <span className="nth">{nth + 1}</span>
+            {musicName}
+        </span>
+        <div className="flex flex-row gap-x-2 items-center" style={{ minWidth: "36px" }}>
             <button className="round-btn" style={{ padding: "0.5rem" }} onClick={playMusicInLib}>
                 <img src="/imgs/backend-images/icon/play-button.png" alt="control-btn" width={20} height={20} />
             </button>

@@ -61,7 +61,7 @@ export default function Lounge() {
           <iframe className="full-page" src="https://www.youtube.com/embed/Na0w3Mz46GA?si=GRuvjOuzyB_UJo34&amp;autoplay=1&amp;loop=1&amp;mute=1&amp;controls=0&amp;rel=0" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
         </section>
         <section className="break bg-black flex flex-row items-center justify-evenly">
-          <Image alt="smile listen to music" name="smile listen to music.png" dir="stickers/" constant />
+          <Image id="smile-listen-to-music" alt="smile listen to music" name="smile listen to music.png" dir="stickers/" constant />
           <h1 id="music-on-your-demand" className="relative z-10 art-text py-[1em] md:py-[2em] font-bangers text-3xl nmob:text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[#1DB954]">Music on your demand!</h1>
         </section>
         <section id="music">
@@ -80,7 +80,7 @@ export default function Lounge() {
         <section className="break flex flex-col items-center" style={{ backgroundImage: "linear-gradient(black 50%, rgb(169, 95, 47))" }}>
           <div className="w-full flex flex-row items-center justify-evenly">
             <div>
-              <Image alt="falling book" name="falling-book.png" constant  />
+              <Image id="falling-book" alt="falling book" name="falling-book.png" constant  />
             </div>
             <h1 id="im-a-bookworm" className="relative z-10 art-text py-[1em] md:py-[2em] font-bangers text-3xl nmob:text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[#1DB954]">I&apos;m a bookworm!</h1>
           </div>

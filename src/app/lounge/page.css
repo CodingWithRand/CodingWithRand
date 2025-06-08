@@ -35,7 +35,7 @@ layer(components);
         -webkit-text-stroke-width: 1px;
     }
 
-    img[alt="lofi-girl"]{
+    img#lofi-girl{
         @apply w-[50px] h-[50px] md:w-[75px] md:h-[75px] lg:w-[100px] lg:h-[100px]
     }
 
@@ -57,11 +57,9 @@ layer(components);
         column-gap: 2rem;
     }
 
-    .lib-list .music-lib span::before, .lib-list .music-card span::before{
+    .nth {
         @apply mx-[1rem] sm:mx-[2rem];
         font-family: "Comic Relief", "system-ui";
-        counter-increment: music-lib-counter;
-        content: counter(music-lib-counter);
         opacity: 0.5;
     }
 
@@ -70,7 +68,6 @@ layer(components);
         border: 5px solid white;
         border-radius: 4rem;
         background-image: linear-gradient(45deg, rgb(80,80,80), rgb(0,0,0) 50%, rgb(80,80,80));
-        counter-reset: music-lib-counter
     }
     
     #lib-search-bar input{
@@ -128,7 +125,7 @@ h2.h-concerned{
     
 }
 
-img[alt="smile listen to music"]{
+img#smile-listen-to-music{
     transform: rotate(-15deg);
 }
 
@@ -137,49 +134,49 @@ img[alt="smile listen to music"]{
 }
 
 @media (min-width: 1024px) {
-    img[alt="smile listen to music"]{
+    img#smile-listen-to-music{
         width: 20%;
         padding: 5rem 0;
     }
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
-    img[alt="smile listen to music"]{
+    img#smile-listen-to-music{
         width: 25%;
         padding: 5rem 0;
     }
 }
 
 @media (min-width: 640px) and (max-width: 768px) {
-    img[alt="smile listen to music"]{
+    img#smile-listen-to-music{
         width: 30%;
         padding: 2rem 0;
     }
 }
 
 @media (min-width: 500px) and (max-width: 640px) {
-    img[alt="smile listen to music"]{
+    img#smile-listen-to-music{
         width: 25%;
         padding: 2rem 0;
     }
 }
 
 @media (min-width: 400px) and (max-width: 500px) {
-    img[alt="smile listen to music"]{
+    img#smile-listen-to-music{
         width: 30%;
         padding: 2rem 0;
     }
 }
 
 @media (min-width: 320px) and (max-width: 400px) {
-    img[alt="smile listen to music"]{
+    img#smile-listen-to-music{
         width: 35%;
         padding: 2rem 0;
     }
 }
 
 @media (max-width: 320px) {
-    img[alt="smile listen to music"]{
+    img#smile-listen-to-music{
         width: 40%;
         padding: 2rem 0;
     }
@@ -254,6 +251,7 @@ html{
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 
 .playlist-cover img{
@@ -376,7 +374,7 @@ html{
     z-index: 100;
 }
 
-img[alt="falling book"]{
+img#falling-book{
     margin: 10rem 0;
     width: 20vw;
     rotate: -30deg;
