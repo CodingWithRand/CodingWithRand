@@ -12,7 +12,7 @@ layer(components);
 }
 
 :root {
-    --lofi-radio-count: 6;
+    --lofi-radio-count: 9;
 }
 
 @layer components{

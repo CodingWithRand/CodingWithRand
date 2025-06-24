@@ -49,6 +49,15 @@ export function LofiRadio(){
             case "Hip Hop - Sleep/Chill":
                 iframeId = "hh-sc";
                 break;
+            case "Asian - Relax/Study":
+                iframeId = "a-rs";
+                break;
+            case "Sad - Rainy Days":
+                iframeId = "s-rd";
+                break;
+            case "Peacful Piano - Focus/Study":
+                iframeId = "pp-fs";
+                break;
             case "Medieval - Medieval":
                 iframeId = "medieval";
                 break;
@@ -97,6 +106,15 @@ export function LofiRadio(){
                 break;
             case "medieval":
                 setIsPlaying((prev) => ({...prev, playlist: "Medieval", music: "Medieval", state, category: "Lofi Radio", subcategory: undefined }));
+                break;
+            case "a-rs":
+                setIsPlaying((prev) => ({...prev, playlist: "Asian", music: "Relax/Study", state, category: "Lofi Radio", subcategory: undefined }));
+                break;
+            case "s-rd":
+                setIsPlaying((prev) => ({...prev, playlist: "Sad", music: "Rainy Days", state, category: "Lofi Radio", subcategory: undefined }));
+                break;
+            case "pp-fs":
+                setIsPlaying((prev) => ({...prev, playlist: "Peacful Piano", music: "Focus/Study", state, category: "Lofi Radio", subcategory: undefined }));
                 break;
             case "s-cg":
                 setIsPlaying((prev) => ({...prev, playlist: "Synthwave", music: "Chill/Gaming", state, category: "Lofi Radio", subcategory: undefined }));
@@ -177,6 +195,33 @@ export function LofiRadio(){
                     </div>
                 </div>
                 <div className="item gap-y-2">
+                    <iframe id="a-rs" className="relative z-[2] lofi-radio" src="https://www.youtube.com/embed/Na0w3Mz46GA?si=VPqFZ3Vj3eFHOMdu&amp;controls=0&amp;enablejsapi=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+                    <div className="relative z-[1] flex flex-col items-center gap-y-2">
+                    <h3 className="radio-name font-comic-relief text-white text-lg">Asian: Relax/Study</h3>
+                    <button id="a-rs" className="round-btn control-btn" onClick={(e) => play(e, "a-rs")} onMouseEnter={selection} onMouseLeave={deselection}>
+                        <img id="a-rs" className="control-btn-icon" src="/imgs/backend-images/icon/play-button.png" alt="control button" width={30} height={30} />
+                    </button>
+                    </div>
+                </div>
+                <div className="item gap-y-2">
+                    <iframe id="s-rd" className="relative z-[2] lofi-radio" src="https://www.youtube.com/embed/P6Segk8cr-c?si=rb2jMvZNltV6Ejrt&amp;controls=0&amp;enablejsapi=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+                    <div className="relative z-[1] flex flex-col items-center gap-y-2">
+                    <h3 className="radio-name font-comic-relief text-white text-lg">Sad: Rainy Days</h3>
+                    <button id="s-rd" className="round-btn control-btn" onClick={(e) => play(e, "s-rd")} onMouseEnter={selection} onMouseLeave={deselection}>
+                        <img id="s-rd" className="control-btn-icon" src="/imgs/backend-images/icon/play-button.png" alt="control button" width={30} height={30} />
+                    </button>
+                    </div>
+                </div>
+                <div className="item gap-y-2">
+                    <iframe id="pp-fs" className="relative z-[2] lofi-radio" src="https://www.youtube.com/embed/TtkFsfOP9QI?si=RuYeRZwGT-DCEHQg&amp;controls=0&amp;enablejsapi=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+                    <div className="relative z-[1] flex flex-col items-center gap-y-2">
+                    <h3 className="radio-name font-comic-relief text-white text-lg">Peaceful Piano: Focus/Study</h3>
+                    <button id="pp-fs" className="round-btn control-btn" onClick={(e) => play(e, "pp-fs")} onMouseEnter={selection} onMouseLeave={deselection}>
+                        <img id="pp-fs" className="control-btn-icon" src="/imgs/backend-images/icon/play-button.png" alt="control button" width={30} height={30} />
+                    </button>
+                    </div>
+                </div>
+                <div className="item gap-y-2">
                     <iframe id="medieval" className="relative z-[2] lofi-radio" src="https://www.youtube.com/embed/IxPANmjPaek?si=sh-RD8AxPgVvLc15&amp;controls=0&amp;enablejsapi=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
                     <div className="relative z-[1] flex flex-col items-center gap-y-2">
                     <h3 className="radio-name font-comic-relief text-white text-lg">Medieval</h3>
@@ -251,6 +296,8 @@ export function MusicLibrary(){
                 <PlaylistLibCard cate="Game OST" name="The Legend of Bum-bo" backdropColor="#42330A" />
                 <PlaylistLibCard cate="Game OST" name="The Binding of Isaac (Lullabies)" backdropColor="#31372A" />
                 <PlaylistLibCard cate="Game OST" name="The Binding of Isaac (Mutations)" backdropColor="#00355D" />
+                <CategoryTitle text="Other OST" />
+                <PlaylistLibCard cate="Other OST" name="Fieren Beyond Journey's End" backdropColor="#99cba6" />
             </div>
             <div className="flex flex-row gap-x-4">
                 <div className="flex flex-col items-center gap-y-2">
