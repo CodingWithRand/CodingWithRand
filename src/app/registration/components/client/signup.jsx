@@ -61,9 +61,17 @@ export default function SignUp() {
             await serverInsert("users-details", {
                 uid: data.user.id,
                 email: userEmail,
-                ip: await Neutral.Functions.getClientIp(),
                 display_name: userName,
                 email_verified: false,
+            })
+
+            await serverInsert("auth-states", {
+                uid: data.user.id,
+            })
+
+            await serverInsert("codingwithrand", {
+                ip: await Neutral.Functions.getClientIp(),
+                authenticated: true,
             })
 
             

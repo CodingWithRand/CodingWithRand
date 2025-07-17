@@ -31,9 +31,9 @@ async function getClientIp(){
 function LoadingPage(props) {
     return(
         <div className={`loading-bar ${props?.transparentBg ? "bg-[#f0f0f080]" : "bg-[#f0f0f0]"}`}>
-            <div className="loading-dot" id="d1"></div>
-            <div className="loading-dot" id="d2"></div>
-            <div className="loading-dot" id="d3"></div>
+            <div className={`loading-dot ${props?.transparentBg ? "bg-gray-600" : "bg-gray-800" }`} id="d1"></div>
+            <div className={`loading-dot ${props?.transparentBg ? "bg-gray-600" : "bg-gray-800" }`} id="d2"></div>
+            <div className={`loading-dot ${props?.transparentBg ? "bg-gray-600" : "bg-gray-800" }`} id="d3"></div>
         </div>
     )
 }

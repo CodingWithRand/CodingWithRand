@@ -38,10 +38,12 @@ export default function SignIn() {
             if ((await serverFetch("users-details", "display_name", { columnName: "display_name", value: userName.current })).length !== 0) {
                 const { data, error } = await auth.signInWithPassword({ email: userEmail.current, password: userPass.current });
                 if(error) throw error;
-                
-                await serverUpdate("users-details", {
+
+                const cwrPageAuthStateId = await serverFetch("auth-states", "codingwithrand", { columnName: "uid", value: data.user.id })
+                await serverUpdate("codingwithrand", {
                     ip: await Neutral.Functions.getClientIp(),
-                }, { columnName: "email", value: userEmail.current });
+                    authenticated: true,
+                }, { columnName: "id", value: cwrPageAuthStateId[0].codingwithrand });
 
                 await Neutral.Functions.asyncDelay(1000);
                 // window.location.replace("/");

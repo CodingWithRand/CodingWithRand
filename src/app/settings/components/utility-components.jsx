@@ -3,7 +3,7 @@ import { useGlobal } from "@/glient/global";
 import { useLoadingState } from "@/glient/loading";
 import Client from "@/glient/util";
 import Cookies from "universal-cookie";
-import { serverFetch, auth } from "@/glient/supabase";
+import { serverFetch, auth, serverUpdate } from "@/glient/supabase";
 
 const { Dynamic } = Client.Components;
 const { Image } = Dynamic;
@@ -25,11 +25,16 @@ export function Username(){
 }
 
 export function SignOutBTN() {
+    const { authUser } = useGlobal();
     const setLoadingState = useLoadingState();
-    const cookies = new Cookies();
 
     return <button onClick={async () => {
         setLoadingState(true);
+        const cwrPageAuthStateId = await serverFetch("auth-states", "codingwithrand", { columnName: "uid", value: authUser.isAuthUser.id })
+        await serverUpdate("codingwithrand", {
+            ip: null,
+            authenticated: false,
+        }, { columnName: "id", value: cwrPageAuthStateId[0].codingwithrand });
         await auth.signOut();
         setLoadingState(false);
         window.location.replace("/registration");
