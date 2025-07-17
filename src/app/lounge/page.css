@@ -53,7 +53,6 @@ layer(components);
         @apply w-[60%] sm:w-[80%];
         display: grid;
         justify-items: center;
-        grid-template-columns: repeat(14, 1fr);
         column-gap: 2rem;
     }
 

@@ -281,7 +281,12 @@ export function MusicLibrary(){
             <h2 className="text-[#9b3331] font-comic-relief py-16 text-center text-5xl nmob:text-6xl sm:text-7xl md:text-8xl lg:text-9xl">
                 Music Library
             </h2>
-            <div className="conveyor overflow-auto" id="playlists">
+            <div className="conveyor overflow-auto" id="playlists" style={{ gridTemplateColumns: `repeat(${
+                Object.keys(musicId).length +
+                Object.keys(musicId.BGM).length +
+                Object.keys(musicId["Game OST"]).length +
+                Object.keys(musicId["Other OST"]).length
+            }, 1fr);` }}>
                 <CategoryTitle text="Background Music" />
                 <PlaylistLibCard cate="BGM" name="Vindsvept" backdropColor="#402726" />
                 <CategoryTitle text="Game OST" />
