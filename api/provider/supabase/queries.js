@@ -14,19 +14,22 @@ async function adminQueries(req, res) {
         case "update":
             adminUpdate(req, res)
             break;
+        case "function":
+            adminFunction(req, res)
+            break;
         default:
             responseStatus.badRequest(res, "Unknown mode!")
             break;
     }
 }
 async function adminFetch(req, res) {
-    const { tableName, rows, eq } = req.body
+    const { schema, tableName, rows, eq } = req.body
     try{
         let response
         if(eq){
-            response = await supabase.schema("private").from(tableName).select(rows).eq(eq.columnName, eq.value)
+            response = await supabase.schema(schema).from(tableName).select(rows).eq(eq.columnName, eq.value)
         }else{
-            response = await supabase.schema("private").from(tableName).select(rows)
+            response = await supabase.schema(schema).from(tableName).select(rows)
         }
         if(!response.status === 200){
             throw new Error(response.status)
@@ -49,9 +52,9 @@ async function adminFetch(req, res) {
 }
 
 async function adminInsert(req, res) {
-    const { tableName, data } = req.body
+    const { schema, tableName, data } = req.body
     try{
-        const response = await supabase.schema("private").from(tableName).insert(data)
+        const response = await supabase.schema(schema).from(tableName).insert(data)
         if(!response.status === 200){
             throw new Error(response.status)
         }
@@ -61,7 +64,6 @@ async function adminInsert(req, res) {
         }
         responseStatus.noContent(res, "Successfully inserted data to the database")
     }catch(error){
-        console.log(error)
         switch(error.message){
             default:
                 responseStatus.badGateway(res)
@@ -70,9 +72,9 @@ async function adminInsert(req, res) {
 }
 
 async function adminUpdate(req, res) {
-    const { tableName, data, eq } = req.body
+    const { schema, tableName, data, eq } = req.body
     try{
-        const response = await supabase.schema("private").from(tableName).update(data).eq(eq.columnName, eq.value)
+        const response = await supabase.schema(schema).from(tableName).update(data).eq(eq.columnName, eq.value)
         if(!response.status === 200){
             throw new Error(response.status)
         }
@@ -82,7 +84,26 @@ async function adminUpdate(req, res) {
         }
         responseStatus.noContent(res, "Successfully updated data in the database")
     }catch(error){
-        console.log(error)
+        switch(error.message){
+            default:
+                responseStatus.badGateway(res)
+        }  
+    }
+}
+
+async function adminFunction(req, res) {
+    const { fn, args } = req.body;
+    try{
+        const response = await supabase.rpc(fn, args)
+        if(!response.status === 200){
+            throw new Error(response.status)
+        }
+        if(response.error){
+            responseStatus.badRequest(res, response.error.message)
+            return
+        }
+        responseStatus.ok(res, { data: response.data })
+    }catch(error){
         switch(error.message){
             default:
                 responseStatus.badGateway(res)

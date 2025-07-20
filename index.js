@@ -34,7 +34,7 @@ server.use("/post/provider/*", cors({
 
 server.use(bodyParser.json())
 
-server.use("/post/provider/cwr/*", (req, res, next) => {
+server.use("/post/provider/firebase/*", (req, res, next) => {
     if(req.method === "POST" && req.body.adminKey === process.env.FIREBASE_PERSONAL_ADMIN_KEY) next();
     else response.unauthorized(res, "Invalid admin key");
 })
