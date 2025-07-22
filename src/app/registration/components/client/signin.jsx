@@ -4,7 +4,7 @@ import "./client.css"
 import { useState, useRef } from "react";
 import Client from "@/glient/util";
 import Neutral from "@/geutral/util";
-import { auth, serverFetch, serverUpdate } from "@/glient/supabase";
+import { auth, serverFetch, serverRPC, serverUpdate, supabase } from "@/glient/supabase";
 import { useLoadingState } from "@/glient/loading";
 
 export default function SignIn() {
@@ -35,15 +35,15 @@ export default function SignIn() {
         userPass.current = e.target.elements["pass"].value;
         setLoadingState(true);
         try {
-            if ((await serverFetch("users-details", "display_name", { columnName: "display_name", value: userName.current })).length !== 0) {
+            if ((await supabase.schema("public").from("users-details").select("display_name").eq("display_name", userName.current)).data.length !== 0 ) {
                 const { data, error } = await auth.signInWithPassword({ email: userEmail.current, password: userPass.current });
                 if(error) throw error;
 
-                const cwrPageAuthStateId = await serverFetch("auth-states", "codingwithrand", { columnName: "uid", value: data.user.id })
-                await serverUpdate("codingwithrand", {
-                    ip: await Neutral.Functions.getClientIp(),
-                    authenticated: true,
-                }, { columnName: "id", value: cwrPageAuthStateId[0].codingwithrand });
+                await serverRPC("sign_in", {
+                    p_uid: data.user.id,
+                    p_ip: await Neutral.Functions.getClientIp(),
+                    platform: "codingwithrand"
+                })
 
                 await Neutral.Functions.asyncDelay(1000);
                 // window.location.replace("/");
@@ -108,9 +108,9 @@ export default function SignIn() {
                     <div className="option-field">
                         <div className="show-pass">
                             <Switch mode="action-on-off" action={() => setInputType("text")} altAction={() => setInputType("password")} />
-                            <label className="field-label">Show Password</label>
+                            <span className="field-label">Show Password</span>
                         </div>
-                        <span className="forget-password" onClick={() => sendPasswordResetEmail(auth, prompt("Your email:")).then(() => {
+                        <span className="forget-password" onClick={() => auth.resetPasswordForEmail(prompt("Your email:")).then(() => {
                             debug2(true);
                             setDM((prevDM) => ({ ...prevDM, title: "Password reset email has been sent!", subtitle: "Please check your email inbox!", description: "" }))
                         }).catch(() => alert("Invalid Email"))}>Forgot your password? Reset it here</span>

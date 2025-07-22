@@ -7,12 +7,13 @@ export const supabase = createClient(sbUrl, sbKey);
 export const auth = supabase.auth;
 export const storage = supabase.storage
 
-export async function serverFetch(tableName, rows, eq=undefined){
+export async function serverFetch(schema, tableName, rows, eq=undefined){
   try{
     const response = await fetch("https://cwr-api-us.onrender.com/post/provider/supabase/queries/fetch", { 
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        schema: schema,
         tableName: tableName,
         rows: rows,
         eq: eq
@@ -25,12 +26,13 @@ export async function serverFetch(tableName, rows, eq=undefined){
   }
 }
 
-export async function serverInsert(tableName, data){
+export async function serverInsert(schema, tableName, data){
   try{
     await fetch("https://cwr-api-us.onrender.com/post/provider/supabase/queries/insert", { 
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        schema, 
         tableName: tableName,
         data: data
       })
@@ -40,17 +42,32 @@ export async function serverInsert(tableName, data){
   }
 }
 
-export async function serverUpdate(tableName, data, eq) {
+export async function serverUpdate(schema, tableName, data, eq) {
   try {
     await fetch("https://cwr-api-us.onrender.com/post/provider/supabase/queries/update", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        schema, 
         tableName: tableName,
         data: data,
         eq: eq
       })
     })
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+export async function serverRPC(fn, args) {
+  try {
+    const response = await fetch("https://cwr-api-us.onrender.com/post/provider/supabase/queries/function", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ fn, args })
+    })
+    const json = await response.json();
+    return json.data
   } catch (e) {
     console.error(e)
   }

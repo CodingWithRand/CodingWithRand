@@ -131,7 +131,7 @@ export function playMusic({
             videoId: id,
             events: {    
                 onReady: (event) => {
-                    console.log("play")
+                    console.log("play", constant.isPlaying.volume[0])
                     event.target.playVideo();
                     event.target.setVolume(constant.isPlaying.volume[0]);
                 },

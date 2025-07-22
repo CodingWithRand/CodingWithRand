@@ -76,6 +76,12 @@
     row-gap: 10px;
 }
 
+.option-field {
+    display: flex;
+    column-gap: 0.5rem;
+    align-items: center;
+}
+
 .forget-password{
     color: darkgray;
     text-decoration: underline;

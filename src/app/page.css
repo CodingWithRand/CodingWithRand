@@ -525,6 +525,12 @@ html{
     animation: randomly-moving-particle 2s ease-in-out infinite alternate;
 }
 
+.option-field {
+  display: flex;
+  column-gap: 0.5rem;
+  align-items: center;
+}
+
 @keyframes circulate1{
     0%{ top: -15%; right: -15%; }
     25%{ top: 100%; right: -15%; }

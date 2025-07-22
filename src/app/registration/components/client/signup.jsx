@@ -2,7 +2,7 @@
 
 import "./client.css"
 import { useState, useEffect } from "react";
-import { auth, serverFetch, serverInsert } from "@/glient/supabase";
+import { auth, serverFetch, serverInsert, serverRPC, supabase } from "@/glient/supabase";
 import { useLoadingState } from "@/glient/loading";
 import Client from "@/glient/util";
 import Neutral from"@/geutral/util";
@@ -46,10 +46,10 @@ export default function SignUp() {
 
         try{
             // make this more secure -> create an encrypted api key for this and decrypt it before sending it to the server with a function.
-            const isEmailExisted = await serverFetch("users-details", "email", { columnName: "email", value: userEmail });
-            const isUsernameExisted = await serverFetch("users-details", "display_name", { columnName: "display_name", value: userName });
-            console.log(isEmailExisted, isUsernameExisted)
-            if (isEmailExisted.length !== 0 || isUsernameExisted.length !== 0) {
+            const isEmailExisted = await serverFetch("private", "users-sensitive-details", "email", { columnName: "email", value: userEmail });
+            const isUsernameExisted = await supabase.schema("public").from("users-details").select("display_name").eq("display_name", userName);
+
+            if (isEmailExisted.length !== 0 || isUsernameExisted.data.length !== 0) {
                 setSUS(true); setErrMsg("This username or email has been taken");
                 setLoadingState(false)
                 return;
@@ -58,23 +58,14 @@ export default function SignUp() {
             if (error) throw error;
             setEmailSent(true);
 
-            await serverInsert("users-details", {
-                uid: data.user.id,
+            await serverRPC("sign_up", {
+                p_uid: data.user.id,
+                username: userName,
                 email: userEmail,
-                display_name: userName,
-                email_verified: false,
-            })
-
-            await serverInsert("auth-states", {
-                uid: data.user.id,
-            })
-
-            await serverInsert("codingwithrand", {
                 ip: await Neutral.Functions.getClientIp(),
-                authenticated: true,
+                platform: "codingwithrand"
             })
 
-            
         } catch (error) {
             const errorCode = error.code;
             const errorMessage = error.message;

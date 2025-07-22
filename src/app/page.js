@@ -23,7 +23,7 @@ export default function Home() {
     // email_verified update when email is verified (waiting for confirmation)
     (async () => {
       if(authUser.isAuthUser.email_confirmed_at){
-        await serverUpdate("users-details", { email_verified: true }, { columnName: "uid", value: authUser.isAuthUser.id });
+        await serverUpdate("public", "users-details", { email_verified: true }, { columnName: "uid", value: authUser.isAuthUser.id });
       }
     })()
   }, [authUser.isAuthUser])

@@ -3,7 +3,7 @@ import { useGlobal } from "@/glient/global";
 import { useLoadingState } from "@/glient/loading";
 import Client from "@/glient/util";
 import Cookies from "universal-cookie";
-import { serverFetch, auth, serverUpdate } from "@/glient/supabase";
+import { serverFetch, auth, serverUpdate, serverRPC, supabase } from "@/glient/supabase";
 
 const { Dynamic } = Client.Components;
 const { Image } = Dynamic;
@@ -15,8 +15,8 @@ export function Username(){
     useEffect(() => {
         (async () => {
             if(authUser.isAuthUser) {
-                const name = await serverFetch("users-details", "display_name", { columnName: "uid", value: authUser.isAuthUser.id });
-                setShowingUsername(name[0].display_name);
+                const name = await supabase.schema("public").from("users-details").select("display_name").eq("uid", authUser.isAuthUser.id);
+                setShowingUsername(name.data[0].display_name);
             }
         })()
     }, [authUser.isAuthUser])
@@ -30,11 +30,11 @@ export function SignOutBTN() {
 
     return <button onClick={async () => {
         setLoadingState(true);
-        const cwrPageAuthStateId = await serverFetch("auth-states", "codingwithrand", { columnName: "uid", value: authUser.isAuthUser.id })
-        await serverUpdate("codingwithrand", {
-            ip: null,
-            authenticated: false,
-        }, { columnName: "id", value: cwrPageAuthStateId[0].codingwithrand });
+        await serverRPC("sign_out", {
+            p_uid: authUser.isAuthUser.id,
+            platform: "codingwithrand"
+        });
+
         await auth.signOut();
         setLoadingState(false);
         window.location.replace("/registration");

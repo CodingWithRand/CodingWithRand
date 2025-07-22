@@ -154,6 +154,12 @@
     transform: rotate(180deg);
   }
 
+  .option-field {
+    display: flex;
+    column-gap: 0.5rem;
+    align-items: center;
+  }
+
   @keyframes diagnog-swoop {
     0% {
       top: -20%;
