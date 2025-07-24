@@ -28,6 +28,20 @@ layer(components);
         transition: transform 1s ease-in, opacity 1s ease-in;
     }
 
+    .locked {
+        @apply w-full h-full absolute flex flex-col items-center justify-center;
+        bottom: 0;
+        color: white;
+    }
+
+    .locked h1{
+        @apply text-[1.5rem] nmob:text-[2rem] sm:text-[2.5rem] md:text-[3rem] lg:text-[4rem] font-comic-relief;
+    }
+
+    .locked a.reg-btn{
+        @apply p-[1rem] rounded-[0.5rem] md:text-[1.5rem] lg:text-[2rem] font-comic-relief;
+    }
+
     .break .art-text{
         @apply max-w-[200px] sm:max-w-[350px] lg:max-w-[500px] xl:max-w-none;
         text-align: center;

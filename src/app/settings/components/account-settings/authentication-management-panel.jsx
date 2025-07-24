@@ -44,7 +44,15 @@ function SessionsInfo(){
                         <a href={interpretSessionInfo("url", session_name)}><b>URL: </b>{interpretSessionInfo("url", session_name)}</a>
                         <dl>
                             <dt><i><b>Issued at:</b></i></dt>
-                            <dd>{session_data.authenticated_at}</dd>
+                            <dd>{(() => {
+                                const date = new Date(session_data.authenticated_at);
+                                const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                                return new Intl.DateTimeFormat('en-GB', {
+                                    dateStyle: 'full',
+                                    timeStyle: 'long',
+                                    timeZone: timezone
+                                }).format(date);
+                            })()}</dd>
                             <dt><i><b>Login location:</b></i></dt>
                             <dd>{`${location.city}, ${location.region}, ${location.country}, ${location.continent}`}</dd>
                             <dt><i><b>Internet IP:</b></i></dt>
@@ -76,6 +84,21 @@ function SessionsInfo(){
     return(
         <Loading cover>
             {sessionComponents}
+            <button onClick={async () => {
+                try{
+                    const platforms = ["codingwithrand", "cwr-education", "planreminder"];
+                    for(const platform of platforms){
+                        await serverRPC("sign_out", {
+                            p_uid: authUser.isAuthUser.id,
+                            platform: platform
+                        });
+                    }
+                    await auth.signOut();
+                    window.location.replace("/registration");
+                }catch(e){
+                    console.error(e);
+                }
+            }} style={{ fontSize: "2rem", color: "red", width: "100%" }}>Logout all sessions</button>
         </Loading>
     )
 }
@@ -83,7 +106,7 @@ function SessionsInfo(){
 export default function AuthenticationManagementPanel() {
     return (
         <Section id="amp" themed style="pallete" title="Authentication Management Panel" description="You can manage your account's login session here, you can log out any sessions you want.">
-            <b>Current Sessions</b>
+            <b className="theme text-color">Current Sessions</b>
             <SessionsInfo />
         </Section>
     )

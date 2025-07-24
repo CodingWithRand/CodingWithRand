@@ -7,11 +7,15 @@ import Neutral from "@/geutral/util";
 import { LofiRadio, RadioToast, MusicLibrary, BookShelf, MusicLibraryDialog } from "./components/client/constructor-components";
 import { MusicStateProvider } from "./components/client/utility-components";
 import Script from "next/script";
+import { useGlobal } from "@/glient/global";
+import musicId from "./components/musicId";
 
 export default function Lounge() {
   const { Components } = Client
   const { NavBar, CWRFooter, Dynamic } = Components
   const { Coroussel, Image } = Dynamic
+
+  const { authUser } = useGlobal();
 
   useEffect(() => {
     const headingBannerTitle = document.querySelector("#heading-banner .title");
@@ -33,6 +37,18 @@ export default function Lounge() {
         <style>{`
           nav, nav ul {
             background-color: #9b3331
+          }
+          .locked a.reg-btn.si {
+            background-color: rgb(218, 140, 139)
+          }
+          .locked a.reg-btn.si:hover {
+            background-color: rgb(168, 106, 105)
+          }
+          .locked a.reg-btn.su {
+            background-color: rgba(192, 84, 82, 1)
+          }
+            .locked a.reg-btn.su:hover {
+            background-color: rgba(150, 64, 62, 1)
           }
         `}</style>
       }/>
@@ -60,43 +76,65 @@ export default function Lounge() {
           </div>
           <iframe className="full-page" src="https://www.youtube.com/embed/Na0w3Mz46GA?si=GRuvjOuzyB_UJo34&amp;autoplay=1&amp;loop=1&amp;mute=1&amp;controls=0&amp;rel=0" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
         </section>
-        <section className="break bg-black flex flex-row items-center justify-evenly">
-          <Image id="smile-listen-to-music" alt="smile listen to music" name="smile listen to music.png" dir="stickers/" constant />
-          <h1 id="music-on-your-demand" className="relative z-10 art-text py-[1em] md:py-[2em] font-bangers text-3xl nmob:text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[#1DB954]">Music on your demand!</h1>
-        </section>
-        <section id="music">
-          <Coroussel
-            totalPages={2}
-            corousselElements={[
-              <LofiRadio key={1} />,
-              <MusicLibrary key={2} />,
-            ]}
-            corousselWrappersStyle={[
-              
-            ]}
-            backgroundImageDir={false}
-          />
-        </section>
-        <section className="break flex flex-col items-center" style={{ backgroundImage: "linear-gradient(black 50%, rgb(169, 95, 47))" }}>
-          <div className="w-full flex flex-row items-center justify-evenly">
-            <div>
-              <Image id="falling-book" alt="falling book" name="falling-book.png" constant  />
+        <section className="break bg-black">
+          <div>
+            <div className="flex flex-row items-center justify-evenly">
+              <Image id="smile-listen-to-music" alt="smile listen to music" name="smile listen to music.png" dir="stickers/" constant />
+              <h1 id="music-on-your-demand" className="relative z-[2] art-text py-[1em] md:py-[2em] font-bangers text-3xl nmob:text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[#1DB954]">Music on your demand!</h1>
             </div>
-            <h1 id="im-a-bookworm" className="relative z-10 art-text py-[1em] md:py-[2em] font-bangers text-3xl nmob:text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[#1DB954]">I&apos;m a bookworm!</h1>
+            {
+              !(authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at) &&
+              <div className="w-full absolute bottom-0 h-full z-[4]" style={{ backdropFilter: 'blur(1rem)' }}></div>
+            }
           </div>
-          <Image alt="bookpile" name="pile of books.png" style={{ maskImage: "linear-gradient(black 80%, transparent 100%)" }} constant/>
+          {
+              !(authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at) &&
+              <div className="z-[5] locked">
+                  <h1>Sign up for more access!</h1>
+                  <div className="flex flex-row items-center gap-x-8 my-8">
+                    <a className="reg-btn su" href="/registration?page=register">Sign Up</a>
+                    <a className="reg-btn si" href="/registration?page=login">Log In</a>
+                  </div>
+              </div>
+          }
         </section>
-        <section className="h-screen w-screen flex items-center justify-center" style={{
-          backgroundColor: "rgb(169, 95, 47)",
-        }}>
-          <Image cls="w-full h-full" alt="old library" name="old-library-bg.jpg" style={{ 
-            position: "absolute",
-            zIndex: 0,
-            maskImage: "linear-gradient(transparent, black 20%)",
-            objectFit: "cover",
-          }} constant />
-          <BookShelf />
-        </section>
+        {
+          (authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at) && <>
+            <section id="music">
+              <Coroussel
+                totalPages={2}
+                corousselElements={[
+                  <LofiRadio key={1} />,
+                  <MusicLibrary key={2} />,
+                ]}
+                corousselWrappersStyle={[
+                  
+                ]}
+                backgroundImageDir={false}
+              />
+            </section>
+            <section className="break flex flex-col items-center" style={{ backgroundImage: "linear-gradient(black 50%, rgb(169, 95, 47))" }}>
+              <div className="w-full flex flex-row items-center justify-evenly">
+                <div>
+                  <Image id="falling-book" alt="falling book" name="falling-book.png" constant  />
+                </div>
+                <h1 id="im-a-bookworm" className="relative z-10 art-text py-[1em] md:py-[2em] font-bangers text-3xl nmob:text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[#1DB954]">I&apos;m a bookworm!</h1>
+              </div>
+              <Image alt="bookpile" name="pile of books.png" style={{ maskImage: "linear-gradient(black 80%, transparent 100%)" }} constant/>
+            </section>
+            <section className="h-screen w-screen flex items-center justify-center" style={{
+              backgroundColor: "rgb(169, 95, 47)",
+            }}>
+              <Image cls="w-full h-full" alt="old library" name="old-library-bg.jpg" style={{ 
+                position: "absolute",
+                zIndex: 0,
+                maskImage: "linear-gradient(transparent, black 20%)",
+                objectFit: "cover",
+              }} constant />
+              <BookShelf />
+            </section>
+          </>
+        }
       </main>
       <CWRFooter arbitraryCSSRules={
         <style>{`

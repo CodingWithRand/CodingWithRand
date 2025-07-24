@@ -67,6 +67,9 @@ export function LofiRadio(){
             case "Jazz - Chill/Study":
                 iframeId = "j-cs";
                 break;
+            case "Summer - Chill beats for sunny days":
+                iframeId = "s-cs";
+                break;
         }
         setIsIframePlaying((prev) => ({ ...prev, [iframeId]: isPlaying.state }));
     }, [isPlaying.playlist, isPlaying.music]);
@@ -122,6 +125,9 @@ export function LofiRadio(){
             case "j-cs":
                 setIsPlaying((prev) => ({...prev, playlist: "Jazz", music: "Chill/Study", state, category: "Lofi Radio", subcategory: undefined }));
                 break;
+            case "s-cs":
+                setIsPlaying((prev) => ({...prev, playlist: "Summer", music: "Chill beats for sunny days", state, category: "Lofi Radio", subcategory: undefined }));
+                break;
         }
       }
 
@@ -176,78 +182,87 @@ export function LofiRadio(){
             </h2>
             <div className="conveyor h-[60%] w-full">
                 <div className="belt">
-                <div className="item gap-y-2">
-                    <iframe id="hh-rs" className="relative z-[2] lofi-radio" src="https://www.youtube.com/embed/jfKfPfyJRdk?si=mHRrVpcsmqu6LX6g&amp;controls=0&amp;enablejsapi=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
-                    <div className="relative z-[1] flex flex-col items-center gap-y-2">
-                    <h3 className="radio-name font-comic-relief text-white text-lg">Hip Hop: Relax/Study</h3>
-                    <button id="hh-rs" className="round-btn control-btn" onClick={(e) => play(e, "hh-rs")} onMouseEnter={selection} onMouseLeave={deselection}>
-                        <img id="hh-rs" className="control-btn-icon" src="/imgs/backend-images/icon/play-button.png" alt="control button" width={30} height={30} />
-                    </button>
+                    <div className="item gap-y-2">
+                        <iframe id="hh-rs" className="relative z-[2] lofi-radio" src="https://www.youtube.com/embed/jfKfPfyJRdk?si=mHRrVpcsmqu6LX6g&amp;controls=0&amp;enablejsapi=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+                        <div className="relative z-[1] flex flex-col items-center gap-y-2">
+                        <h3 className="radio-name font-comic-relief text-white text-lg">Hip Hop: Relax/Study</h3>
+                        <button id="hh-rs" className="round-btn control-btn" onClick={(e) => play(e, "hh-rs")} onMouseEnter={selection} onMouseLeave={deselection}>
+                            <img id="hh-rs" className="control-btn-icon" src="/imgs/backend-images/icon/play-button.png" alt="control button" width={30} height={30} />
+                        </button>
+                        </div>
                     </div>
-                </div>
-                <div className="item gap-y-2">
-                    <iframe id="hh-sc" className="relative z-[2] lofi-radio" src="https://www.youtube.com/embed/28KRPhVzCus?si=DeeqcjpuFcDn7yqL&amp;controls=0&amp;enablejsapi=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
-                    <div className="relative z-[1] flex flex-col items-center gap-y-2">
-                    <h3 className="radio-name font-comic-relief text-white text-lg">Hip Hop: Sleep/Chill</h3>
-                    <button id="hh-sc" className="round-btn control-btn" onClick={(e) => play(e, "hh-sc")} onMouseEnter={selection} onMouseLeave={deselection}>
-                        <img id="hh-sc" className="control-btn-icon" src="/imgs/backend-images/icon/play-button.png" alt="control button" width={30} height={30} />
-                    </button>
+                    <div className="item gap-y-2">
+                        <iframe id="hh-sc" className="relative z-[2] lofi-radio" src="https://www.youtube.com/embed/28KRPhVzCus?si=DeeqcjpuFcDn7yqL&amp;controls=0&amp;enablejsapi=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+                        <div className="relative z-[1] flex flex-col items-center gap-y-2">
+                        <h3 className="radio-name font-comic-relief text-white text-lg">Hip Hop: Sleep/Chill</h3>
+                        <button id="hh-sc" className="round-btn control-btn" onClick={(e) => play(e, "hh-sc")} onMouseEnter={selection} onMouseLeave={deselection}>
+                            <img id="hh-sc" className="control-btn-icon" src="/imgs/backend-images/icon/play-button.png" alt="control button" width={30} height={30} />
+                        </button>
+                        </div>
                     </div>
-                </div>
-                <div className="item gap-y-2">
-                    <iframe id="a-rs" className="relative z-[2] lofi-radio" src="https://www.youtube.com/embed/Na0w3Mz46GA?si=VPqFZ3Vj3eFHOMdu&amp;controls=0&amp;enablejsapi=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
-                    <div className="relative z-[1] flex flex-col items-center gap-y-2">
-                    <h3 className="radio-name font-comic-relief text-white text-lg">Asian: Relax/Study</h3>
-                    <button id="a-rs" className="round-btn control-btn" onClick={(e) => play(e, "a-rs")} onMouseEnter={selection} onMouseLeave={deselection}>
-                        <img id="a-rs" className="control-btn-icon" src="/imgs/backend-images/icon/play-button.png" alt="control button" width={30} height={30} />
-                    </button>
+                    <div className="item gap-y-2">
+                        <iframe id="a-rs" className="relative z-[2] lofi-radio" src="https://www.youtube.com/embed/Na0w3Mz46GA?si=VPqFZ3Vj3eFHOMdu&amp;controls=0&amp;enablejsapi=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+                        <div className="relative z-[1] flex flex-col items-center gap-y-2">
+                        <h3 className="radio-name font-comic-relief text-white text-lg">Asian: Relax/Study</h3>
+                        <button id="a-rs" className="round-btn control-btn" onClick={(e) => play(e, "a-rs")} onMouseEnter={selection} onMouseLeave={deselection}>
+                            <img id="a-rs" className="control-btn-icon" src="/imgs/backend-images/icon/play-button.png" alt="control button" width={30} height={30} />
+                        </button>
+                        </div>
                     </div>
-                </div>
-                <div className="item gap-y-2">
-                    <iframe id="s-rd" className="relative z-[2] lofi-radio" src="https://www.youtube.com/embed/P6Segk8cr-c?si=rb2jMvZNltV6Ejrt&amp;controls=0&amp;enablejsapi=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
-                    <div className="relative z-[1] flex flex-col items-center gap-y-2">
-                    <h3 className="radio-name font-comic-relief text-white text-lg">Sad: Rainy Days</h3>
-                    <button id="s-rd" className="round-btn control-btn" onClick={(e) => play(e, "s-rd")} onMouseEnter={selection} onMouseLeave={deselection}>
-                        <img id="s-rd" className="control-btn-icon" src="/imgs/backend-images/icon/play-button.png" alt="control button" width={30} height={30} />
-                    </button>
+                    <div className="item gap-y-2">
+                        <iframe id="pp-fs" className="relative z-[2] lofi-radio" src="https://www.youtube.com/embed/TtkFsfOP9QI?si=RuYeRZwGT-DCEHQg&amp;controls=0&amp;enablejsapi=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+                        <div className="relative z-[1] flex flex-col items-center gap-y-2">
+                        <h3 className="radio-name font-comic-relief text-white text-lg">Peaceful Piano: Focus/Study</h3>
+                        <button id="pp-fs" className="round-btn control-btn" onClick={(e) => play(e, "pp-fs")} onMouseEnter={selection} onMouseLeave={deselection}>
+                            <img id="pp-fs" className="control-btn-icon" src="/imgs/backend-images/icon/play-button.png" alt="control button" width={30} height={30} />
+                        </button>
+                        </div>
                     </div>
-                </div>
-                <div className="item gap-y-2">
-                    <iframe id="pp-fs" className="relative z-[2] lofi-radio" src="https://www.youtube.com/embed/TtkFsfOP9QI?si=RuYeRZwGT-DCEHQg&amp;controls=0&amp;enablejsapi=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
-                    <div className="relative z-[1] flex flex-col items-center gap-y-2">
-                    <h3 className="radio-name font-comic-relief text-white text-lg">Peaceful Piano: Focus/Study</h3>
-                    <button id="pp-fs" className="round-btn control-btn" onClick={(e) => play(e, "pp-fs")} onMouseEnter={selection} onMouseLeave={deselection}>
-                        <img id="pp-fs" className="control-btn-icon" src="/imgs/backend-images/icon/play-button.png" alt="control button" width={30} height={30} />
-                    </button>
+                    <div className="item gap-y-2">
+                        <iframe id="s-cs" className="relative z-[2] lofi-radio" src="https://www.youtube.com/embed/SXySxLgCV-8?si=r0MUn6iRPRjGrCzP&amp;controls=0&amp;enablejsapi=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+                        <div className="relative z-[1] flex flex-col items-center gap-y-2">
+                        <h3 className="radio-name font-comic-relief text-white text-lg">Summer: Chill beats for sunny days</h3>
+                        <button id="s-cs" className="round-btn control-btn" onClick={(e) => play(e, "s-cs")} onMouseEnter={selection} onMouseLeave={deselection}>
+                            <img id="s-cs" className="control-btn-icon" src="/imgs/backend-images/icon/play-button.png" alt="control button" width={30} height={30} />
+                        </button>
+                        </div>
                     </div>
-                </div>
-                <div className="item gap-y-2">
-                    <iframe id="medieval" className="relative z-[2] lofi-radio" src="https://www.youtube.com/embed/IxPANmjPaek?si=sh-RD8AxPgVvLc15&amp;controls=0&amp;enablejsapi=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
-                    <div className="relative z-[1] flex flex-col items-center gap-y-2">
-                    <h3 className="radio-name font-comic-relief text-white text-lg">Medieval</h3>
-                    <button id="medieval" className="round-btn control-btn" onClick={(e) => play(e, "medieval")} onMouseEnter={selection} onMouseLeave={deselection}>
-                        <img id="medieval" className="control-btn-icon" src="/imgs/backend-images/icon/play-button.png" alt="control button" width={30} height={30} />
-                    </button>
+                    <div className="item gap-y-2">
+                        <iframe id="j-cs" className="relative z-[2] lofi-radio" src="https://www.youtube.com/embed/HuFYqnbVbzY?si=Fh8ftP5L0nl42CCp&amp;controls=0&amp;enablejsapi=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+                        <div className="relative z-[1] flex flex-col items-center gap-y-2">
+                        <h3 className="radio-name font-comic-relief text-white text-lg">Jazz: Chill/Study</h3>
+                        <button id="j-cs" className="round-btn control-btn" onClick={(e) => play(e, "j-cs")} onMouseEnter={selection} onMouseLeave={deselection}>
+                            <img id="j-cs" className="control-btn-icon" src="/imgs/backend-images/icon/play-button.png" alt="control button" width={30} height={30} />
+                        </button>
+                        </div>
                     </div>
-                </div>
-                <div className="item gap-y-2">
-                    <iframe id="s-cg" className="relative z-[2] lofi-radio" src="https://www.youtube.com/embed/4xDzrJKXOOY?si=Ecywhf9zr7ThIOMN&amp;controls=0&amp;enablejsapi=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
-                    <div className="relative z-[1] flex flex-col items-center gap-y-2">
-                    <h3 className="radio-name font-comic-relief text-white text-lg">Synthwave: Chill/Gaming</h3>
-                    <button id="s-cg" className="round-btn control-btn" onClick={(e) => play(e, "s-cg")} onMouseEnter={selection} onMouseLeave={deselection}>
-                        <img id="s-cg" className="control-btn-icon" src="/imgs/backend-images/icon/play-button.png" alt="control button" width={30} height={30} />
-                    </button>
+                    <div className="item gap-y-2">
+                        <iframe id="s-rd" className="relative z-[2] lofi-radio" src="https://www.youtube.com/embed/P6Segk8cr-c?si=rb2jMvZNltV6Ejrt&amp;controls=0&amp;enablejsapi=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+                        <div className="relative z-[1] flex flex-col items-center gap-y-2">
+                        <h3 className="radio-name font-comic-relief text-white text-lg">Sad: Rainy Days</h3>
+                        <button id="s-rd" className="round-btn control-btn" onClick={(e) => play(e, "s-rd")} onMouseEnter={selection} onMouseLeave={deselection}>
+                            <img id="s-rd" className="control-btn-icon" src="/imgs/backend-images/icon/play-button.png" alt="control button" width={30} height={30} />
+                        </button>
+                        </div>
                     </div>
-                </div>
-                <div className="item gap-y-2">
-                    <iframe id="j-cs" className="relative z-[2] lofi-radio" src="https://www.youtube.com/embed/HuFYqnbVbzY?si=Fh8ftP5L0nl42CCp&amp;controls=0&amp;enablejsapi=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
-                    <div className="relative z-[1] flex flex-col items-center gap-y-2">
-                    <h3 className="radio-name font-comic-relief text-white text-lg">Jazz: Chill/Study</h3>
-                    <button id="j-cs" className="round-btn control-btn" onClick={(e) => play(e, "j-cs")} onMouseEnter={selection} onMouseLeave={deselection}>
-                        <img id="j-cs" className="control-btn-icon" src="/imgs/backend-images/icon/play-button.png" alt="control button" width={30} height={30} />
-                    </button>
+                    <div className="item gap-y-2">
+                        <iframe id="medieval" className="relative z-[2] lofi-radio" src="https://www.youtube.com/embed/IxPANmjPaek?si=sh-RD8AxPgVvLc15&amp;controls=0&amp;enablejsapi=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+                        <div className="relative z-[1] flex flex-col items-center gap-y-2">
+                        <h3 className="radio-name font-comic-relief text-white text-lg">Medieval</h3>
+                        <button id="medieval" className="round-btn control-btn" onClick={(e) => play(e, "medieval")} onMouseEnter={selection} onMouseLeave={deselection}>
+                            <img id="medieval" className="control-btn-icon" src="/imgs/backend-images/icon/play-button.png" alt="control button" width={30} height={30} />
+                        </button>
+                        </div>
                     </div>
-                </div>
+                    <div className="item gap-y-2">
+                        <iframe id="s-cg" className="relative z-[2] lofi-radio" src="https://www.youtube.com/embed/4xDzrJKXOOY?si=Ecywhf9zr7ThIOMN&amp;controls=0&amp;enablejsapi=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+                        <div className="relative z-[1] flex flex-col items-center gap-y-2">
+                        <h3 className="radio-name font-comic-relief text-white text-lg">Synthwave: Chill/Gaming</h3>
+                        <button id="s-cg" className="round-btn control-btn" onClick={(e) => play(e, "s-cg")} onMouseEnter={selection} onMouseLeave={deselection}>
+                            <img id="s-cg" className="control-btn-icon" src="/imgs/backend-images/icon/play-button.png" alt="control button" width={30} height={30} />
+                        </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -286,7 +301,7 @@ export function MusicLibrary(){
                 Object.keys(musicId.BGM).length +
                 Object.keys(musicId["Game OST"]).length +
                 Object.keys(musicId["Other OST"]).length
-            }, 1fr);` }}>
+            }, 1fr)` }}>
                 <CategoryTitle text="Background Music" />
                 <PlaylistLibCard cate="BGM" name="Vindsvept" backdropColor="#402726" />
                 <CategoryTitle text="Game OST" />
@@ -327,7 +342,7 @@ export function MusicLibrary(){
 
 export function RadioToast(){
     const { isPlayingState, player, speakerUID, cs } = useMusic();
-    const { device } = useGlobal();
+    const { device, authUser } = useGlobal();
     const { isPlaying, setIsPlaying } = isPlayingState;
     const { setSpeakerUniqueId } = speakerUID;
     const { currentSearching } = cs;
@@ -345,6 +360,7 @@ export function RadioToast(){
     }, [isPlaying.state], 100)
 
     useEffect(() => {
+        if(!authUser.isAuthUser && !authUser.isAuthUser?.email_confirmed_at) return;
         if (!isPlaying.state){
             document.querySelector(".belt").style.animationPlayState = "running";
             document.querySelectorAll(".control-btn-icon").forEach((cbi) => {
@@ -370,6 +386,7 @@ export function RadioToast(){
     }, [isPlaying.state, isPlaying.category])
 
     useEffect(() => {
+        if(!authUser.isAuthUser && !authUser.isAuthUser?.email_confirmed_at) return;
         let showNameTimeout;
         let hideNameTimeout;
         if(device.device !== "lg" && device.device !== "xl" && device.device !== "2xl"){
@@ -395,6 +412,15 @@ export function RadioToast(){
             case "Hip Hop - Sleep/Chill":
                 iframeId = "hh-sc";
                 break;
+            case "Asian - Relax/Study":
+                iframeId = "a-rs";
+                break;
+            case "Sad - Rainy Days":
+                iframeId = "s-rd";
+                break;
+            case "Peacful Piano - Focus/Study":
+                iframeId = "pp-fs";
+                break;
             case "Medieval - Medieval":
                 iframeId = "medieval";
                 break;
@@ -403,6 +429,9 @@ export function RadioToast(){
                 break;
             case "Jazz - Chill/Study":
                 iframeId = "j-cs";
+                break;
+            case "Summer - Chill beats for sunny days":
+                iframeId = "s-cs";
                 break;
             default:
                 iframeId = "speaker";
