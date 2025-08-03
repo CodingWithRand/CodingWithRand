@@ -1,8 +1,8 @@
 const { supabase } = require("./initialize")
 const responseStatus = require("../../../responseStatus");
-const { jwtVerify, createRemoteJWKSet } = require("jose");
 
 async function userAccessTokenTranslation(access_token){
+    const { jwtVerify, createRemoteJWKSet } = await import("jose");
     const PROJECT_JWKS = createRemoteJWKSet(
         new URL("https://naoezvmpzuwzafoeguvh.supabase.co/auth/v1/.well-known/jwks.json")
     );
