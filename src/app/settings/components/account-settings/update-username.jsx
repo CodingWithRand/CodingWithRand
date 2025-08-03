@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useGlobal } from "@/glient/global";
 import Client from "@/glient/util";
-import { serverUpdate } from "@/glient/supabase";
+import { serverUpdate, supabase } from "@/glient/supabase";
 
 const { InputField, Section } = Client.Components.Dynamic;
 
@@ -12,7 +12,8 @@ export default function UpdateUsername() {
     async function changeDisplayName(e){
         e.preventDefault();
         if(isValid){ 
-            await serverUpdate("users-details", { display_name: userName }, { columnName: "uid", value: authUser.isAuthUser.id });
+            const userSession = await supabase.auth.getSession();
+            await serverUpdate("users-details", { display_name: userName }, { columnName: "uid", value: authUser.isAuthUser.id }, userSession.data.session.access_token);
             window.location.reload();
         }
     }

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import Client from "@/glient/util";
 import Loading, { useLoadingState } from "@/glient/loading";
 import { useGlobal } from "@/glient/global";
-import { auth, serverRPC } from "@/glient/supabase";
+import { auth, serverRPC, supabase } from "@/glient/supabase";
 
 const { Section } = Client.Components.Dynamic;
 
@@ -32,7 +32,8 @@ function SessionsInfo(){
         }
         (async () => {
             let sc = [];
-            const userAuthData = await serverRPC("auth_states_request", { p_uid: authUser.isAuthUser.id });
+            const userSession = await supabase.auth.getSession();
+            const userAuthData = await serverRPC("auth_states_request", { p_uid: authUser.isAuthUser.id }, userSession.data.session.access_token);
 
             for (const [session_name, session_data] of Object.entries(userAuthData)) {
                 const locationResponse = await fetch(`https://ipwho.is/${session_data.ip}`);
@@ -63,7 +64,7 @@ function SessionsInfo(){
                                 await serverRPC("sign_out", {
                                     p_uid: authUser.isAuthUser.id,
                                     platform: "codingwithrand"
-                                });
+                                }, userSession.data.session.access_token);
                                 await auth.signOut() 
                                 window.location.replace("/registration")
                             }catch(e){ console.error(e) } 
@@ -86,12 +87,13 @@ function SessionsInfo(){
             {sessionComponents}
             <button onClick={async () => {
                 try{
+                    const userSession = await supabase.auth.getSession();
                     const platforms = ["codingwithrand", "cwr-education", "planreminder"];
                     for(const platform of platforms){
                         await serverRPC("sign_out", {
                             p_uid: authUser.isAuthUser.id,
                             platform: platform
-                        });
+                        }, userSession.data.session.access_token);
                     }
                     await auth.signOut();
                     window.location.replace("/registration");

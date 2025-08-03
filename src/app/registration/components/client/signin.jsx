@@ -4,7 +4,7 @@ import "./client.css"
 import { useState, useRef } from "react";
 import Client from "@/glient/util";
 import Neutral from "@/geutral/util";
-import { auth, serverFetch, serverRPC, serverUpdate, supabase } from "@/glient/supabase";
+import { auth, serverRPC, supabase } from "@/glient/supabase";
 import { useLoadingState } from "@/glient/loading";
 
 export default function SignIn() {
@@ -39,11 +39,13 @@ export default function SignIn() {
                 const { data, error } = await auth.signInWithPassword({ email: userEmail.current, password: userPass.current });
                 if(error) throw error;
 
+                const userSession = await supabase.auth.getSession();
+
                 await serverRPC("sign_in", {
                     p_uid: data.user.id,
                     p_ip: await Neutral.Functions.getClientIp(),
                     platform: "codingwithrand"
-                })
+                }, userSession.data.session.access_token);
 
                 await Neutral.Functions.asyncDelay(1000);
                 // window.location.replace("/");

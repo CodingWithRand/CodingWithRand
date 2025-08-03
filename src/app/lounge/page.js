@@ -4,11 +4,10 @@ import "./page.css";
 import Client from "@/glient/util";
 import { useEffect } from "react";
 import Neutral from "@/geutral/util";
-import { LofiRadio, RadioToast, MusicLibrary, BookShelf, MusicLibraryDialog } from "./components/client/constructor-components";
+import { LofiRadios, RadioToast, MusicLibrary, BookShelf, MusicLibraryDialog } from "./components/client/constructor-components";
 import { MusicStateProvider } from "./components/client/utility-components";
 import Script from "next/script";
 import { useGlobal } from "@/glient/global";
-import musicId from "./components/musicId";
 
 export default function Lounge() {
   const { Components } = Client
@@ -104,7 +103,7 @@ export default function Lounge() {
               <Coroussel
                 totalPages={2}
                 corousselElements={[
-                  <LofiRadio key={1} />,
+                  <LofiRadios key={1} />,
                   <MusicLibrary key={2} />,
                 ]}
                 corousselWrappersStyle={[

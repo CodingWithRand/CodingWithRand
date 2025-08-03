@@ -2,7 +2,7 @@
 
 import "./client.css"
 import { useState, useEffect } from "react";
-import { auth, serverFetch, serverInsert, serverRPC, supabase } from "@/glient/supabase";
+import { auth, serverRPC, supabase } from "@/glient/supabase";
 import { useLoadingState } from "@/glient/loading";
 import Client from "@/glient/util";
 import Neutral from"@/geutral/util";
@@ -46,10 +46,10 @@ export default function SignUp() {
 
         try{
             // make this more secure -> create an encrypted api key for this and decrypt it before sending it to the server with a function.
-            const isEmailExisted = await serverFetch("private", "users-sensitive-details", "email", { columnName: "email", value: userEmail });
+            const isEmailExisted = await supabase.rpc("check_email_exists", { i_email: userEmail });
             const isUsernameExisted = await supabase.schema("public").from("users-details").select("display_name").eq("display_name", userName);
 
-            if (isEmailExisted.length !== 0 || isUsernameExisted.data.length !== 0) {
+            if (isEmailExisted.data || isUsernameExisted.data.length !== 0) {
                 setSUS(true); setErrMsg("This username or email has been taken");
                 setLoadingState(false)
                 return;
@@ -58,13 +58,15 @@ export default function SignUp() {
             if (error) throw error;
             setEmailSent(true);
 
+            const userSession = await supabase.auth.getSession();
+
             await serverRPC("sign_up", {
                 p_uid: data.user.id,
                 username: userName,
                 email: userEmail,
                 ip: await Neutral.Functions.getClientIp(),
                 platform: "codingwithrand"
-            })
+            }, userSession.data.session.access_token);
 
         } catch (error) {
             const errorCode = error.code;

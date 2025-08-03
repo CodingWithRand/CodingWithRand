@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import { useGlobal } from "@/glient/global";
 import { useLoadingState } from "@/glient/loading";
 import Client from "@/glient/util";
-import Cookies from "universal-cookie";
-import { serverFetch, auth, serverUpdate, serverRPC, supabase } from "@/glient/supabase";
+import { auth, serverRPC, supabase } from "@/glient/supabase";
 
 const { Dynamic } = Client.Components;
 const { Image } = Dynamic;
@@ -30,10 +29,11 @@ export function SignOutBTN() {
 
     return <button onClick={async () => {
         setLoadingState(true);
+        const userSession = await supabase.auth.getSession();
         await serverRPC("sign_out", {
             p_uid: authUser.isAuthUser.id,
             platform: "codingwithrand"
-        });
+        }, userSession.data.session.access_token);
 
         await auth.signOut();
         setLoadingState(false);

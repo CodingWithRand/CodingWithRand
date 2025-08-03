@@ -132,9 +132,16 @@ h2.h-concerned{
     animation: conveyor-belt calc(var(--lofi-radio-count) * 5s) linear infinite alternate;
 }
 
+.conveyor .belt .item.lrc {
+    position: relative;
+    overflow: unset;
+    background-color: transparent;
+    cursor: pointer;
+}
+
 @keyframes conveyor-belt {
     0% { transform: translateX(calc(450px + 1rem)); }
-    100% { transform: translateX(calc(-1 * ((var(--lofi-radio-count) / 3) + 1)* (450px + 1rem))); }
+    100% { transform: translateX(calc(-1 * (var(--lofi-radio-count) - 2) * (450px + 1rem))); }
     
 }
 
@@ -420,4 +427,20 @@ img#falling-book{
     border: 2px solid white;
     mask-image: linear-gradient(transparent, black 30%, black 70%, transparent);
     margin-left: 1.5rem
+}
+
+.lrc[popover]:popover-open:not(dialog) .lofi-radio {
+    max-width: unset;
+    width: 100vw;
+    height: 100vh;
+}
+
+.lrc[popover]:popover-open:not(dialog) .ctrl-btn-sec{
+    position: fixed;
+    bottom: 1rem;
+    z-index: 9999;
+}
+
+.lrc[popover]:popover-open:not(dialog) .radio-name{
+    display: none;
 }

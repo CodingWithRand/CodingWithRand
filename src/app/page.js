@@ -7,7 +7,7 @@ import { Article } from "./components/client/utility-components";
 import Client from "./global/client/util";
 import { useEffect, useState } from "react";
 import { useGlobal } from "@/glient/global";
-import { auth, serverUpdate } from "@/glient/supabase";
+import { auth, serverUpdate, supabase } from "@/glient/supabase";
 
 const { Section, InputGroupField } = Client.Components.Dynamic;
 const { Switch } = Client.Components;
@@ -23,7 +23,8 @@ export default function Home() {
     // email_verified update when email is verified (waiting for confirmation)
     (async () => {
       if(authUser.isAuthUser.email_confirmed_at){
-        await serverUpdate("public", "users-details", { email_verified: true }, { columnName: "uid", value: authUser.isAuthUser.id });
+        const userSession = await supabase.auth.getSession();
+        await serverUpdate("public", "users-details", { email_verified: true }, { columnName: "uid", value: authUser.isAuthUser.id }, userSession.data.session.access_token);
       }
     })()
   }, [authUser.isAuthUser])
