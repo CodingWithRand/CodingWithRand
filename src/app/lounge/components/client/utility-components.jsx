@@ -1,7 +1,8 @@
 import Client from "@/glient/util";
 import { flushSync } from "react-dom";
 import { useContext, useState, useRef, createContext, useEffect } from "react";
-import musicId from "../musicId";
+import musicId from "../musicId.json";
+import Cookies from "universal-cookie";
 
 import { extend } from "@pixi/react";
 import { Graphics, Rectangle } from "pixi.js";
@@ -11,6 +12,7 @@ extend({ Graphics });
 const MusicState = createContext(undefined);
 
 export function MusicStateProvider({ children }){
+    const cookies = new Cookies();
     const [ isPlaying, setIsPlaying ] = useState({ 
         playlist: undefined,
         music: undefined,
@@ -26,7 +28,10 @@ export function MusicStateProvider({ children }){
     const toasterPlayer = useRef(null);
 
     useEffect(() => {
-        if(toasterPlayer.current) toasterPlayer.current.setVolume(isPlaying.volume[0]);
+        cookies.set("volume", isPlaying.volume[0], { path: "/" });
+        if(toasterPlayer.current){
+            toasterPlayer.current.setVolume(isPlaying.volume[0]);
+        }
     }, [isPlaying.volume])
 
     return (
@@ -117,6 +122,7 @@ export function playMusic({
     subcategory=undefined, 
     globallyRandom=false 
 }, constant){
+    const cookies = new Cookies();
     console.log(playlist)
     if(playlist !== constant.isPlaying.playlist || music !== constant.isPlaying.music){
         const uId = `speaker-${Date.now()}`;
@@ -131,11 +137,14 @@ export function playMusic({
             videoId: id,
             events: {    
                 onReady: (event) => {
-                    console.log("play", constant.isPlaying.volume[0])
+                    console.log("play", cookies.get("volume"))
+                    event.target.mute();
                     event.target.playVideo();
-                    event.target.setVolume(constant.isPlaying.volume[0]);
+                    event.target.setVolume(cookies.get("volume"));
                 },
                 onStateChange: (event) => {
+                    console.log(event.data, new Date(Date.now()).toLocaleTimeString());
+                    event.target.unMute();
                     if (event.data === YT.PlayerState.PAUSED) {
                         constant.setIsPlaying((prev) => ({ ...prev, state: false })); 
                     }
@@ -169,7 +178,7 @@ export function nextMusicInLib(playlist, currentIndex, ids, names, cate, constan
     }, constant)
 }
 
-export function MusicLibraryCard({ nth, cate, libName }){
+export function MusicLibraryCard({ nth, matchedSearch, cate, libName }){
     const { isPlayingState, player, speakerUID, cs, mlList } = useMusic();
     const { isPlaying, setIsPlaying } = isPlayingState;
     const { setShowingList } = mlList;
@@ -216,7 +225,50 @@ export function MusicLibraryCard({ nth, cate, libName }){
     return <div id={cate && libName ? libName : cate} className="music-lib">
         <span className="text-sm nmob:text-base">
             <span className="nth">{nth + 1}</span>
-            {cate && libName ? libName : cate}
+            <span>
+            {
+                cate && libName ? 
+                    (matchedSearch && !(matchedSearch.every((match) => match === ""))) ? (() => {
+                        const regex = new RegExp(matchedSearch.join("|"), "g");
+                        // Use replace to wrap matched characters
+                        let idx = 0;
+                        const highlighted = [];
+                        libName.replace(regex, (match, offset) => {
+                            // Push text before match
+                            if (offset > idx) highlighted.push(libName.slice(idx, offset));
+                            // Push highlighted match
+                            highlighted.push(
+                                <mark key={offset}>{match}</mark>
+                            );
+                            idx = offset + match.length;
+                            return match;
+                        });
+                        // Push remaining text
+                        if (idx < libName.length) highlighted.push(libName.slice(idx));
+                        return highlighted;
+                    })() : libName
+                : 
+                    (matchedSearch && !(matchedSearch.every((match) => match === ""))) ? (() => {
+                        const regex = new RegExp(matchedSearch.join("|"), "g");
+                        // Use replace to wrap matched characters
+                        let idx = 0;
+                        const highlighted = [];
+                        cate.replace(regex, (match, offset) => {
+                            // Push text before match
+                            if (offset > idx) highlighted.push(cate.slice(idx, offset));
+                            // Push highlighted match
+                            highlighted.push(
+                                <mark key={offset}>{match}</mark>
+                            );
+                            idx = offset + match.length;
+                            return match;
+                        });
+                        // Push remaining text
+                        if (idx < cate.length) highlighted.push(cate.slice(idx));
+                        return highlighted;
+                    })() : cate
+            }
+            </span>
         </span>
         <div className="flex flex-row gap-x-2 items-center" style={{ minWidth: "80px" }}>
             <button className="round-btn" style={{ padding: "0.5rem" }} onClick={browseLib}>
@@ -229,15 +281,15 @@ export function MusicLibraryCard({ nth, cate, libName }){
     </div>
 }
 
-export function MusicCard({ nth, musicName }){
+export function MusicCard({ nth, musicName, matchedSearch=undefined }){
 
     const { isPlayingState, player, speakerUID, cs } = useMusic();
     const { isPlaying, setIsPlaying } = isPlayingState;
     const { setSpeakerUniqueId } = speakerUID;
     const { currentSearching } = cs;
 
-    let constant = { isPlaying, setIsPlaying, player, setSpeakerUniqueId };
-
+    let constant = { isPlaying, setIsPlaying, player, setSpeakerUniqueId};
+    
     function playMusicInLib(e){
         setIsPlaying((prev) => ({...prev, state: false}));
         if(player.current) player.current.pauseVideo();
@@ -260,7 +312,29 @@ export function MusicCard({ nth, musicName }){
     return <div id={musicName} className="music-card">
         <span className="text-sm nmob:text-base">
             <span className="nth">{nth + 1}</span>
-            {musicName}
+            <span>
+                {
+                    (matchedSearch && !(matchedSearch.every((match) => match === ""))) ? (() => {
+                        const regex = new RegExp(matchedSearch.join("|"), "g");
+                        // Use replace to wrap matched characters
+                        let idx = 0;
+                        const highlighted = [];
+                        musicName.replace(regex, (match, offset) => {
+                            // Push text before match
+                            if (offset > idx) highlighted.push(musicName.slice(idx, offset));
+                            // Push highlighted match
+                            highlighted.push(
+                                <mark key={offset}>{match}</mark>
+                            );
+                            idx = offset + match.length;
+                            return match;
+                        });
+                        // Push remaining text
+                        if (idx < musicName.length) highlighted.push(musicName.slice(idx));
+                        return highlighted;
+                    })() : musicName
+                }
+            </span>
         </span>
         <div className="flex flex-row gap-x-2 items-center" style={{ minWidth: "36px" }}>
             <button className="round-btn" style={{ padding: "0.5rem" }} onClick={playMusicInLib}>

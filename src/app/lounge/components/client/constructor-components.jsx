@@ -3,7 +3,7 @@ import { Container, Graphics, Sprite, Texture, Assets, Rectangle, v8_0_0 } from 
 
 import Client from "@/glient/util";
 import { useRef, useState, useEffect } from "react";
-import musicId from "../musicId";
+import musicId from "../musicId.json";
 import { Direction, Range } from "react-range";
 import { useGlobal } from "@/glient/global";
 import { 
@@ -270,6 +270,7 @@ export function MusicLibrary(){
                 <PlaylistLibCard cate="Game OST" name="The Legend of Bum-bo" backdropColor="#42330A" />
                 <PlaylistLibCard cate="Game OST" name="The Binding of Isaac (Lullabies)" backdropColor="#31372A" />
                 <PlaylistLibCard cate="Game OST" name="The Binding of Isaac (Mutations)" backdropColor="#00355D" />
+                <PlaylistLibCard cate="Game OST" name="Library of Ruina" backdropColor="#311f0bff" />
                 <CategoryTitle text="Other OST" />
                 <PlaylistLibCard cate="Other OST" name="Fieren Beyond Journey's End" backdropColor="#99cba6" />
             </div>
@@ -511,25 +512,25 @@ export function MusicLibraryDialog(){
             let i = 0;
             if (Object.values(currentSearching).every((v) => v === undefined)) {
                 Object.keys(musicId).forEach((cate) => {
-                    const searchPattern = new RegExp(`^${e.target.value.toLowerCase()}`)
-                    if(searchPattern.test(cate.toLowerCase())){
-                        list.push(<MusicLibraryCard key={cate} nth={i} cate={cate} />)
+                    const searchPattern = new RegExp(`(${e.target.value})+`, "g")
+                    if(cate.match(searchPattern)){
+                        list.push(<MusicLibraryCard key={cate} nth={i} matchedSearch={libName.match(searchPattern)} cate={cate} />)
                         i++;
                     }
                 })
             } else if (currentSearching.cate && !currentSearching.lib) {
                 Object.keys(musicId[currentSearching.cate]).forEach((libName) => {
-                    const searchPattern = new RegExp(`^${e.target.value.toLowerCase()}`)
-                    if(searchPattern.test(libName.toLowerCase())){
-                        list.push(<MusicLibraryCard key={libName} nth={i} cate={currentSearching.cate} libName={libName} />)
+                    const searchPattern = new RegExp(`(${e.target.value})+`, "g")
+                    if(libName.match(searchPattern)){
+                        list.push(<MusicLibraryCard key={libName} nth={i} matchedSearch={libName.match(searchPattern)} cate={currentSearching.cate} libName={libName} />)
                         i++;
                     }
                 })
             } else if (currentSearching.cate && currentSearching.lib) {
                 Object.keys(musicId[currentSearching.cate][currentSearching.lib]).forEach((musicName) => {
-                    const searchPattern = new RegExp(`^${e.target.value.toLowerCase()}`)
-                    if(searchPattern.test(musicName.toLowerCase())){
-                        list.push(<MusicCard key={musicName} nth={i} musicName={musicName} />)
+                    const searchPattern = new RegExp(`(${e.target.value})+`, "g")
+                    if(musicName.match(searchPattern)){
+                        list.push(<MusicCard key={musicName} nth={i} musicName={musicName} matchedSearch={musicName.match(searchPattern)} />)
                         i++;
                     }
                 })

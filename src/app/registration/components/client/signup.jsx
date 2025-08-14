@@ -58,15 +58,13 @@ export default function SignUp() {
             if (error) throw error;
             setEmailSent(true);
 
-            const userSession = await supabase.auth.getSession();
-
             await serverRPC("sign_up", {
                 p_uid: data.user.id,
                 username: userName,
                 email: userEmail,
                 ip: await Neutral.Functions.getClientIp(),
                 platform: "codingwithrand"
-            }, userSession.data.session.access_token);
+            }, data.session.access_token);
 
         } catch (error) {
             const errorCode = error.code;

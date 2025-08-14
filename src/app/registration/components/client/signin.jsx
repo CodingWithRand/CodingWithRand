@@ -39,13 +39,11 @@ export default function SignIn() {
                 const { data, error } = await auth.signInWithPassword({ email: userEmail.current, password: userPass.current });
                 if(error) throw error;
 
-                const userSession = await supabase.auth.getSession();
-
                 await serverRPC("sign_in", {
                     p_uid: data.user.id,
                     p_ip: await Neutral.Functions.getClientIp(),
                     platform: "codingwithrand"
-                }, userSession.data.session.access_token);
+                }, data.session.access_token);
 
                 await Neutral.Functions.asyncDelay(1000);
                 // window.location.replace("/");

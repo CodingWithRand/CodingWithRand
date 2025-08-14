@@ -119,7 +119,7 @@ export default function Lounge() {
                 </div>
                 <h1 id="im-a-bookworm" className="relative z-10 art-text py-[1em] md:py-[2em] font-bangers text-3xl nmob:text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[#1DB954]">I&apos;m a bookworm!</h1>
               </div>
-              <Image alt="bookpile" name="pile of books.png" style={{ maskImage: "linear-gradient(black 80%, transparent 100%)" }} constant/>
+              <Image cls="w-full" alt="bookpile" name="pile of books.png" style={{ maskImage: "linear-gradient(black 80%, transparent 100%)" }} constant/>
             </section>
             <section className="h-screen w-screen flex items-center justify-center" style={{
               backgroundColor: "rgb(169, 95, 47)",
