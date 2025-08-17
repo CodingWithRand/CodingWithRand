@@ -23,7 +23,8 @@
     ol.theme.text-color,
     textarea.theme.text-color,
     input.theme.text-color,
-    p.theme.text-color
+    p.theme.text-color,
+    b.theme.text-color
     {
         @apply text-black dark:text-white;
     }

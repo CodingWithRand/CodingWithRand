@@ -434,6 +434,7 @@ h1, h2, li, form{
 
 .reg-form.animate.exp{
   padding: 2vh 0;
+  height: -webkit-fit-content;
   height: fit-content;
 }
 

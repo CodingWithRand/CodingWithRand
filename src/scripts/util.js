@@ -227,7 +227,7 @@ function Section(props){
     switch(props.style){
         case "pallete":
             return( 
-                <div id={props.id} style={props.cssstyle} className={`pallete ${props.themed ? "theme" : ""} ctn bg-color intense`}>
+                <div id={props.id} style={props.cssstyle} className={`pallete ${props.themed ? "theme" : ""} container bg-color intense`}>
                     <h1 className={`setting-section-title responsive ${props.themed ? "theme" : ""} text-color`}>{props.title}</h1>
                     <p className={`setting-section-description responsive ${props.themed ? "theme" : ""} text-color`}>{props.description || ""}</p>
                     {props.children}
@@ -430,9 +430,9 @@ function UserPFP(){
                 const { data, error } = await storage.from("user-pfp").createSignedUrl(`${authUser.isAuthUser.id}/profile.png`, 3600);
                 if(error) throw error
                 const userProfileImage = data.signedUrl;
-                setPfpImg(<img alt="user-profile-icon" src={userProfileImage} className="rounded-full" width={40} height={40}/>)
+                setPfpImg(<img alt="user-profile-icon" src={userProfileImage} style={{ borderRadius: "9999px" }} width={40} height={40}/>)
             }catch(err){ 
-                setPfpImg(<All.Components.Dynamic.Image alt="programmer-profile-icon" dir="icon/" width={40} height={40} name="programmer.png" cls="rounded-full" />)
+                setPfpImg(<All.Components.Dynamic.Image alt="programmer-profile-icon" dir="icon/" width={40} height={40} name="programmer.png" style={{ borderRadius: "9999px" }} />)
                 console.error(err)
             }
         })()

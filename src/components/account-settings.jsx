@@ -3,6 +3,7 @@ import { useGlobal } from "../scripts/global"
 import All from "../scripts/util";
 import { BgMusicController } from "./setup";
 import { serverRPC, supabase, auth, serverUpdate } from "../scripts/supabase";
+import "../css/use/account-settings.css";
 
 const { Dynamic, Switch } = All.Components;
 const { Image, Section, AlertBox, InputField, InputGroupField } = Dynamic;
@@ -63,7 +64,7 @@ function SessionsInfo(){
                             try{ 
                                 await serverRPC("sign_out", {
                                     p_uid: authUser.isAuthUser.id,
-                                    platform: "codingwithrand"
+                                    platform: "cwr-education"
                                 }, userSession.data.session.access_token);
                                 await auth.signOut() 
                                 window.location.replace("/registration")
@@ -311,7 +312,7 @@ function SignOutBTN() {
         const userSession = await supabase.auth.getSession();
         await serverRPC("sign_out", {
             p_uid: authUser.isAuthUser.id,
-            platform: "codingwithrand"
+            platform: "cwr-education"
         }, userSession.data.session.access_token);
 
         await auth.signOut();
@@ -351,8 +352,8 @@ export default function AccountSettings() {
 
     return(
         <div className="page-container spaceship-cockpit-panel">
-            <iframe id="account-settings-iframe" className="crossite-iframe">
-                <nav id="navbar">
+            <div id="account-settings-iframe" className="crossite-iframe" style={{ overflow: "auto", padding: "0 5%" }}>
+                <nav id="navbar" style={{ position: "absolute", top: 0, left: 0 }}>
                     <ul>
                         <li className="text-md sm:text-lg">Welcome!</li>
                         <Username />
@@ -379,13 +380,13 @@ export default function AccountSettings() {
                         </a></li>
                     </ul>
                 </nav>
-                <main className="flex items-center flex-col">
+                <div className="flex items-center flex-col">
                     <UpdateProfilePicture />
                     <UpdateUsername />
                     <UpdatePassword />
                     <AuthenticationManagementPanel />
-                </main>
-            </iframe>
+                </div>
+            </div>
             <All.Components.HyperspaceTeleportationBackground />
             <BgMusicController />
         </div>
