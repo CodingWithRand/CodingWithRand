@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useParams } from "react-router-dom";
-import { Components } from "../../scripts/util";
+import All from "../../scripts/util";
 
 export function Quote({ quote, author, initialAnimationTime }){
     const { page } = useParams();
@@ -43,7 +43,7 @@ export function ComputerComponent(props){
                     for(let i = 0; i < props.elementNumber; i++){
                         body.push(
                             <li className="responsive" key={i}>
-                                <Components.Dynamic.Image name={`${props.componentNames[i].toLowerCase()}.png`} alt={props.componentNames[i]} constant dir="icon/" width={100} height={100}/>
+                                <All.Components.Dynamic.Image name={`${props.componentNames[i].toLowerCase()}.png`} alt={props.componentNames[i]} constant dir="icon/" width={100} height={100}/>
                                 <div className="computer-info-card">
                                     <h2 className="font-league-spartan responsive">{props.componentNames[i]}</h2>
                                     <p className="font-oswald">{props.componentDescriptions[i]}</p>

@@ -1,47 +1,46 @@
-import { onAuthStateChanged } from "@firebase/auth";
+import { auth } from "./supabase";
 import { useContext, createContext, useState, useEffect } from "react";
-import { auth } from "./firebase";
-import Cookies from "universal-cookie";
 
 const GlobalState = createContext(undefined);
 
 export function Global({ children }){
-  const cookies = new Cookies();
   const [isAuthUser, getCurrentUser] = useState();
+  const [authEvent, setAuthEvent] = useState();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => getCurrentUser(user));
-    return () => unsubscribe();
-  }, []);
+    const { data } = auth.onAuthStateChange((event, session) => {
+      setAuthEvent(event)
+      if(session) getCurrentUser(session.user)
+      else getCurrentUser(null)
+      // console.log(isAuthUser);
+    });
+    return () => data.subscription.unsubscribe()
+  }, [])
   
-  const [isLoggedIn, logIn] = useState(!cookies.get("login") ? false : cookies.get("login"));
-  const [theme, setTheme] = useState(localStorage.getItem("theme") || "default-os");
+  const [theme, setTheme] = useState("default-os");
+  const [onExceptionPage, setOnExceptionPage] = useState(false);
   const [device, detectDevice] = useState("pc");
   const [scriptLoaded, setScriptLoaded] = useState(false);
 
   useEffect(() => {
-    if(!isAuthUser) logIn(false);
-    else {
-      logIn(true);
-      return () => console.log('Falsy detect');
-    }
-  }, [cookies.get("login"), isAuthUser]);
-
-  useEffect(() => {
-    if(cookies.get("login") === undefined) cookies.set("login", "undefined", { path: "/", maxAge: 7 * 24 * 60 * 60 });
-    else cookies.set("login", isLoggedIn, { path: "/", maxAge: 7 * 24 * 60 * 60 });
-  }, [isLoggedIn]);
-
-  useEffect(() => {
     function detectingDevice(){
-      if(window.innerWidth < 640) detectDevice("tablet")
-      else detectDevice("pc");
+      if(window.innerWidth < 640) detectDevice("xs")
+      else if(window.innerWidth < 768) detectDevice("sm")
+      else if(window.innerWidth < 1024) detectDevice("md")
+      else if(window.innerWidth < 1280) detectDevice("lg")
+      else if(window.innerWidth < 1536) detectDevice("xl")
+      else detectDevice("2xl");
     };
 
     detectingDevice();
     
     window.addEventListener("resize", detectingDevice);
     return () => window.removeEventListener("resize", detectDevice);
+  }, []);
+
+  useEffect(() => {
+    if(localStorage.getItem("theme") === null) localStorage.setItem("theme", theme)
+    setTheme(localStorage.getItem("theme"))
   }, [])
 
   useEffect(() => localStorage.setItem("theme", theme), [theme])
@@ -49,8 +48,9 @@ export function Global({ children }){
   return(
     <GlobalState.Provider value={{
       theme: {theme, setTheme},
-      login: {isLoggedIn, logIn},
       authUser: {isAuthUser},
+      authEvent: {authEvent},
+      exceptionPage: {onExceptionPage, setOnExceptionPage},
       device: {device, detectDevice},
       scriptLoaded: {scriptLoaded, setScriptLoaded}
     }}>

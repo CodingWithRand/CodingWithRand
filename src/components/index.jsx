@@ -1,16 +1,14 @@
 import { useLocation, useNavigate } from "react-router-dom"
 import { useGlobal } from "../scripts/global";
-import { Components } from "../scripts/util";
-import { signOut } from "@firebase/auth";
-import { auth } from "../scripts/firebase";
+import { auth, signOut } from "../scripts/supabase"
 import { useEffect, useMemo, useRef } from "react";
-import { Functions } from "../scripts/util";
+import All from "../scripts/util";
 import Cookies from "universal-cookie";
 import { SetUp } from "./setup";
 import "../css/use/index.css";
 
-const { AlertBox, Dynamic } = Components
-const { Image } = Dynamic
+const { Dynamic } = All.Components
+const { AlertBox, Image } = Dynamic
 
 function Stars() {
     const stars = useMemo(() => Array.from({ length: 1000 }, (_, i) => { 
@@ -38,7 +36,7 @@ function Stars() {
             }
         }
         async function shineAtmosphere() {
-            await Functions.asyncDelay(50);
+            await All.Functions.asyncDelay(50);
             for(const atmosphere of document.querySelectorAll(".star .atmosphere")){
                 if(!localStorage.getItem("bigbanged")) await Functions.asyncDelay(50);
                 atmosphere.classList.add("shine");
@@ -137,7 +135,7 @@ function Stage(props){
             <dialog id={`sinf-${props.index}`} className="stage-info">
                 <div className="dialog-box">
                     <h1 onClick={() => {
-                        navigator(`/stage/${Functions.convertToParamCase(props.name)}/${Functions.convertToParamCase(props.sectionNames[props.currentSectionProgress || 0])}/0`)
+                        navigator(`/stage/${All.Functions.convertToParamCase(props.name)}/${All.Functions.convertToParamCase(props.sectionNames[props.currentSectionProgress || 0])}/0`)
                         window.location.reload();
                     }}>{`Stage ${props.index} (${props.currentSectionProgress || 0}/${props.totalSections || "NA"})`}</h1>
                     <h3>{props.name}</h3>
@@ -169,14 +167,14 @@ export default function IndexHomepage() {
     const cookies = new Cookies();
     const navigator = useNavigate();
     const location = useLocation();
-    const { login } = useGlobal();
+    const { authUser } = useGlobal();
 
     useEffect(() => {
         if(!cookies.get("watchedIntro")){
             cookies.set("watchedIntro", true, { path: "/", maxAge: 7 * 24 * 60 * 60 })
             navigator("/intro?redirectFrom=homepage");
         }
-    }, [login.isLoggedIn, cookies.get("watchedIntro")])
+    }, [authUser.isAuthUser, cookies.get("watchedIntro")])
 
     useEffect(scrollableUniverse, [location])
 
@@ -271,7 +269,7 @@ export default function IndexHomepage() {
                         </div>
                     </div>
                 </div>
-                <AlertBox id="session-expired" auto detect={(login.isLoggedIn === "undefined" || login.isLoggedIn === false) && (cookies.get("login") === "undefined" || cookies.get("login") === false)} 
+                <AlertBox id="session-expired" auto detect={!authUser.isAuthUser} 
                 messages={{
                     title: "Your session has expired.",
                     subtitle: "Please sign in again!",

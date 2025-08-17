@@ -7,23 +7,25 @@
 }
 
 .transform{
-  -webkit-transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-          transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .resize{
   resize: both;
 }
 
+.font-barlow{
+  font-family: Barlow, sans-serif;
+}
+
 .filter{
-  -webkit-filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
-          filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .transition{
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, -webkit-transform, -webkit-filter, -webkit-backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-transform, -webkit-filter, -webkit-backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
@@ -60,30 +62,30 @@ label.theme.text-color,
     input.theme.text-color,
     p.theme.text-color{
   --tw-text-opacity: 1;
-  color: rgb(0 0 0 / var(--tw-text-opacity));
+  color: rgb(0 0 0 / var(--tw-text-opacity, 1));
 }
 
-:is(.dark label.theme.text-color),:is(.dark 
-    h1.theme.text-color),:is(.dark 
-    h2.theme.text-color),:is(.dark 
-    h3.theme.text-color),:is(.dark 
-    h4.theme.text-color),:is(.dark 
-    h5.theme.text-color),:is(.dark 
-    h6.theme.text-color),:is(.dark 
-    div.theme.text-color),:is(.dark 
-    button.theme.text-color),:is(.dark 
-    code.theme.text-color),:is(.dark 
-    pre.theme.text-color),:is(.dark 
-    a.theme.text-color),:is(.dark 
-    option.theme.text-color),:is(.dark 
-    li.theme.text-color),:is(.dark 
-    ul.theme.text-color),:is(.dark 
-    ol.theme.text-color),:is(.dark 
-    textarea.theme.text-color),:is(.dark 
-    input.theme.text-color),:is(.dark 
-    p.theme.text-color){
+label.theme.text-color:is(.dark *),
+    h1.theme.text-color:is(.dark *),
+    h2.theme.text-color:is(.dark *),
+    h3.theme.text-color:is(.dark *),
+    h4.theme.text-color:is(.dark *),
+    h5.theme.text-color:is(.dark *),
+    h6.theme.text-color:is(.dark *),
+    div.theme.text-color:is(.dark *),
+    button.theme.text-color:is(.dark *),
+    code.theme.text-color:is(.dark *),
+    pre.theme.text-color:is(.dark *),
+    a.theme.text-color:is(.dark *),
+    option.theme.text-color:is(.dark *),
+    li.theme.text-color:is(.dark *),
+    ul.theme.text-color:is(.dark *),
+    ol.theme.text-color:is(.dark *),
+    textarea.theme.text-color:is(.dark *),
+    input.theme.text-color:is(.dark *),
+    p.theme.text-color:is(.dark *){
   --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity));
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
 
 label.theme.component.bg-color.inverse,
@@ -107,31 +109,31 @@ label.theme.component.bg-color.inverse,
     dialog.theme.component.bg-color.inverse,
     p.theme.component.bg-color.inverse{
   --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
 }
 
-:is(.dark label.theme.component.bg-color.inverse),:is(.dark 
-    h1.theme.component.bg-color.inverse),:is(.dark 
-    h2.theme.component.bg-color.inverse),:is(.dark 
-    h3.theme.component.bg-color.inverse),:is(.dark 
-    h4.theme.component.bg-color.inverse),:is(.dark 
-    h5.theme.component.bg-color.inverse),:is(.dark 
-    h6.theme.component.bg-color.inverse),:is(.dark 
-    div.theme.component.bg-color.inverse),:is(.dark 
-    button.theme.component.bg-color.inverse),:is(.dark 
-    code.theme.component.bg-color.inverse),:is(.dark 
-    pre.theme.component.bg-color.inverse),:is(.dark 
-    a.theme.component.bg-color.inverse),:is(.dark 
-    option.theme.component.bg-color.inverse),:is(.dark 
-    li.theme.component.bg-color.inverse),:is(.dark 
-    ul.theme.component.bg-color.inverse),:is(.dark 
-    ol.theme.component.bg-color.inverse),:is(.dark 
-    textarea.theme.component.bg-color.inverse),:is(.dark 
-    input.theme.component.bg-color.inverse),:is(.dark 
-    dialog.theme.component.bg-color.inverse),:is(.dark 
-    p.theme.component.bg-color.inverse){
+label.theme.component.bg-color.inverse:is(.dark *),
+    h1.theme.component.bg-color.inverse:is(.dark *),
+    h2.theme.component.bg-color.inverse:is(.dark *),
+    h3.theme.component.bg-color.inverse:is(.dark *),
+    h4.theme.component.bg-color.inverse:is(.dark *),
+    h5.theme.component.bg-color.inverse:is(.dark *),
+    h6.theme.component.bg-color.inverse:is(.dark *),
+    div.theme.component.bg-color.inverse:is(.dark *),
+    button.theme.component.bg-color.inverse:is(.dark *),
+    code.theme.component.bg-color.inverse:is(.dark *),
+    pre.theme.component.bg-color.inverse:is(.dark *),
+    a.theme.component.bg-color.inverse:is(.dark *),
+    option.theme.component.bg-color.inverse:is(.dark *),
+    li.theme.component.bg-color.inverse:is(.dark *),
+    ul.theme.component.bg-color.inverse:is(.dark *),
+    ol.theme.component.bg-color.inverse:is(.dark *),
+    textarea.theme.component.bg-color.inverse:is(.dark *),
+    input.theme.component.bg-color.inverse:is(.dark *),
+    dialog.theme.component.bg-color.inverse:is(.dark *),
+    p.theme.component.bg-color.inverse:is(.dark *){
   --tw-bg-opacity: 1;
-  background-color: rgb(15 15 15 / var(--tw-bg-opacity));
+  background-color: rgb(15 15 15 / var(--tw-bg-opacity, 1));
 }
 
 label.theme.component.bg-color,
@@ -155,31 +157,31 @@ label.theme.component.bg-color,
     dialog.theme.component.bg-color,
     p.theme.component.bg-color{
   --tw-bg-opacity: 1;
-  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity, 1));
 }
 
-:is(.dark label.theme.component.bg-color),:is(.dark 
-    h1.theme.component.bg-color),:is(.dark 
-    h2.theme.component.bg-color),:is(.dark 
-    h3.theme.component.bg-color),:is(.dark 
-    h4.theme.component.bg-color),:is(.dark 
-    h5.theme.component.bg-color),:is(.dark 
-    h6.theme.component.bg-color),:is(.dark 
-    div.theme.component.bg-color),:is(.dark 
-    button.theme.component.bg-color),:is(.dark 
-    code.theme.component.bg-color),:is(.dark 
-    pre.theme.component.bg-color),:is(.dark 
-    a.theme.component.bg-color),:is(.dark 
-    option.theme.component.bg-color),:is(.dark 
-    li.theme.component.bg-color),:is(.dark 
-    ul.theme.component.bg-color),:is(.dark 
-    ol.theme.component.bg-color),:is(.dark 
-    textarea.theme.component.bg-color),:is(.dark 
-    input.theme.component.bg-color),:is(.dark 
-    dialog.theme.component.bg-color),:is(.dark 
-    p.theme.component.bg-color){
+label.theme.component.bg-color:is(.dark *),
+    h1.theme.component.bg-color:is(.dark *),
+    h2.theme.component.bg-color:is(.dark *),
+    h3.theme.component.bg-color:is(.dark *),
+    h4.theme.component.bg-color:is(.dark *),
+    h5.theme.component.bg-color:is(.dark *),
+    h6.theme.component.bg-color:is(.dark *),
+    div.theme.component.bg-color:is(.dark *),
+    button.theme.component.bg-color:is(.dark *),
+    code.theme.component.bg-color:is(.dark *),
+    pre.theme.component.bg-color:is(.dark *),
+    a.theme.component.bg-color:is(.dark *),
+    option.theme.component.bg-color:is(.dark *),
+    li.theme.component.bg-color:is(.dark *),
+    ul.theme.component.bg-color:is(.dark *),
+    ol.theme.component.bg-color:is(.dark *),
+    textarea.theme.component.bg-color:is(.dark *),
+    input.theme.component.bg-color:is(.dark *),
+    dialog.theme.component.bg-color:is(.dark *),
+    p.theme.component.bg-color:is(.dark *){
   --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
 }
 
 div.theme.container.bg-color,
@@ -187,15 +189,15 @@ div.theme.container.bg-color,
     ol.theme.container.bg-color,
     dialog.theme.container.bg-color{
   --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
 }
 
-:is(.dark div.theme.container.bg-color),:is(.dark 
-    ul.theme.container.bg-color),:is(.dark 
-    ol.theme.container.bg-color),:is(.dark 
-    dialog.theme.container.bg-color){
+div.theme.container.bg-color:is(.dark *),
+    ul.theme.container.bg-color:is(.dark *),
+    ol.theme.container.bg-color:is(.dark *),
+    dialog.theme.container.bg-color:is(.dark *){
   --tw-bg-opacity: 1;
-  background-color: rgb(23 23 23 / var(--tw-bg-opacity));
+  background-color: rgb(23 23 23 / var(--tw-bg-opacity, 1));
 }
 
 div.theme.container.bg-color.intense,
@@ -203,15 +205,15 @@ div.theme.container.bg-color.intense,
     ol.theme.container.bg-color.intense,
     dialog.theme.container.bg-color.intense{
   --tw-bg-opacity: 1;
-  background-color: rgb(229 229 229 / var(--tw-bg-opacity));
+  background-color: rgb(229 229 229 / var(--tw-bg-opacity, 1));
 }
 
-:is(.dark div.theme.container.bg-color.intense),:is(.dark 
-    ul.theme.container.bg-color.intense),:is(.dark 
-    ol.theme.container.bg-color.intense),:is(.dark 
-    dialog.theme.container.bg-color.intense){
+div.theme.container.bg-color.intense:is(.dark *),
+    ul.theme.container.bg-color.intense:is(.dark *),
+    ol.theme.container.bg-color.intense:is(.dark *),
+    dialog.theme.container.bg-color.intense:is(.dark *){
   --tw-bg-opacity: 1;
-  background-color: rgb(10 10 10 / var(--tw-bg-opacity));
+  background-color: rgb(10 10 10 / var(--tw-bg-opacity, 1));
 }
 
 label.theme.border-color,
@@ -235,31 +237,31 @@ label.theme.border-color,
     dialog.theme.border-color,
     p.theme.border-color{
   --tw-border-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-border-opacity));
+  border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
 }
 
-:is(.dark label.theme.border-color),:is(.dark 
-    h1.theme.border-color),:is(.dark 
-    h2.theme.border-color),:is(.dark 
-    h3.theme.border-color),:is(.dark 
-    h4.theme.border-color),:is(.dark 
-    h5.theme.border-color),:is(.dark 
-    h6.theme.border-color),:is(.dark 
-    div.theme.border-color),:is(.dark 
-    button.theme.border-color),:is(.dark 
-    code.theme.border-color),:is(.dark 
-    pre.theme.border-color),:is(.dark 
-    a.theme.border-color),:is(.dark 
-    option.theme.border-color),:is(.dark 
-    li.theme.border-color),:is(.dark 
-    ul.theme.border-color),:is(.dark 
-    ol.theme.border-color),:is(.dark 
-    textarea.theme.border-color),:is(.dark 
-    input.theme.border-color),:is(.dark 
-    dialog.theme.border-color),:is(.dark 
-    p.theme.border-color){
+label.theme.border-color:is(.dark *),
+    h1.theme.border-color:is(.dark *),
+    h2.theme.border-color:is(.dark *),
+    h3.theme.border-color:is(.dark *),
+    h4.theme.border-color:is(.dark *),
+    h5.theme.border-color:is(.dark *),
+    h6.theme.border-color:is(.dark *),
+    div.theme.border-color:is(.dark *),
+    button.theme.border-color:is(.dark *),
+    code.theme.border-color:is(.dark *),
+    pre.theme.border-color:is(.dark *),
+    a.theme.border-color:is(.dark *),
+    option.theme.border-color:is(.dark *),
+    li.theme.border-color:is(.dark *),
+    ul.theme.border-color:is(.dark *),
+    ol.theme.border-color:is(.dark *),
+    textarea.theme.border-color:is(.dark *),
+    input.theme.border-color:is(.dark *),
+    dialog.theme.border-color:is(.dark *),
+    p.theme.border-color:is(.dark *){
   --tw-border-opacity: 1;
-  border-color: rgb(40 40 40 / var(--tw-border-opacity));
+  border-color: rgb(40 40 40 / var(--tw-border-opacity, 1));
 }
 
 label.theme.border-color.intense,
@@ -283,47 +285,47 @@ label.theme.border-color.intense,
     dialog.theme.border-color.intense
     p.theme.border-color.intense{
   --tw-border-opacity: 1;
-  border-color: rgb(0 0 0 / var(--tw-border-opacity));
+  border-color: rgb(0 0 0 / var(--tw-border-opacity, 1));
 }
 
-:is(.dark label.theme.border-color.intense),:is(.dark 
-    h1.theme.border-color.intense),:is(.dark 
-    h2.theme.border-color.intense),:is(.dark 
-    h3.theme.border-color.intense),:is(.dark 
-    h4.theme.border-color.intense),:is(.dark 
-    h5.theme.border-color.intense),:is(.dark 
-    h6.theme.border-color.intense),:is(.dark 
-    div.theme.border-color.intense),:is(.dark 
-    button.theme.border-color.intense),:is(.dark 
-    code.theme.border-color.intense),:is(.dark 
-    pre.theme.border-color.intense),:is(.dark 
-    a.theme.border-color.intense),:is(.dark 
-    option.theme.border-color.intense),:is(.dark 
-    li.theme.border-color.intense),:is(.dark 
-    ul.theme.border-color.intense),:is(.dark 
-    ol.theme.border-color.intense),:is(.dark 
-    textarea.theme.border-color.intense),:is(.dark 
-    input.theme.border-color.intense),:is(.dark 
+label.theme.border-color.intense:is(.dark *),
+    h1.theme.border-color.intense:is(.dark *),
+    h2.theme.border-color.intense:is(.dark *),
+    h3.theme.border-color.intense:is(.dark *),
+    h4.theme.border-color.intense:is(.dark *),
+    h5.theme.border-color.intense:is(.dark *),
+    h6.theme.border-color.intense:is(.dark *),
+    div.theme.border-color.intense:is(.dark *),
+    button.theme.border-color.intense:is(.dark *),
+    code.theme.border-color.intense:is(.dark *),
+    pre.theme.border-color.intense:is(.dark *),
+    a.theme.border-color.intense:is(.dark *),
+    option.theme.border-color.intense:is(.dark *),
+    li.theme.border-color.intense:is(.dark *),
+    ul.theme.border-color.intense:is(.dark *),
+    ol.theme.border-color.intense:is(.dark *),
+    textarea.theme.border-color.intense:is(.dark *),
+    input.theme.border-color.intense:is(.dark *),
     dialog.theme.border-color.intense
-    p.theme.border-color.intense){
+    p.theme.border-color.intense:is(.dark *){
   --tw-border-opacity: 1;
-  border-color: rgb(255 255 255 / var(--tw-border-opacity));
+  border-color: rgb(255 255 255 / var(--tw-border-opacity, 1));
 }
 
 .setup-btn-icon-shadow.theme.custom{
   --icon-shadow: radial-gradient(gray 0%, transparent 60%);
 }
 
-:is(.dark .setup-btn-icon-shadow.theme.custom){
+.setup-btn-icon-shadow.theme.custom:is(.dark *){
   --icon-shadow: radial-gradient(rgb(50, 50, 50) 0%, transparent 75%);
 }
 
 .loading-bar-border.theme.custom{
   --tw-border-opacity: 1;
-  border-color: rgb(23 23 23 / var(--tw-border-opacity));
+  border-color: rgb(23 23 23 / var(--tw-border-opacity, 1));
 }
 
-:is(.dark .loading-bar-border.theme.custom){
+.loading-bar-border.theme.custom:is(.dark *){
   --tw-border-opacity: 1;
-  border-color: rgb(255 255 255 / var(--tw-border-opacity));
+  border-color: rgb(255 255 255 / var(--tw-border-opacity, 1));
 }

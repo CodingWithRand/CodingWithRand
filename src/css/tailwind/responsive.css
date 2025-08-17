@@ -1,5 +1,29 @@
 @tailwind utilities;
 
+@custom-variant nmob {
+    @media (min-width: 400px) {
+        @slot;
+    }
+}
+
+@custom-variant gmob-lsm {
+    @media (min-width: 500px) and (max-width: 640px) {
+        @slot;
+    }
+}
+
+@custom-variant amd {
+    @media (min-width: 777px) {
+        @slot;
+    }
+}
+
+@custom-variant xs-md {
+    @media (min-width: 0px) and (max-width: 768px) {
+        @slot;
+    }
+}
+
 @layer utilities {
 
     /* intro.jsx */

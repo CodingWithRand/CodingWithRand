@@ -7,12 +7,21 @@ module.exports = {
     './src/App.js'
   ],
   theme: {
-    screens: {
-      'amd': '777px',
-      'gmob-lsm': {'min': '500px', 'max': '640px'},
-      'nmob': {'min': '400px'},
-      ...defaultTheme.screens
-    }
+    extend: {
+      screens: {
+        'amd': '777px',
+        'gmob-lsm': {'min': '500px', 'max': '640px'},
+        'xs-md': {'min': '0px', 'max': '768px'},
+        'nmob': '400px',
+      },
+      fontFamily: {
+        'russo': ['Russo One', 'sans-serif'],
+        'spartan': ['League Spartan', 'sans-serif'],
+        'barlow': ['Barlow', 'sans-serif'],
+        'comic-relief': ["Comic Relief", "system-ui"],
+        'bangers': ['Bangers', 'system-ui'],
+      }
+    },
   },
   plugins: [],
 }

@@ -1,18 +1,17 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Components } from "../../scripts/util";
+import All from "../../scripts/util";
 import { useGlobal } from "../../scripts/global";
 import FoundationOfProgramming from "./the-beginning/foundation-of-programming";
 import { SetUp } from "../setup";
-import { signOut } from "@firebase/auth";
 import "../../css/use/stages.css";
 import Cookies from "universal-cookie";
-import { auth } from "../../scripts/firebase";
+import { auth, signOut } from "../../scripts/supabase";
 
 const totalStageSections = {
     "the-beginning": 3
 }
-const { AlertBox } = Components;
+const { AlertBox } = All.Components;
 
 export default function StagesManager(){
     const { stageName, sectionName, page } = useParams();

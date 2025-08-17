@@ -1,0 +1,370 @@
+@tailwind components;
+
+@layer components{
+    #registration-mode {
+        @apply bottom-[-1em] left-[1em] text-[0.55em] sm:text-base;
+        color: darkgray;
+        text-decoration: underline;
+        cursor: pointer;
+        position: relative;
+    }
+    .login-pallete{
+      @apply relative z-[2] p-8 rounded-[2em] bg-white w-[70vw] h-auto sm:w-[65vw] md:w-[60vw] lg:w-[50vw] xl:w-[40vw];
+      overflow-x: hidden;
+      box-shadow: 0 0 5px gray;
+      transition:
+        transform 2s ease-out,
+        opacity 2s ease-out;
+      min-width: 245px;
+    }
+    .h-reg {
+      @apply text-2xl mt-[2em] sm:text-[2em] sm:mt-[1em] lg:text-[3em];
+    }
+    
+    .reg-t {
+      @apply sm:text-xl lg:text-[1.5em];
+    }
+    
+    .reg-f {
+      @apply py-[1em] sm:py-[2em];
+    }
+    
+    .input-field input {
+      @apply text-xs sm:text-base;
+    }
+    
+    .field-label {
+      @apply text-xs sm:text-base;
+    }
+    
+    .submit-btn {
+      @apply text-xs sm:text-base;
+    }
+    
+    .forget-password {
+      @apply text-[0.55em] sm:text-base;
+      color: darkgray;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    
+    .email-icon {
+      @apply w-[150px] h-[150px] sm:w-[200px] sm:h-[200px];
+    }
+    
+    .notf-box {
+      @apply p-[3vh] text-sm sm:p-[5vh] sm:text-base;
+    }
+    
+    :root {
+      --trail-width: 5em;
+    }
+    
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+    
+    main {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100vw;
+      height: 100vh;
+    }
+    
+    .bg-wrapper {
+      position: absolute;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    
+    .minimal-bg {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .minimal-bg polygon {
+      transition: opacity 1s ease-in;
+    }
+    
+    .dice-logo {
+      position: absolute;
+      bottom: 50px;
+      left: 50px;
+      transform: translateY(150%);
+      animation-duration: 1s;
+      animation-timing-function: ease-in-out;
+      animation-fill-mode: forwards;
+    }
+    
+    .reg-wrapper {
+      display: flex;
+      flex-direction: row;
+      width: 212%;
+      transition: transform 0.3s ease-in-out;
+      column-gap: 2rem;
+    }
+    
+    .reg-box {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      width: 50%;
+      transition: opacity 0.1s ease-in-out;
+    }
+    
+    .init-dot {
+      position: absolute;
+      border-radius: 9999px;
+      width: 1.25em;
+      height: 1.25em;
+      background-color: rgb(25, 25, 25);
+      animation: diagnog-swoop 1s ease-in-out forwards;
+      bottom: 0;
+      right: 0;
+    }
+    
+    .init-dot > .trail {
+      width: 0;
+      height: 30%;
+      background-image: linear-gradient(
+        to right,
+        rgb(25, 25, 25),
+        rgb(200, 200, 200),
+        transparent
+      );
+      position: relative;
+      right: 10%;
+      top: 45%;
+      transition: width 0.4s ease-in;
+      transition-delay: 0.1s;
+      border-radius: 5px;
+      transform-origin: center left;
+      transform: rotate(180deg);
+    }
+    
+    .option-field {
+      display: flex;
+      column-gap: 0.5rem;
+      align-items: center;
+    }
+    
+    @keyframes diagnog-swoop {
+      0% {
+        top: -20%;
+        left: -20%;
+      }
+    
+      100% {
+        top: 120%;
+        left: 120%;
+      }
+    }
+    
+    @keyframes unstable-trail {
+      0% {
+        width: calc(var(--trail-width) - 1.5em);
+      }
+    
+      10% {
+        width: calc(var(--trail-width) + 0.8em);
+      }
+    
+      20% {
+        width: calc(var(--trail-width) - 0.5em);
+      }
+    
+      30% {
+        width: calc(var(--trail-width) + 0.3em);
+      }
+    
+      40% {
+        width: calc(var(--trail-width) + 1em);
+      }
+    
+      50% {
+        width: calc(var(--trail-width) - 0.8em);
+      }
+    
+      60% {
+        width: calc(var(--trail-width) + 0.7em);
+      }
+    
+      70% {
+        width: calc(var(--trail-width) - 1.3em);
+      }
+    
+      80% {
+        width: calc(var(--trail-width) + 0.5em);
+      }
+    
+      90% {
+        width: calc(var(--trail-width) + 0.2em);
+      }
+    
+      100% {
+        width: calc(var(--trail-width) - 1em);
+      }
+    }
+    
+    @keyframes pop-up {
+      0% {
+        transform: translateY(150%);
+      }
+    
+      50% {
+        transform: translateY(-25%);
+      }
+    
+      100% {
+        transform: translateY(0%);
+      }
+    }
+    
+    @keyframes shaking {
+      from {
+        transform: rotate(25deg);
+      }
+    
+      to {
+        transform: rotate(-25deg);
+      }
+    }
+}
+
+
+h1, h2, li, form{ user-select: none; }
+
+:root{
+    --ease-out-cubic: cubic-bezier(0.22, 0.61, 0.36, 1);
+    --reg-btn-bg-color: rgb(240, 240, 240, 0.3);
+    --reg-btn-txt-color: rgb(50,50,50);
+}
+
+/* html, body, #root{ overflow-y: auto; } */
+
+.h-reg{
+    font-family: 'League Spartan', sans-serif;
+    font-family: 'Montserrat', sans-serif;
+    transition: transform 1s var(--ease-out-cubic), opacity 1s var(--ease-out-cubic);
+    opacity: 0;
+    transform: translateY(-15vh);
+    text-align: center;
+}
+
+.h-reg.animate{
+    transform: translateY(0vh);
+    opacity: 1;
+}
+
+.registration-forms{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    transition: opacity 1s linear;
+    opacity: 0;
+}
+
+.registration-forms.animate{ opacity: 1; }
+
+.reg-t-or{ background-color: var(--reg-btn-bg-color); }
+
+.registration-forms li{
+    width: 100%;
+    text-align: center;
+}
+
+.registration-forms li:nth-of-type(even){
+    padding: 0;
+    cursor: initial;
+}
+
+.reg-t{ font-family: 'Barlow', sans-serif; }
+
+#sign-in{ background-image: linear-gradient(to bottom, transparent, var(--reg-btn-bg-color)); }
+
+.reg-f > .reg-t{ color: rgb(150, 150, 150); }
+
+#sign-up{ background-image: linear-gradient(to bottom, var(--reg-btn-bg-color), transparent); }
+
+.hov-eff{ 
+    transition: transform 0.2s ease-out;
+    cursor: pointer;
+}
+
+.hov-eff:hover > .reg-t{
+    transform: scale3d(1.1, 1.1, 1.1);
+    color: var(--reg-btn-txt-color);
+}
+
+.reg-form{
+    transition: margin 0.5s var(--fastout-slowin), opacity 0.5s linear;
+    overflow: auto;
+    margin: 0;
+    position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+}
+
+.reg-form.animate.exp{
+    padding: 2vh 0;
+    height: fit-content;
+}
+
+.reg-form.animate.rev{ opacity: 1; }
+
+.submit-btn:disabled{ opacity: 0.5; }
+
+.submit-btn:hover:not(:disabled){
+    background-color: darkgray;
+    cursor: pointer;
+    opacity: 1;
+}
+
+.option-field{
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    margin: 1vh 0;
+    width: 100%;
+}
+
+.f-c .submit-btn{
+    background-color: lightgray;
+    border-radius: 5px;
+    min-width: 30%;
+    padding: 1vh 1vw;
+}
+
+.f-c{
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.show-pass{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 10px;
+}
+
+.notf-box{
+    margin-top: 8vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.notf-action:disabled{ opacity: 0.5; cursor: initial; }
+.notf-action{ cursor: pointer; color: gray; }

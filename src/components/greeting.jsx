@@ -1,13 +1,11 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useGlobal } from "../scripts/global";
 import "../css/use/greeting.css"
-import { Functions, Hooks } from "../scripts/util";
+import All from "../scripts/util";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../scripts/firebase";
 import { BgMusicController } from "./setup";
-import { Components } from "../scripts/util";
 
-const { Dynamic, HyperspaceTeleportationBackground } = Components;
+const { Dynamic, HyperspaceTeleportationBackground } = All.Components;
 const { Image } = Dynamic;
 
 const useDocumentShowingState = () => {
@@ -33,7 +31,7 @@ const useDocumentShowingState = () => {
 
 export default function Greet(){
     const isShowing = useDocumentShowingState();
-    const { login } = useGlobal();
+    const { authUser } = useGlobal();
     const navigator = useNavigate();
     const orderedGreetMsg = [
         "Greeting Traveler...", 
@@ -48,9 +46,9 @@ export default function Greet(){
     ]
     const [ greetMsgSize, setGreetMsgSize ] = useState("");
     const [ greetMsg, setGreetMsg ] = useState("");
-    Hooks.useDelayedEffect(() => {
-        if(login.isLoggedIn && auth.currentUser?.emailVerified){ navigator("/"); };
-    }, [login.isLoggedIn], 100);
+    All.Hooks.useDelayedEffect(() => {
+        if(authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at !== null){ navigator("/"); };
+    }, [authUser.isAuthUser], 100);
     
 
     function getTypeWrittingTime(msg){
@@ -67,7 +65,7 @@ export default function Greet(){
         
         async function writeCharacter(l, delay) {
             return new Promise((resolve) => {
-                Functions.jobDelay(() => {
+                All.Functions.jobDelay(() => {
                     setGreetMsg((prevGreetMsg) => prevGreetMsg + l);
                     resolve();
                 }, delay);
@@ -76,7 +74,7 @@ export default function Greet(){
         
         async function eraseCharacter(delay) {
             return new Promise((resolve) => {
-                Functions.jobDelay(() => {
+                All.Functions.jobDelay(() => {
                     setGreetMsg((prevGreetMsg) => {
                         let prevGreetMsgArray = Array.from(prevGreetMsg);
                         prevGreetMsgArray.pop();
@@ -93,12 +91,12 @@ export default function Greet(){
             else return;
         };
 
-        await Functions.asyncDelay(extendTime);
+        await All.Functions.asyncDelay(extendTime);
         for(let i = 0; i<Array.from(msg).length; i++){
             if(isShowing()) await eraseCharacter(50);
             else return;
         }
-        await Functions.asyncDelay(extendTime);
+        await All.Functions.asyncDelay(extendTime);
     }
 
     useEffect(() => {
@@ -149,7 +147,7 @@ export default function Greet(){
             <button className="skip-intro" onClick={async () => {
                 document.querySelector(".prompting-message").style.opacity = 0;
                 document.querySelector(".hud-scifi-panel").removeAttribute("style");
-                await Functions.jobDelay(() => navigator("/registration"), 1000);
+                await All.Functions.jobDelay(() => navigator("/registration"), 1000);
             }}>Skip intro</button>
             <HyperspaceTeleportationBackground />
         </div>

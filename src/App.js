@@ -10,7 +10,7 @@ import './css/use/theme.css';
 import Greet from "./components/greeting";
 import AccountSettings from "./components/account-settings";
 import StagesManager from "./components/stages/stages-manager";
-import { Functions } from "./scripts/util";
+import All from "./scripts/util";
 
 function PageRouter() {
 
@@ -34,7 +34,7 @@ function PageRouter() {
 
     if(path.startsWith("/stage")){
       const params = path.split("/");
-      title = `${Functions.convertToTitleCase(params[2])} - ${Functions.convertToTitleCase(params[3])}`
+      title = `${All.Functions.convertToTitleCase(params[2])} - ${All.Functions.convertToTitleCase(params[3])}`
     }
 
     document.title = title;

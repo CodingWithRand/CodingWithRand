@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import '../css/use/setup.css';
-import { Components, Functions, Hooks } from '../scripts/util';
+import All from '../scripts/util';
 import { useGlobal } from '../scripts/global';
-import { signOut } from '@firebase/auth';
-import { auth } from '../scripts/firebase';
+import { signOut, auth, supabase, serverRPC } from "../scripts/supabase";
 import { useNavigate } from 'react-router-dom';
 
-const { Dynamic } = Components;
+const { Dynamic } = All. Components;
 const { Image } = Dynamic;
 
 function onHoverSetupBtn(btnId){
@@ -68,10 +67,15 @@ function ThemeChanger(props){
 
 function SignOut(props){
     const navigator = useNavigate();
+    const { authUser } = useGlobal();
 
     return (
         <button id='signout' className='setup-btn' onClick={async () => {
-            await Functions.cwrAuthMethod.updateRegistryData(auth.currentUser.uid, { origin: window.location.origin, authenticated: false, ip: null, date: null });
+            const userSession = await supabase.auth.getSession();
+            await serverRPC("sign_out", {
+                p_uid: authUser.isAuthUser.id,
+                platform: "codingwithrand"
+            }, userSession.data.session.access_token);
             await signOut(auth);
             navigator("/registration");
             window.location.reload();
@@ -87,7 +91,7 @@ function SignOut(props){
 
 function BgMusicController(props){
     const [ videoState, setVideoState ] = useState("unmuted");
-    Hooks.useDelayedEffect(() => {
+    All.Hooks.useDelayedEffect(() => {
         const player = document.getElementById('youtubePlayer');
         if(videoState === "unmuted"){
             player.contentWindow.postMessage(JSON.stringify({"event":"command","func":"playVideo","args":""}), "*");
@@ -104,7 +108,7 @@ function BgMusicController(props){
             onMouseEnter={() => { if(!props.noTitle) onHoverSetupBtn("bgm-controller") }} 
             onMouseLeave={() => { if(!props.noTitle) onHoverSetupBtn("bgm-controller") }}
         >
-            <Image constant={!props.theme} dir="icon/" name={videoState === "unmuted" ? "audio.png" : "muted.png"} alt="bg-music-controller-btn-icon" cls="setup-btn-icon-shadow theme custom"/>
+            <img src={`/imgs/backend-images/icon/${videoState === "unmuted" ? "audio.png" : "muted.png"}`} alt="bg-music-controller-btn-icon" className="setup-btn-icon-shadow theme custom" />
             <OptionTitle noTitle={props.noTitle}>{`Music: ${videoState}`}</OptionTitle>
         </button>
     )
@@ -132,7 +136,7 @@ function ToolKit(){
     });
     const setting_btn_number = 2;
 
-    if(authUser.isAuthUser && auth.currentUser?.emailVerified) return(
+    if(authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at !== null) return(
         <>
             <button id='settings' className='setup-btn' 
                 onMouseEnter={() => onHoverSetupBtn("settings")} 

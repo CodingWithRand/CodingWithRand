@@ -3,7 +3,9 @@ import { useGlobal } from "./global";
 import "../css/use/util.css";
 import "../css/use/theme.css";
 import "../css/use/responsive.css";
+import { storage } from "./supabase";
 import { useLocation } from "react-router-dom";
+
 
 async function asyncDelay(ms) { return new Promise((resolve) => setTimeout(() => resolve(), ms)); };
 async function jobDelay(callback, ms){
@@ -25,6 +27,45 @@ function syncDelay(ms) {
     };
 };
 
+async function getClientIp(){
+    const ipResponse = await fetch("https://api.ipify.org?format=json");
+    const ipData = await ipResponse.json();
+    return ipData.ip
+}
+
+function convertToTitleCase(str) {
+    return str
+        .split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+}
+
+function convertToParamCase(str){
+    return str
+        .toLowerCase()
+        .replace(/ /g, "-")
+}
+
+function LoadingPage(props) {
+    return(
+        <div className={`loading-bar ${props?.transparentBg ? "bg-[#f0f0f080]" : "bg-[#f0f0f0]"}`}>
+            <div className={`loading-dot ${props?.transparentBg ? "bg-gray-600" : "bg-gray-800" }`} id="d1"></div>
+            <div className={`loading-dot ${props?.transparentBg ? "bg-gray-600" : "bg-gray-800" }`} id="d2"></div>
+            <div className={`loading-dot ${props?.transparentBg ? "bg-gray-600" : "bg-gray-800" }`} id="d3"></div>
+        </div>
+    )
+}
+
+function isElementInViewport(element) {
+    const rect = element.getBoundingClientRect();
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+}
+
 function useDelayedEffect(callback, dependencies, delay) {
     const savedCallback = useRef();
   
@@ -44,142 +85,25 @@ function useDelayedEffect(callback, dependencies, delay) {
       return () => clearTimeout(timerId);
     }, [...dependencies, delay]);
 }
-
-function convertToTitleCase(str) {
-    return str
-        .split('-')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
-}
-
-function convertToParamCase(str){
-    return str
-        .toLowerCase()
-        .replace(/ /g, "-")
-}
-
-const API_DOMAIN = "https://codingwithrand.vercel.app";
-
-/** 
- * Copy this code in your utilize code file. 
- * Only apply in web application
- */
-
-/**
- * Fetch a POST allowed method API
- * @param {string} path API url to fetch
- * @param {object} data an object of data to POST that satisfies the endpoint's params
- * @param {number} retry numbers of retry with 1 second interval (default is 5)
- * @returns {object} response's data
- */
-async function sitePostApiFetch(path, data, retry=5) {
-    for(let i = 0; i < retry; i++){
-        try{
-            const response = await fetch(`${API_DOMAIN}/global/server/api/${path}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ data: data })
-            })
-            if(response.status === 200){
-                const responseJSON = await response.json();
-                return responseJSON.data;
-                break;
-            }
-        }catch(e){
-            console.error(e);
-        }
-        await asyncDelay(1000);
-    }
-    console.error("Failed to fetch data from server");
-}
-
-/**
- * Fetch a GET allowed method API
- * @param {string} path API url to fetch
- * @param {number} retry numbers of retry with 1 second interval (default is 5)
- * @returns {object} response's data
- */
-async function siteGetApiFetch(path, retry=5) {
-    for(let i = 0; i < retry; i++){
-        try{
-            const response = await fetch(`${API_DOMAIN}/global/server/api/${path}`)
-            if(response.status === 200){
-                const responseJSON = await response.json();
-                return responseJSON.data;
-                break;
-            }
-        }catch(e){
-            console.error(e);
-        }
-        await asyncDelay(1000);
-    }
-    console.error("Failed to fetch data from server");
-}
-
-/**
- * Set a user's username as a new one in the CWR's firebase database
- * @param {string | undefined} username new user's username (undefined to omit the old one)
- * @param {string} uid user's id (constant)
- * @returns {Promise<void>}
- */
-const updateUsername = async (username, uid) => await sitePostApiFetch("firebase/auth/uu", { username: username, uid: uid });
-/**
- * Update a user's registry data in the CWR's firebase database
- * @param {string} uid user's username to be altered (selector)
- * @param {{origin: string, authenticated: boolean, ip: string, date: string}} regData an object that includes origin, authenticated, ip, and date keys.
- * @returns {Promise<void>}
- */
-const updateRegistryData = async (uid, regData) => await sitePostApiFetch("firebase/auth/urd", { uid: uid, regData: regData });
-
-/**
- * Get all available usernames in the CWR's firebase database
- * @returns {Promise<{[username]: uid}>}
- */
-const getAllUsernames = async () => await siteGetApiFetch("firebase/auth/gau");
-/**
- * Get user's registry data of each applicaion that user has authenticated in the CWR's firebase database
- * @param {string} uid user's id
- * @returns {Promise<{
- *    [origin]: {authenticated: boolean, at: {place: string, time: string}}
- * }>}
- */
-const getRegistryData = async (uid) => await sitePostApiFetch("firebase/auth/grd", { uid: uid });
-/**
- * Generate a new custom token to authenticate.
- * @param {string} uid user's id
- * @returns {Promise<string>}
- */
-const createNewCustomToken = async (uid) => await sitePostApiFetch("firebase/auth/cnct", { uid: uid });
-
-async function getClientIp(){
-    const ipResponse = await fetch("https://api.ipify.org?format=json");
-    const ipData = await ipResponse.json();
-    return ipData.ip
-}
-
+  
 function Image(props){
     const { theme } = useGlobal();
-    const [imgSrc, setImgSrc] = useState("");
+    const [imgSrc, setImgSrc] = useState(null);
     const [isBinding, bind] = useState(false);
     
     useEffect(() => {
         if(isBinding) return;
-        if(!props.constant) setImgSrc(process.env.PUBLIC_URL + `/imgs/backend-images/theme/${props.dir || ""}${(() => {
+        if(!props.constant) setImgSrc(`/imgs/backend-images/theme/${props.dir || null}${(() => {
                 if(theme.theme === "default-os" && props.name !== "mode.png"){
-                    if(window.matchMedia('(prefers-color-scheme: dark)').matches){
-                        document.documentElement.classList.add("dark");
-                        return "dark";
-                    }
-                    else{
-                        document.documentElement.classList.remove("dark");
-                        return "light";
-                    }
+                    if(window.matchMedia('(prefers-color-scheme: dark)').matches) return "dark";
+                    else return "light";
                 }else return theme.theme
             })()}-${props.name}`);
-        else setImgSrc(process.env.PUBLIC_URL + `/imgs/backend-images/${props.dir || ""}${props.name}`);
-    }, [theme.theme, isBinding, props.name]);
+        else setImgSrc(`/imgs/backend-images/${props.dir || ""}${props.name}`);
+    }, [theme.theme, isBinding]);
 
     Hooks.useDelayedEffect(() => {
+        if(!isBinding) return;
         const targetElement = document.querySelector(`#${props.to}[binding-status]`);
       
         if (targetElement) {
@@ -188,11 +112,11 @@ function Image(props){
               if (mutation.type === 'attributes' && mutation.attributeName === 'binding-status') {
                 if(targetElement.getAttribute('binding-status') === "true"){
                     bind(true);
-                    setImgSrc(process.env.PUBLIC_URL + `/imgs/backend-images/binded/${props.dir || ""}binded-${props.name}`);
+                    setImgSrc(`/imgs/backend-images/binded/${props.dir || null}binded-${props.name}`);
                 }
                 else if(targetElement.getAttribute('binding-status') === "false"){
                     bind(false);
-                    setImgSrc(process.env.PUBLIC_URL + `/imgs/backend-images/theme/${props.dir || ""}${(() => {
+                    setImgSrc(`/imgs/backend-images/theme/${props.dir || null}${(() => {
                         if(theme.theme === "default-os" && props.name !== "mode.png"){
                             if(window.matchMedia('(prefers-color-scheme: dark)').matches) return "dark";
                             else return "light";
@@ -210,15 +134,27 @@ function Image(props){
         }
       }, [], 100);
     
-    return <img alt={props.alt || undefined} src={imgSrc} className={props.cls || undefined} style={props.style || undefined} width={props.width || undefined} height={props.height || undefined}/>
-}
+    return(
+        <img
+            id={props.id || undefined}
+            alt={props.alt}
+            src={imgSrc}
+            className={props.cls || undefined}
+            width={props.width || undefined}
+            height={props.height || undefined}
+            style={props.style}
+            onClick={props.onClick || undefined}
+            title={props.title || undefined}
+        />
+    )
+};
 
 function AlertBox(props){
     const [timer, setTimer] = useState(props.auto === true ? 3 : "");
 
     useEffect(() => {
         if(props.auto){
-            if(props.detect) Functions.jobDelay(() => {
+            if(props.detect) jobDelay(() => {
                 if(timer > 0) setTimer(prevT => {return prevT - 1});
                 else{ setTimer(0); props.action(); }
             }, 1000);
@@ -231,12 +167,19 @@ function AlertBox(props){
     }, [props.detect], 500);
 
     return (
-        <dialog id={props.id} className={`alert-box responsive ${props.themed ? "theme" : ""} container bg-color border-color`}>
+        <dialog id={props.id} className={`alert-box responsive ${props.themed ? "theme" : ""} ctn bg-color border-color`}>
             <div className="dialog-nester responsive">
-                <h2 className={`dialog-title ${props.themed ? "theme" : ""} text-color responsive`}>{props.messages.title}</h2>
-                <label className={`dialog-subtitle responsive ${props.themed ? "theme" : ""} text-color`}>{props.messages.subtitle || ""}</label>
-                <div className={`dialog-description responsive ${props.themed ? "theme" : ""} text-color`}>{props.messages.description || ""}</div>
-                <button className="dialog-btn responsive" onClick={props.action}>{`${props.messages.action} ${timer}`}</button>
+                {(() => {
+                    if(props.children) return props.children;
+                    else return(
+                        <>
+                            <h2 className={`dialog-title ${props.themed ? "theme" : ""} text-color responsive`}>{props.messages.title}</h2>
+                            <label className={`dialog-subtitle responsive ${props.themed ? "theme" : ""} text-color`}>{props.messages.subtitle || ""}</label>
+                            <div className={`dialog-description responsive ${props.themed ? "theme" : ""} text-color`}>{props.messages.description || ""}</div>
+                            <button className="dialog-btn responsive" onClick={props.action}>{`${props.messages.action} ${timer}`}</button>
+                        </>
+                    )
+                })()}
             </div>
         </dialog>
     );
@@ -272,7 +215,7 @@ function Switch(props){
     return(
         <div id={props.id} className={`switch-area responsive ${props.cls || ""} ${delayStateClass}`} onClick={() => { 
             setSSC(prevState => {return prevState === "is-off" ? "is-on" : "is-off";});
-            Functions.jobDelay(() => setDSC(prevState => {return prevState === "is-off" ? "is-on" : "is-off";}), 200);
+            jobDelay(() => setDSC(prevState => {return prevState === "is-off" ? "is-on" : "is-off";}), 200);
             turn(prevState => {return prevState === false ? true : false});
         }}>
             <div className={`button responsive ${switchStateClass}`}></div>
@@ -284,7 +227,7 @@ function Section(props){
     switch(props.style){
         case "pallete":
             return( 
-                <div className={`pallete ${props.themed ? "theme" : ""} container bg-color intense`}>
+                <div id={props.id} style={props.cssstyle} className={`pallete ${props.themed ? "theme" : ""} ctn bg-color intense`}>
                     <h1 className={`setting-section-title responsive ${props.themed ? "theme" : ""} text-color`}>{props.title}</h1>
                     <p className={`setting-section-description responsive ${props.themed ? "theme" : ""} text-color`}>{props.description || ""}</p>
                     {props.children}
@@ -312,7 +255,7 @@ function InputField(props){
 
     return( 
         <div className="input-field">
-            <input name={props.name} required={props.required} className={`${props.themed ? "theme" : ""} border-color component text-color bg-color inverse ${props.errDetector ? "err-detector" : ""} ${props.detectorCls || ""} responsive`} type={props.type} placeholder={props.placeholder || ""} onChange={(e) => {
+            <input id={props.id || undefined} name={props.name || undefined} required={props.required} className={`${props.themed ? "theme" : ""} border-color component text-color bg-color inverse ${props.errDetector ? "err-detector" : ""} ${props.detectorCls || ""} responsive`} type={props.type || "text"} placeholder={props.placeholder || ""} onChange={(e) => {
                 e.preventDefault();
                 if(!props.onChange.binded) return;
                 props.onChange.expected_condition.forEach((i, c) => {
@@ -332,7 +275,7 @@ function InputField(props){
                 })
                 
             }}/>
-            <label className="field-warning responsive">{errText}</label>
+            <label className="field-warning responsive" title={props.warningMsgDescription}>{errText}</label>
         </div>
     );
 };
@@ -340,7 +283,7 @@ function InputField(props){
 function InputGroupField(props){
     const [inputFields, updateInputFields] = useState(Array.from({ length: props.fieldNumber }, (_, i) => (
         <div key={i} className="sub input-field">
-            <input name={props.name[i]} required={props.required[i]} className={`${props.themed ? "theme" : ""} border-color component text-color bg-color inverse ${props.errDetector[i] ? "err-detector" : ""} ${props.detectorCls[i] || ""} responsive`} type={props.type[i]} placeholder={props.placeholder[i] || ""} onChange={(e) => {
+            <input id={props.id && props.id[i]} name={props.name && props.name[i]} required={props.required && props.required[i]} className={`${props.themed ? "theme" : ""} border-color component text-color bg-color inverse ${props.errDetector[i] ? "err-detector" : ""} ${props.detectorCls[i] || ""} responsive`} type={props.type[i] || "text"} placeholder={props.placeholder[i] || ""} onChange={(e) => {
                 e.preventDefault();
                 if(!props.onChange[i].binded) return;
                 props.onChange[i].expected_condition.forEach((j, c) => {
@@ -354,7 +297,7 @@ function InputGroupField(props){
                 })
                 
             }}/>
-            <label className={`field-warning ${props.detectorCls[i]} responsive`}></label>
+            <label className={`field-warning ${props.detectorCls[i]} responsive`} title={props.warningMsgDescription && props.warningMsgDescription[i]}></label>
         </div>
     )));
     const [errText, setErrText] = useState((() => 
@@ -384,7 +327,7 @@ function InputGroupField(props){
             const updatingInputFields = [...prevInputFields];
             return updatingInputFields.map((_, i) => (
                 <div key={i} className="sub input-field">
-                    <input name={props.name[i]} required={props.required[i]} className={`${props.themed ? "theme" : ""} border-color component text-color bg-color inverse ${props.errDetector[i] ? "err-detector" : ""} ${props.detectorCls[i] || ""} responsive`} type={props.type[i]} placeholder={props.placeholder[i] || ""} onChange={(e) => {
+                    <input name={props.name && props.name[i]} required={props.required && props.required[i]} className={`${props.themed ? "theme" : ""} border-color component text-color bg-color inverse ${props.errDetector[i] ? "err-detector" : ""} ${props.detectorCls[i] || ""} responsive`} type={props.type[i]} placeholder={props.placeholder[i] || ""} onChange={(e) => {
                         e.preventDefault();
                         if(!props.onChange[i].binded) return;
                         props.onChange[i].expected_condition.forEach((j, c) => {
@@ -398,7 +341,7 @@ function InputGroupField(props){
                         })
                         
                     }}/>
-                    <label className={`field-warning ${props.detectorCls[i]} responsive`}></label>
+                    <label className={`field-warning ${props.detectorCls[i]} responsive`} title={props.warningMsgDescription && props.warningMsgDescription[i]}></label>
                 </div>
             ))
         })
@@ -415,6 +358,348 @@ function InputGroupField(props){
     })())
 
     return <div className="input-fields">{inputFields}</div>
+}
+
+function ThemeChanger(){
+    const { theme } = useGlobal();
+
+    useEffect(() => {
+        switch(theme.theme){
+            case 'light':
+                document.documentElement.classList.remove("dark");
+                break;
+            case 'dark':
+                document.documentElement.classList.add("dark");
+                break;
+            case 'default-os':
+                const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if(isDark) document.documentElement.classList.add("dark");
+                else document.documentElement.classList.remove("dark");
+                break;
+        }
+    }, [theme.theme])
+
+    function changeTheme(e){
+        e.preventDefault();
+        switch(theme.theme){
+            case 'light':
+                theme.setTheme('dark');
+                break;
+            case 'dark':
+                theme.setTheme('default-os');
+                break;
+            case 'default-os':
+                theme.setTheme('light');
+                break;
+        };
+    };
+    
+    return (
+        <button id='theme' className='setup-btn' onClick={changeTheme}>
+            <All.Components.Dynamic.Image dir="icon/" name="mode.png" alt='theme-changer-btn-icon' cls="setup-btn-icon-shadow theme custom" />
+        </button>
+    )
+}
+
+function SuspenseComponent(props){
+    const [ onMountComponent, setOnMountComponent ] = useState(props.loadingComponent || LoadingPage);
+    useEffect(() => {
+        if(props.condition){
+            setOnMountComponent(null);
+            document.documentElement.removeAttribute("style");
+        }
+        else if(props.timer) setTimeout(() => {
+            setOnMountComponent(null)
+            document.documentElement.removeAttribute("style");
+        }, props.timer);
+    }, [props.condition]);
+
+    return <>
+        {(onMountComponent && !props.cover) || props.children}
+        {props.cover && onMountComponent}
+    </>
+}
+
+function UserPFP(){
+    const { authUser } = useGlobal();
+    const [ pfpImg, setPfpImg ] = useState();
+
+    useEffect(() => {
+        if(authUser.isAuthUser) (async () => {
+            try{
+                const { data, error } = await storage.from("user-pfp").createSignedUrl(`${authUser.isAuthUser.id}/profile.png`, 3600);
+                if(error) throw error
+                const userProfileImage = data.signedUrl;
+                setPfpImg(<img alt="user-profile-icon" src={userProfileImage} className="rounded-full" width={40} height={40}/>)
+            }catch(err){ 
+                setPfpImg(<All.Components.Dynamic.Image alt="programmer-profile-icon" dir="icon/" width={40} height={40} name="programmer.png" cls="rounded-full" />)
+                console.error(err)
+            }
+        })()
+    }, [authUser.isAuthUser])
+
+    return pfpImg
+}
+
+function Media(props){
+    const { authUser } = useGlobal();
+    const [ mediaSrc, setMediaSrc ] = useState();
+    const mediaRef = useRef(null)
+    useEffect(() => {
+        if(props.supabase){
+            const { data, error } = storage.from("public-assets").getPublicUrl(props.mediaSrc);
+            if(error) throw error;
+            setMediaSrc(data.publicUrl);
+            switch(props.mediaType){
+                case "video": mediaRef.current.load(); break;
+            }
+        }
+    }, [authUser.isAuthUser])
+
+    switch(props.mediaType){
+        case "video": 
+            return (
+                <video
+                    ref={mediaRef} 
+                    className={props.cls || undefined} 
+                    style={props.style || undefined} 
+                    autoPlay={props.autoPlay || undefined} 
+                    muted={props.muted || undefined}
+                    loop={props.loop || undefined}
+                >
+                    <source src={mediaSrc} type="video/mp4" />
+                </video>
+            )
+        default: return <></>
+    }
+}
+
+function CWRFooter({ arbitraryCSSRules }){
+    return(
+        <footer className="footer">
+            {arbitraryCSSRules}
+            <div className="credit-card">
+            <h1>Powered by</h1>
+            <ul>
+                <li><Image dir="icon/" name="vercel.png" constant alt="vercel-logo" width={20} height={20}/>&nbsp;<a href="https://vercel.com" target="_blank">Vercel</a></li>
+                <li><Image dir="icon/" name="fb.png" constant alt="firebase-logo" width={20} height={20}/>&nbsp;<a href="https://firebase.google.com" target="_blank">Firebase</a></li>
+                <li><Image dir="icon/" name="github.svg" constant alt="github-logo" width={20} height={20}/>&nbsp;<a href="https://github.com" target="_blank">GitHub</a></li>
+                <li><Image dir="icon/" name="render.png" alt="render-logo" width={20} height={20}/>&nbsp;<a href="https://render.com" target="_blank">Render</a></li>
+            </ul>
+            </div>
+            <div className="credit-card">
+            <h1>Created using</h1>
+            <ul>
+                <li><Image dir="icon/" name="react.png" constant alt="react-logo" width={20} height={20}/>&nbsp;<a href="https://react.dev" target="_blank">React</a></li>
+                <li><Image dir="icon/" name="nextjs-icon-background.svg" alt="next-logo" width={20} height={20}/>&nbsp;<a href="https://nextjs.org" target="_blank">Next.js</a></li>
+                <li><Image dir="icon/" name="express.svg" alt="express-logo" width={20} height={20}/>&nbsp;<a href="https://expressjs.com/" target="_blank">Express</a></li>
+                <li><Image dir="icon/" name="node.png" constant alt="node-logo" width={20} height={20}/>&nbsp;<a href="https://nodejs.org" target="_blank">Node.js</a></li>
+                <li><Image dir="icon/" name="tw.png" constant alt="tw-logo" width={20} height={20}/>&nbsp;<a href="https://tailwindcss.com/" target="_blank">Tailwind CSS</a></li>
+            </ul>
+            </div>
+            <div className="credit-card">
+            <h1>Medias from</h1>
+            <ul>
+                <li><Image dir="icon/" name="flaticon.png" constant alt="flaticon-logo" width={20} height={20}/>&nbsp;<a href="https://flaticon.com" target="_blank">Flaticon</a></li>
+                <li><Image dir="icon/" name="iconduck.png" constant alt="iconduck-logo" width={20} height={20}/>&nbsp;<a href="https://iconduck.com" target="_blank">Iconduck</a></li>
+                <li><Image dir="icon/" name="brand-freepik.svg" alt="freepik-logo" width={20} height={20}/>&nbsp;<a href="https://www.freepik.com/" target="_blank">Freepik</a></li>
+                <li><Image dir="icon/" name="microsoft-designer.png" constant alt="microsoft-designer-logo" width={20} height={20}/>&nbsp;<a href="https://designer.microsoft.com/" target="_blank">Microsoft Designer (AI Generated)</a></li>
+                <li><a href="/medias-src">View media sources list</a></li>
+            </ul>
+            </div>
+            <div className="absolute bottom-0 left-0 w-full h-full light-theme-content-article-fade pt-6 sm:pt-12 dark:h-3/4 dark:dark-theme-footer-gradient"></div>
+        </footer>
+    )
+}
+
+function PreventCrossSiteComponent({ children }){
+    const [ component, setComponent ] = useState();
+    useEffect(() => {
+        if(window === window.parent) setComponent(children);
+        else setComponent(<></>);
+    }, []);
+    return component
+}
+
+
+function NavBar({ arbitraryCSSRules }){
+
+    const { authUser } = useGlobal();
+    function MenuBtn(){
+        const { device } = useGlobal();
+        const [appearingComponent, setAppearance] = useState(<></>);
+        const [isMatched640, setIsMatched640] = useState();
+        let menu;     
+
+        useEffect(() => {
+            const handleMatchedMediaChange = e => setIsMatched640(e.matches);
+            window.matchMedia("(max-width: 640px)").addEventListener("change", handleMatchedMediaChange);
+            return () => window.matchMedia("(max-width: 640px)").removeEventListener("change", handleMatchedMediaChange);
+        }, [])
+
+        useEffect(() => {
+            menu = document.querySelector("#navbar #menu");
+            let isOpen = false;
+            function menuBtn(e) {
+                if(!isOpen) {
+                    isOpen = true;
+                    e.target.style.rotate = "180deg";
+                    menu.style.display = "flex";
+                    setTimeout(() => menu.style.opacity = 1, 500);
+                } else {
+                    isOpen = false;
+                    e.target.style.rotate = "0deg";
+                    menu.style.opacity = 0;
+                    setTimeout(() => menu.style.display = "none", 500)
+                };
+            }
+            if(device.device === "xs" || (isMatched640 !== undefined ? isMatched640 : window.matchMedia("(max-width: 640px)").matches)) {
+                menu.style.display = "none"
+                menu.style.opacity = 0
+                menu.style.left = "3.5rem"
+                setAppearance(<div id="menu-btn">Menu <Image width={15} height={15} dir="icon/" name="sort-down.png" alt="triangle-icon" onClick={menuBtn}/></div>)
+            }
+            else{
+                setAppearance(<></>)
+                menu.style.display = "flex"
+                menu.style.opacity = 1
+                menu.style.left = 0
+            }
+        }, [device.device, isMatched640])
+
+        return appearingComponent
+    }
+    
+    return(
+        <nav id="navbar" className="text-sm nmob:text-base">
+            {arbitraryCSSRules}
+            <div className="flex flex-row justify-between items-center">
+                <a href="/"><div className="ml-4 w-[30px] h-[30px]"><Image constant dir="icon/" name="home.png" alt="home"/></div></a>
+                <MenuBtn />
+                <ul id="menu">
+                    <li><a href="/">About me</a></li>
+                    <li><a href="/my-projects">My Projects</a></li>
+                    <li><a href="/lounge">Lounge</a></li>
+                    <li><a>Contact</a></li>
+                </ul>
+            </div>
+            <ul>
+                <ThemeChanger />
+                {   authUser.isAuthUser ? 
+                    <>
+                        <li style={{ cursor: "pointer", margin: "0 1rem" }} onClick={() => window.location.replace('/settings')}><UserPFP /></li>
+                    </>
+                    :
+                    <>
+                        <li><a href="/registration?page=login">Login</a></li>
+                        <li><a href="/registration?page=register">Register</a></li>
+                    </>
+                }
+                
+            </ul>
+        </nav>
+    )
+}
+
+function CorousselElements({ total, bgImgsSrc, autoScroll, elems, wrappersStyle }) {
+    let imgs = [];
+    for (let i = 0; i < total; i++) imgs.push(
+        <div className="c-elem w-screen h-screen" key={i} style={{ 
+            ...autoScroll, 
+            ...wrappersStyle[i], 
+            backgroundImage: bgImgsSrc ? `url(${bgImgsSrc + `/wallpaper-${i + 1}.png`})` : undefined, 
+            backgroundPositionX: "center", 
+            backgroundRepeat: "no-repeat", 
+            backgroundSize: "cover" 
+        }}>
+            {elems[i]}
+        </div>
+    );
+    return imgs;
+}
+
+function CorousselPage({ maxPages, btnFunc, tabsOpacity }) {
+    let tabs = [];
+    for (let i = 0; i < maxPages; i++) tabs.push(<div key={i} className='tab' id={`p-${i + 1}`} onClick={() => btnFunc(i + 1)} style={{ opacity: tabsOpacity[i] }}></div>);
+    return tabs;
+};
+
+function Coroussel({ totalPages, corousselElements, corousselWrappersStyle, backgroundImageDir, autoScroll }) {
+
+    const [inUsed, setInUsed] = useState({
+        rightArrow: false,
+        leftArrow: false
+    });
+    const [page, setPage] = useState(1);
+    const [tabsOpaque, setTabsOpaque] = useState((() => {
+        let initial_opacity = [];
+        for (let i = 0; i < totalPages; i++) initial_opacity.push(0.5);
+        return initial_opacity;
+    })());
+    const rs = () => setPage((prevState) => prevState + 1);
+    const ls = () => setPage((prevState) => prevState - 1);
+
+    useEffect(() => {
+        if (!autoScroll) return;
+        const as = setInterval(() => {
+            if (!(page === totalPages)) rs();
+            else for (let currentPage = page; currentPage > 1; currentPage--) ls();
+        }, 5000);
+        return () => clearInterval(as);
+    }, [page])
+
+    useEffect(() => {
+        if (page <= 1) {
+            setInUsed({
+                rightArrow: false,
+                leftArrow: true
+            });
+        } else if (page === totalPages) {
+            setInUsed({
+                rightArrow: true,
+                leftArrow: false
+            });
+        } else {
+            setInUsed({
+                rightArrow: false,
+                leftArrow: false
+            });
+        };
+    }, [page]);
+
+    useEffect(() => {
+        setTabsOpaque(tabsOpaque.map((value, index, array) => {
+            if (index === page - 1) return 1;
+            else return 0.5;
+        }))
+    }, [page]);
+
+    return (
+        <div className='coroussel'>
+            <div className='elems'>
+                <CorousselElements 
+                    total={totalPages}
+                    bgImgsSrc={backgroundImageDir ? `/imgs/backend-images/coroussel/${backgroundImageDir}` : false}
+                    autoScroll={{ transform: `translateX(${(page - 1) * -100}%)` }} 
+                    elems={corousselElements}
+                    wrappersStyle={corousselWrappersStyle}
+                />
+            </div>
+            <div className='ctrl-btn'>
+                <div className='arrows'>
+                    <button id='lft' onClick={ls} disabled={inUsed.leftArrow} style={{ opacity: inUsed.leftArrow ? 0.5 : 1 }}>
+                        <img src="/imgs/backend-images/icon/left-arrow.png" alt='Left next arrow' height='50' width='50' />
+                    </button>
+                    <button id='rght' onClick={rs} disabled={inUsed.rightArrow} style={{ opacity: inUsed.rightArrow ? 0.5 : 1 }}>
+                        <img src="/imgs/backend-images/icon/right-arrow.png" alt='Right next arrow' height='50' width='50' />
+                    </button>
+                </div>
+                <div className='page-selector'>
+                    <CorousselPage maxPages={totalPages} btnFunc={setPage} tabsOpacity={tabsOpaque} />
+                </div>
+            </div>
+        </div>
+    );
 }
 
 function HyperspaceTeleportationBackground() {
@@ -443,31 +728,25 @@ function HyperspaceTeleportationBackground() {
     </div>
 }
 
-const Functions = {
-    asyncDelay,
-    jobDelay,
-    syncDelay,
-    cwrAuthMethod: {
-        getRegistryData,
-        createNewCustomToken,
-        getClientIp,
-        getAllUsernames,
-        updateRegistryData,
-        updateUsername
-    },
-    convertToParamCase,
-    convertToTitleCase
-};
 
 const Components = {
     Dynamic: {
         InputField,
         InputGroupField,
         Image,
+        AlertBox,
+        Section,
+        Coroussel,
     },
-    AlertBox,
+    ThemeChanger,
     Switch,
-    Section,
+    SuspenseComponent,
+    UserPFP,
+    Media,
+    CWRFooter,
+    PreventCrossSiteComponent,
+    NavBar,
+    LoadingPage,
     HyperspaceTeleportationBackground
 };
 
@@ -475,4 +754,18 @@ const Hooks = {
     useDelayedEffect
 }
 
-export { Functions, Components, Hooks };
+const Functions = {
+    isElementInViewport,
+    asyncDelay,
+    jobDelay,
+    syncDelay,
+    getClientIp,
+    convertToParamCase,
+    convertToTitleCase
+}
+
+const All = {
+    Components, Hooks, Functions
+}
+
+export default All;

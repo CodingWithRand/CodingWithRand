@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { Functions } from "../../../scripts/util";
+import All from "../../../scripts/util";
 import { useEffect } from "react";
 import { ComputerComponent, Quote } from "../utility-components";
 
@@ -61,8 +61,8 @@ export default function FoundationOfProgramming() {
         case 1:
             return(
                 <>
-                    <h1 className="stage-name font-sedan-sc-regular responsive">{Functions.convertToTitleCase(stageName)}</h1>
-                    <h3 className="stages-section-name font-league-spartan responsive">{Functions.convertToTitleCase(sectionName)}</h3>
+                    <h1 className="stage-name font-sedan-sc-regular responsive">{All.Functions.convertToTitleCase(stageName)}</h1>
+                    <h3 className="stages-section-name font-league-spartan responsive">{All.Functions.convertToTitleCase(sectionName)}</h3>
                     <Quote
                         quote={"In this lesson, you will learn about the foundations of programming where it's full of historical and theoretical content. You won't be practicing much in this lesson, but you have to grasp the basic concept of programming, coding, and computer first."}
                         author={"CodingWithRand - Author"}
